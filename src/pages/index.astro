@@ -1,17 +1,33 @@
 ---
+import Layout from "../layouts/Layout.astro";
+import { getTranslations } from "../i18n/getTranslations";
+import { fetchAPI, endpoints } from "../lib/api";
+import { getLocalizedName } from "../lib/getLocalizedName";
 
+type Categoria = {
+	nombre: string;
+	slug: string;
+};
+
+const lang = "ca";
+const t = getTranslations(lang);
+
+const data = await fetchAPI(endpoints.categorias);
+const categorias: Categoria[] = data.data;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="GUIAPINEDA" lang={lang}>
+	<h1>{t.nav.categories}</h1>
+
+	<ul>
+		{
+			categorias.map((categoria: Categoria) => (
+				<li>
+					<a href={`/categoria/${categoria.slug}`}>
+						{getLocalizedName(categoria, lang)}
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</Layout>

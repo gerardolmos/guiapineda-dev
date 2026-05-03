@@ -1,0 +1,85 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { fetchAPI, endpoints } from "../lib/api";
+import { getTranslations } from "../i18n/getTranslations";
+import { getLocalizedName } from "../lib/getLocalizedName";
+
+type Subcategoria = {
+    nombre: string;
+    slug: string;
+    categoria?: {
+        slug: string;
+    };
+};
+
+type Categoria = {
+    nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
+    slug: string;
+};
+
+const { slug, lang } = Astro.props;
+
+const t = getTranslations(lang);
+
+const data = await fetchAPI(endpoints.subcategorias);
+const todasLasSubcategorias: Subcategoria[] = data.data;
+
+const categoriaActual = todasLasSubcategorias.find(
+    (subcategoria: any) => subcategoria.categoria?.slug === slug,
+)?.categoria as Categoria | undefined;
+
+const subcategorias = todasLasSubcategorias.filter((sub: any) => {
+    const categoriaSlug =
+        sub.categoria?.slug || sub.categoria?.data?.attributes?.slug;
+
+    return categoriaSlug === slug;
+});
+
+const baseCategoriaUrl =
+    lang === "es"
+        ? "/es/categoria"
+        : lang === "en"
+          ? "/en/categoria"
+          : "/categoria";
+---
+
+<Layout
+    title={categoriaActual
+        ? `${getLocalizedName(categoriaActual, lang)} | GUIAPINEDA`
+        : t.pages.categoryTitle}
+    lang={lang}
+>
+    <nav>
+        <a href={lang === "es" ? "/es" : lang === "en" ? "/en" : "/"}>
+            {t.common.home}
+        </a>
+        {" > "}
+        <span>
+            {categoriaActual ? getLocalizedName(categoriaActual, lang) : ""}
+        </span>
+    </nav>
+
+    <h1>
+        {
+            categoriaActual
+                ? getLocalizedName(categoriaActual, lang)
+                : t.pages.categoryTitle
+        }
+    </h1>
+
+    <ul>
+        {
+            subcategorias.map((subcategoria: Subcategoria) => (
+                <li>
+                    <a
+                        href={`${baseCategoriaUrl}/${slug}/${subcategoria.slug}`}
+                    >
+                        {getLocalizedName(subcategoria, lang)}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</Layout>

@@ -1,0 +1,109 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { fetchAPI, endpoints } from "../lib/api";
+import { getTranslations } from "../i18n/getTranslations";
+import ComercioCard from "../components/ComercioCard.astro";
+import { getLocalizedName } from "../lib/getLocalizedName";
+
+type Comercio = {
+    nombre: string;
+    slug: string;
+    descripcion_corta?: string | null;
+    descripcion_corta_en?: string | null;
+    direccion?: string | null;
+    imagen_principal?: {
+        url: string;
+    }[];
+    subcategoria?: {
+        slug: string;
+    };
+};
+
+type Subcategoria = {
+    nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
+    slug: string;
+    categoria?: {
+        slug: string;
+        nombre: string;
+        nombre_es?: string | null;
+        nombre_en?: string | null;
+    };
+};
+
+const { slug, lang } = Astro.props;
+
+const t = getTranslations(lang);
+
+const data = await fetchAPI(endpoints.comercios);
+const todos: Comercio[] = data.data;
+
+const comercios = todos.filter((c) => c.subcategoria?.slug === slug);
+
+const subData = await fetchAPI(endpoints.subcategorias);
+const todasLasSubcategorias: Subcategoria[] = subData.data;
+
+const subcategoriaActual = todasLasSubcategorias.find(
+    (sub) => sub.slug === slug,
+);
+---
+
+<Layout
+    title={subcategoriaActual
+        ? `${getLocalizedName(subcategoriaActual, lang)} en Pineda de Mar | GUIAPINEDA`
+        : t.pages.subcategoryTitle}
+    lang={lang}
+>
+    <nav>
+        <a href={lang === "es" ? "/es" : lang === "en" ? "/en" : "/"}>
+            {t.common.home}
+        </a>
+        {" > "}
+        <a
+            href={lang === "es"
+                ? `/es/categoria/${subcategoriaActual?.categoria?.slug}`
+                : lang === "en"
+                  ? `/en/categoria/${subcategoriaActual?.categoria?.slug}`
+                  : `/categoria/${subcategoriaActual?.categoria?.slug}`}
+        >
+            {
+                subcategoriaActual?.categoria
+                    ? getLocalizedName(subcategoriaActual.categoria, lang)
+                    : ""
+            }
+        </a>
+        {" > "}
+        <span>
+            {
+                subcategoriaActual
+                    ? getLocalizedName(subcategoriaActual, lang)
+                    : ""
+            }
+        </span>
+    </nav>
+
+    <h1>
+        {
+            subcategoriaActual
+                ? getLocalizedName(subcategoriaActual, lang)
+                : t.pages.subcategoryTitle
+        }
+    </h1>
+
+    <ul>
+        {
+            comercios.map((c: Comercio) => (
+                <ComercioCard
+                    nombre={c.nombre}
+                    slug={c.slug}
+                    lang={lang}
+                    descripcion_corta={c.descripcion_corta}
+                    descripcion_corta_en={c.descripcion_corta_en}
+                    direccion={c.direccion}
+                    imagen_principal={c.imagen_principal}
+                />
+            ))
+        }
+    </ul>
+</Layout>

@@ -1,0 +1,31 @@
+---
+import SubcategoryPage from "../../../../templates/SubcategoryPage.astro";
+import { fetchAPI, endpoints } from "../../../../lib/api";
+
+type Subcategoria = {
+    slug: string;
+    categoria?: {
+        slug: string;
+    };
+};
+
+export async function getStaticPaths() {
+    const data = await fetchAPI(endpoints.subcategorias);
+    const subcategorias: Subcategoria[] = data.data;
+
+    return subcategorias.map((subcategoria: Subcategoria) => ({
+        params: {
+            categoriaSlug: subcategoria.categoria?.slug,
+            subcategoriaSlug: subcategoria.slug,
+        },
+    }));
+}
+
+const { categoriaSlug, subcategoriaSlug } = Astro.params;
+---
+
+<SubcategoryPage
+    slug={subcategoriaSlug!}
+    categoriaSlug={categoriaSlug!}
+    lang="en"
+/>

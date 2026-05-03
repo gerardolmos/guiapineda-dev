@@ -1,0 +1,22 @@
+---
+import CommercePage from "../../../templates/CommercePage.astro";
+import { fetchAPI, endpoints } from "../../../lib/api";
+
+type Comercio = {
+    slug: string;
+};
+
+export async function getStaticPaths() {
+    const data = await fetchAPI(endpoints.comercios);
+
+    const comercios: Comercio[] = data.data;
+
+    return comercios.map((comercio: Comercio) => ({
+        params: { slug: comercio.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+---
+
+<CommercePage slug={slug} lang="es" />

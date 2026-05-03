@@ -1,0 +1,63 @@
+---
+import { getTranslations } from "../i18n/getTranslations";
+import { getLanguageLinks } from "../lib/languageSwitcher";
+
+const { lang = "ca", title = "GUIAPINEDA" } = Astro.props;
+
+const t = getTranslations(lang);
+const pathname = Astro.url.pathname;
+const { currentLang, links } = getLanguageLinks(pathname);
+---
+
+<!doctype html>
+<html lang={lang}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{title}</title>
+    </head>
+    <body>
+        <nav>
+            <a href={lang === "ca" ? "/" : `/${lang}`}>Home</a>
+
+            <div style="margin-top: 1rem;">
+                {
+                    "ca" in links &&
+                        (currentLang === "ca" ? (
+                            <strong>CA</strong>
+                        ) : (
+                            <a href={links.ca}>CA</a>
+                        ))
+                }
+
+                {
+                    "es" in links && (
+                        <>
+                            {" | "}
+                            {currentLang === "es" ? (
+                                <strong>ES</strong>
+                            ) : (
+                                <a href={links.es}>ES</a>
+                            )}
+                        </>
+                    )
+                }
+
+                {
+                    "en" in links && (
+                        <>
+                            {" | "}
+                            {currentLang === "en" ? (
+                                <strong>EN</strong>
+                            ) : (
+                                <a href={links.en}>EN</a>
+                            )}
+                        </>
+                    )
+                }
+            </div>
+        </nav>
+
+        <slot />
+    </body>
+</html>

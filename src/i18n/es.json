@@ -1,0 +1,16 @@
+{
+    "nav": {
+        "home": "Inicio",
+        "categories": "Categorías"
+    },
+    "pages": {
+        "categoryTitle": "Categorías",
+        "subcategoryTitle": "Subcategorías"
+    },
+    "common": {
+        "noDescription": "Sin descripción",
+        "notFound": "No encontrado",
+        "viewMore": "Ver más",
+        "home": "Inicio"
+    }
+}

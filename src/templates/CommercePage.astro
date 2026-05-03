@@ -1,0 +1,111 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { fetchAPI, endpoints } from "../lib/api";
+import { getTranslations } from "../i18n/getTranslations";
+
+type RichTextChild = {
+    text?: string;
+};
+
+type RichTextBlock = {
+    children?: RichTextChild[];
+};
+
+type Comercio = {
+    nombre: string;
+    slug: string;
+    descripcion_corta?: string | null;
+    descripcion_corta_en?: string | null;
+    descripcion_completa?: RichTextBlock[] | null;
+    descripcion_completa_en?: RichTextBlock[] | null;
+    direccion?: string | null;
+    telefono?: string | null;
+    email?: string | null;
+    web?: string | null;
+    horario?: RichTextBlock[] | null;
+    categoria?: {
+        nombre: string;
+    };
+    subcategoria?: {
+        nombre: string;
+    };
+    imagen_principal?: {
+        url: string;
+    }[];
+};
+
+const { slug, lang } = Astro.props;
+
+const t = getTranslations(lang);
+
+const data = await fetchAPI(endpoints.comercios);
+const todos: Comercio[] = data.data;
+
+const comercio = todos.find((c) => c.slug === slug);
+
+if (!comercio) {
+    throw new Error("Comercio no encontrado");
+}
+
+function richTextToPlainText(blocks?: RichTextBlock[] | null) {
+    if (!blocks || !Array.isArray(blocks)) return "";
+
+    return blocks
+        .map((block) =>
+            (block.children || []).map((child) => child.text || "").join(""),
+        )
+        .filter(Boolean)
+        .join("\n");
+}
+
+const descripcionCorta =
+    lang === "en"
+        ? comercio.descripcion_corta_en || comercio.descripcion_corta
+        : comercio.descripcion_corta;
+
+const descripcionCompleta =
+    lang === "en"
+        ? richTextToPlainText(
+              comercio.descripcion_completa_en || comercio.descripcion_completa,
+          )
+        : richTextToPlainText(comercio.descripcion_completa);
+
+const horarioTexto = richTextToPlainText(comercio.horario);
+
+const imageUrl = comercio.imagen_principal?.[0]?.url
+    ? `http://localhost:1337${comercio.imagen_principal[0].url}`
+    : null;
+---
+
+<Layout title={comercio.nombre} lang={lang}>
+    <h1>{comercio.nombre}</h1>
+
+    {imageUrl && <img src={imageUrl} alt={comercio.nombre} />}
+
+    {descripcionCorta && <p>{descripcionCorta}</p>}
+
+    {
+        descripcionCompleta && (
+            <div>
+                {descripcionCompleta.split("\n").map((linea) => (
+                    <p>{linea}</p>
+                ))}
+            </div>
+        )
+    }
+
+    {comercio.direccion && <p>{comercio.direccion}</p>}
+    {comercio.telefono && <p>{comercio.telefono}</p>}
+    {comercio.email && <p>{comercio.email}</p>}
+    {comercio.web && <p>{comercio.web}</p>}
+
+    {
+        horarioTexto && (
+            <div>
+                {horarioTexto.split("\n").map((linea) => (
+                    <p>{linea}</p>
+                ))}
+            </div>
+        )
+    }
+</Layout>

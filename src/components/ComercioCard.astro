@@ -1,0 +1,63 @@
+---
+import { getTranslations } from "../i18n/getTranslations";
+
+interface Props {
+    nombre: string;
+    slug: string;
+    lang: "ca" | "es" | "en";
+    descripcion_corta?: string | null;
+    descripcion_corta_en?: string | null;
+    direccion?: string | null;
+    imagen_principal?: {
+        url: string;
+    }[];
+}
+
+const {
+    nombre,
+    slug,
+    lang,
+    descripcion_corta,
+    descripcion_corta_en,
+    direccion,
+    imagen_principal,
+} = Astro.props;
+
+const descripcion =
+    lang === "en"
+        ? descripcion_corta_en || descripcion_corta
+        : descripcion_corta;
+
+const imageUrl = imagen_principal?.[0]?.url
+    ? `http://localhost:1337${imagen_principal[0].url}`
+    : null;
+
+const detalleUrl =
+    lang === "es"
+        ? `/es/comercio/${slug}`
+        : lang === "en"
+          ? `/en/comercio/${slug}`
+          : `/comercio/${slug}`;
+
+const t = getTranslations(lang);
+---
+
+<li style="margin-bottom: 30px; border: 1px solid #ccc; padding: 16px;">
+    {
+        imageUrl && (
+            <img
+                src={imageUrl}
+                alt={nombre}
+                style="max-width:200px; display:block; margin-bottom:10px;"
+            />
+        )
+    }
+
+    <h2>{nombre}</h2>
+
+    {direccion && <p>{direccion}</p>}
+
+    <p>{descripcion ?? t.common.noDescription}</p>
+
+    <a href={detalleUrl}>{t.common.viewMore}</a>
+</li>

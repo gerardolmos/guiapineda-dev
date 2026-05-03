@@ -1,0 +1,22 @@
+---
+import CategoryPage from "../../../templates/CategoryPage.astro";
+
+type Categoria = {
+    slug: string;
+};
+
+export async function getStaticPaths() {
+    const res = await fetch("http://localhost:1337/api/categoria-comercios");
+    const data = await res.json();
+
+    const categorias: Categoria[] = data.data;
+
+    return categorias.map((categoria: Categoria) => ({
+        params: { slug: categoria.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+---
+
+<CategoryPage slug={slug} lang="es" />

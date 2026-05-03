@@ -1,0 +1,33 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getTranslations } from "../../i18n/getTranslations";
+import { fetchAPI, endpoints } from "../../lib/api";
+import { getLocalizedName } from "../../lib/getLocalizedName";
+
+type Categoria = {
+    nombre: string;
+    slug: string;
+};
+
+const lang = "en";
+const t = getTranslations(lang);
+
+const data = await fetchAPI(endpoints.categorias);
+const categorias: Categoria[] = data.data;
+---
+
+<Layout title="GUIAPINEDA" lang={lang}>
+    <h1>{t.nav.categories}</h1>
+
+    <ul>
+        {
+            categorias.map((categoria: Categoria) => (
+                <li>
+                    <a href={`/en/categoria/${categoria.slug}`}>
+                        {getLocalizedName(categoria, lang)}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</Layout>

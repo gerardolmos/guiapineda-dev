@@ -1,0 +1,16 @@
+{
+    "nav": {
+        "home": "Home",
+        "categories": "Categories"
+    },
+    "pages": {
+        "categoryTitle": "Categories",
+        "subcategoryTitle": "Subcategories"
+    },
+    "common": {
+        "noDescription": "No description",
+        "notFound": "Not found",
+        "viewMore": "View more",
+        "home": "Home"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "nav": {
+        "home": "Inici",
+        "categories": "Categories"
+    },
+    "pages": {
+        "categoryTitle": "Categories",
+        "subcategoryTitle": "Subcategories"
+    },
+    "common": {
+        "noDescription": "Sense descripció",
+        "notFound": "No trobat",
+        "viewMore": "Veure més",
+        "home": "Inici"
+    }
+}
