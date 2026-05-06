@@ -1,0 +1,23 @@
+---
+import CategoryPage from "../../templates/CategoryPage.astro";
+import { fetchAPI, endpoints } from "../../lib/api";
+
+type Categoria = {
+    slug: string;
+};
+
+export async function getStaticPaths() {
+    const data = await fetchAPI(endpoints.categorias);
+    const categorias: Categoria[] = data.data;
+
+    return categorias.map((categoria) => ({
+        params: {
+            categoriaSlug: categoria.slug,
+        },
+    }));
+}
+
+const { categoriaSlug } = Astro.params;
+---
+
+<CategoryPage slug={categoriaSlug!} lang="es" />

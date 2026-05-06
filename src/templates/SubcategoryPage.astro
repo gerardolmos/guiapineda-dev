@@ -11,6 +11,7 @@ type Comercio = {
     descripcion_corta?: string | null;
     descripcion_corta_en?: string | null;
     direccion?: string | null;
+    activo?: boolean;
     imagen_principal?: {
         url: string;
     }[];
@@ -39,7 +40,9 @@ const t = getTranslations(lang);
 const data = await fetchAPI(endpoints.comercios);
 const todos: Comercio[] = data.data;
 
-const comercios = todos.filter((c) => c.subcategoria?.slug === slug);
+const comercios = todos.filter(
+    (c) => c.subcategoria?.slug === slug && c.activo === true,
+);
 
 const subData = await fetchAPI(endpoints.subcategorias);
 const todasLasSubcategorias: Subcategoria[] = subData.data;
@@ -47,12 +50,24 @@ const todasLasSubcategorias: Subcategoria[] = subData.data;
 const subcategoriaActual = todasLasSubcategorias.find(
     (sub) => sub.slug === slug,
 );
+
+const subcategoryName = subcategoriaActual
+    ? getLocalizedName(subcategoriaActual, lang)
+    : "";
+
+const description =
+    lang === "es"
+        ? `Encuentra ${subcategoryName} en Pineda de Mar dentro de la guía GUIAPINEDA.`
+        : lang === "en"
+          ? `Find ${subcategoryName} in Pineda de Mar in the GUIAPINEDA guide.`
+          : `Troba ${subcategoryName} a Pineda de Mar dins de la guia GUIAPINEDA.`;
 ---
 
 <Layout
     title={subcategoriaActual
         ? `${getLocalizedName(subcategoriaActual, lang)} en Pineda de Mar | GUIAPINEDA`
         : t.pages.subcategoryTitle}
+    description={description}
     lang={lang}
 >
     <nav>
@@ -62,10 +77,10 @@ const subcategoriaActual = todasLasSubcategorias.find(
         {" > "}
         <a
             href={lang === "es"
-                ? `/es/categoria/${subcategoriaActual?.categoria?.slug}`
+                ? `/es/${subcategoriaActual?.categoria?.slug}`
                 : lang === "en"
-                  ? `/en/categoria/${subcategoriaActual?.categoria?.slug}`
-                  : `/categoria/${subcategoriaActual?.categoria?.slug}`}
+                  ? `/en/${subcategoriaActual?.categoria?.slug}`
+                  : `/${subcategoriaActual?.categoria?.slug}`}
         >
             {
                 subcategoriaActual?.categoria
@@ -97,6 +112,8 @@ const subcategoriaActual = todasLasSubcategorias.find(
                 <ComercioCard
                     nombre={c.nombre}
                     slug={c.slug}
+                    categoriaSlug={subcategoriaActual?.categoria?.slug ?? ""}
+                    subcategoriaSlug={subcategoriaActual?.slug ?? ""}
                     lang={lang}
                     descripcion_corta={c.descripcion_corta}
                     descripcion_corta_en={c.descripcion_corta_en}

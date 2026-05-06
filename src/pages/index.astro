@@ -23,7 +23,7 @@ const categorias: Categoria[] = data.data;
 		{
 			categorias.map((categoria: Categoria) => (
 				<li>
-					<a href={`/categoria/${categoria.slug}`}>
+					<a href={`/${categoria.slug}`}>
 						{getLocalizedName(categoria, lang)}
 					</a>
 				</li>

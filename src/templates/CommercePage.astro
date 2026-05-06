@@ -14,6 +14,7 @@ type RichTextBlock = {
 type Comercio = {
     nombre: string;
     slug: string;
+    activo?: boolean;
     descripcion_corta?: string | null;
     descripcion_corta_en?: string | null;
     descripcion_completa?: RichTextBlock[] | null;
@@ -41,10 +42,10 @@ const t = getTranslations(lang);
 const data = await fetchAPI(endpoints.comercios);
 const todos: Comercio[] = data.data;
 
-const comercio = todos.find((c) => c.slug === slug);
+const comercio = todos.find((c) => c.slug === slug && c.activo === true);
 
 if (!comercio) {
-    throw new Error("Comercio no encontrado");
+    return Astro.redirect("/404");
 }
 
 function richTextToPlainText(blocks?: RichTextBlock[] | null) {
@@ -75,9 +76,22 @@ const horarioTexto = richTextToPlainText(comercio.horario);
 const imageUrl = comercio.imagen_principal?.[0]?.url
     ? `http://localhost:1337${comercio.imagen_principal[0].url}`
     : null;
+
+const comercioNombre = comercio.nombre;
+
+const description =
+    lang === "es"
+        ? `Descubre ${comercioNombre} en Pineda de Mar: dirección, contacto y más información.`
+        : lang === "en"
+          ? `Discover ${comercioNombre} in Pineda de Mar: address, contact and more information.`
+          : `Descobreix ${comercioNombre} a Pineda de Mar: adreça, contacte i més informació.`;
 ---
 
-<Layout title={comercio.nombre} lang={lang}>
+<Layout
+    title={`${comercio.nombre} | GUIAPINEDA`}
+    description={description}
+    lang={lang}
+>
     <h1>{comercio.nombre}</h1>
 
     {imageUrl && <img src={imageUrl} alt={comercio.nombre} />}

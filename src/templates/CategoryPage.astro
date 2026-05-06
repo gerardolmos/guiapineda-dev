@@ -37,18 +37,25 @@ const subcategorias = todasLasSubcategorias.filter((sub: any) => {
     return categoriaSlug === slug;
 });
 
-const baseCategoriaUrl =
+const baseCategoriaUrl = lang === "es" ? "/es" : lang === "en" ? "/en" : "";
+
+const categoryName = categoriaActual
+    ? getLocalizedName(categoriaActual, lang)
+    : "";
+
+const description =
     lang === "es"
-        ? "/es/categoria"
+        ? `Descubre comercios y servicios de la categoría ${categoryName} en Pineda de Mar.`
         : lang === "en"
-          ? "/en/categoria"
-          : "/categoria";
+          ? `Discover businesses and services in the ${categoryName} category in Pineda de Mar.`
+          : `Descobreix comerços i serveis de la categoria ${categoryName} a Pineda de Mar.`;
 ---
 
 <Layout
     title={categoriaActual
         ? `${getLocalizedName(categoriaActual, lang)} | GUIAPINEDA`
         : t.pages.categoryTitle}
+    description={description}
     lang={lang}
 >
     <nav>

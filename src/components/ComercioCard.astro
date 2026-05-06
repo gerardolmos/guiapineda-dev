@@ -4,6 +4,8 @@ import { getTranslations } from "../i18n/getTranslations";
 interface Props {
     nombre: string;
     slug: string;
+    categoriaSlug: string;
+    subcategoriaSlug: string;
     lang: "ca" | "es" | "en";
     descripcion_corta?: string | null;
     descripcion_corta_en?: string | null;
@@ -16,6 +18,8 @@ interface Props {
 const {
     nombre,
     slug,
+    categoriaSlug,
+    subcategoriaSlug,
     lang,
     descripcion_corta,
     descripcion_corta_en,
@@ -34,10 +38,10 @@ const imageUrl = imagen_principal?.[0]?.url
 
 const detalleUrl =
     lang === "es"
-        ? `/es/comercio/${slug}`
+        ? `/es/${categoriaSlug}/${subcategoriaSlug}/${slug}`
         : lang === "en"
-          ? `/en/comercio/${slug}`
-          : `/comercio/${slug}`;
+          ? `/en/${categoriaSlug}/${subcategoriaSlug}/${slug}`
+          : `/${categoriaSlug}/${subcategoriaSlug}/${slug}`;
 
 const t = getTranslations(lang);
 ---
