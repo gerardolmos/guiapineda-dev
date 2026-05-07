@@ -1,0 +1,38 @@
+---
+import CommercePage from "../../../templates/CommercePage.astro";
+import { fetchAPI, endpoints } from "../../../lib/api";
+
+type Comercio = {
+    slug: string;
+    activo?: boolean;
+    categoria?: {
+        slug: string;
+    };
+    subcategoria?: {
+        slug: string;
+    } | null;
+};
+
+export async function getStaticPaths() {
+    const data = await fetchAPI(endpoints.comercios);
+    const comercios: Comercio[] = data.data;
+
+    return comercios
+        .filter(
+            (comercio) =>
+                comercio.activo === true &&
+                comercio.categoria?.slug &&
+                !comercio.subcategoria,
+        )
+        .map((comercio) => ({
+            params: {
+                categoriaSlug: comercio.categoria!.slug,
+                comercioSlug: comercio.slug,
+            },
+        }));
+}
+
+const { comercioSlug } = Astro.params;
+---
+
+<CommercePage slug={comercioSlug!} lang="es" />

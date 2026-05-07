@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { fetchAPI, endpoints } from "../lib/api";
 import { getTranslations } from "../i18n/getTranslations";
 import { getLocalizedName } from "../lib/getLocalizedName";
+import ComercioCard from "../components/ComercioCard.astro";
 
 type Subcategoria = {
     nombre: string;
@@ -19,6 +20,26 @@ type Categoria = {
     slug: string;
 };
 
+type Comercio = {
+    nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
+    slug: string;
+    activo?: boolean;
+    categoria?: {
+        slug: string;
+    };
+    subcategoria?: {
+        slug: string;
+    } | null;
+    descripcion_corta?: string | null;
+    descripcion_corta_en?: string | null;
+    direccion?: string | null;
+    imagen_principal?: {
+        url: string;
+    }[];
+};
+
 const { slug, lang } = Astro.props;
 
 const t = getTranslations(lang);
@@ -26,9 +47,15 @@ const t = getTranslations(lang);
 const data = await fetchAPI(endpoints.subcategorias);
 const todasLasSubcategorias: Subcategoria[] = data.data;
 
-const categoriaActual = todasLasSubcategorias.find(
-    (subcategoria: any) => subcategoria.categoria?.slug === slug,
-)?.categoria as Categoria | undefined;
+const categoriasData = await fetchAPI(endpoints.categorias);
+const todasLasCategorias: Categoria[] = categoriasData.data;
+
+const comerciosData = await fetchAPI(endpoints.comercios);
+const todosLosComercios: Comercio[] = comerciosData.data;
+
+const categoriaActual = todasLasCategorias.find(
+    (categoria) => categoria.slug === slug,
+);
 
 const subcategorias = todasLasSubcategorias.filter((sub: any) => {
     const categoriaSlug =
@@ -36,6 +63,13 @@ const subcategorias = todasLasSubcategorias.filter((sub: any) => {
 
     return categoriaSlug === slug;
 });
+
+const comerciosDirectos = todosLosComercios.filter(
+    (comercio) =>
+        comercio.activo === true &&
+        comercio.categoria?.slug === slug &&
+        !comercio.subcategoria,
+);
 
 const baseCategoriaUrl = lang === "es" ? "/es" : lang === "en" ? "/en" : "";
 
@@ -89,4 +123,24 @@ const description =
             ))
         }
     </ul>
+    {
+        comerciosDirectos.length > 0 && (
+            <ul>
+                {comerciosDirectos.map((comercio: Comercio) => (
+                    <ComercioCard
+                        nombre={comercio.nombre}
+                        nombre_es={comercio.nombre_es}
+                        nombre_en={comercio.nombre_en}
+                        slug={comercio.slug}
+                        categoriaSlug={slug}
+                        lang={lang}
+                        descripcion_corta={comercio.descripcion_corta}
+                        descripcion_corta_en={comercio.descripcion_corta_en}
+                        direccion={comercio.direccion}
+                        imagen_principal={comercio.imagen_principal}
+                    />
+                ))}
+            </ul>
+        )
+    }
 </Layout>

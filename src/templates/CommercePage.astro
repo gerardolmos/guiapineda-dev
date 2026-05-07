@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { fetchAPI, endpoints } from "../lib/api";
 import { getTranslations } from "../i18n/getTranslations";
+import { getLocalizedName } from "../lib/getLocalizedName";
 
 type RichTextChild = {
     text?: string;
@@ -13,6 +14,8 @@ type RichTextBlock = {
 
 type Comercio = {
     nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
     slug: string;
     activo?: boolean;
     descripcion_corta?: string | null;
@@ -26,10 +29,16 @@ type Comercio = {
     horario?: RichTextBlock[] | null;
     categoria?: {
         nombre: string;
+        nombre_es?: string | null;
+        nombre_en?: string | null;
+        slug: string;
     };
     subcategoria?: {
         nombre: string;
-    };
+        nombre_es?: string | null;
+        nombre_en?: string | null;
+        slug: string;
+    } | null;
     imagen_principal?: {
         url: string;
     }[];
@@ -77,7 +86,33 @@ const imageUrl = comercio.imagen_principal?.[0]?.url
     ? `http://localhost:1337${comercio.imagen_principal[0].url}`
     : null;
 
-const comercioNombre = comercio.nombre;
+const comercioNombre = getLocalizedName(comercio, lang);
+
+const categoriaNombre = comercio.categoria
+    ? getLocalizedName(comercio.categoria, lang)
+    : "";
+
+const subcategoriaNombre = comercio.subcategoria
+    ? getLocalizedName(comercio.subcategoria, lang)
+    : "";
+
+const homeUrl = lang === "es" ? "/es" : lang === "en" ? "/en" : "/";
+
+const categoriaUrl =
+    lang === "es"
+        ? `/es/${comercio.categoria?.slug}`
+        : lang === "en"
+          ? `/en/${comercio.categoria?.slug}`
+          : `/${comercio.categoria?.slug}`;
+
+const subcategoriaUrl =
+    comercio.subcategoria && comercio.categoria
+        ? lang === "es"
+            ? `/es/${comercio.categoria.slug}/${comercio.subcategoria.slug}`
+            : lang === "en"
+              ? `/en/${comercio.categoria.slug}/${comercio.subcategoria.slug}`
+              : `/${comercio.categoria.slug}/${comercio.subcategoria.slug}`
+        : "";
 
 const description =
     lang === "es"
@@ -88,13 +123,31 @@ const description =
 ---
 
 <Layout
-    title={`${comercio.nombre} | GUIAPINEDA`}
+    title={`${comercioNombre} | GUIAPINEDA`}
     description={description}
     lang={lang}
 >
-    <h1>{comercio.nombre}</h1>
+    <nav>
+        <a href={homeUrl}>{t.common.home}</a>
+        {" > "}
 
-    {imageUrl && <img src={imageUrl} alt={comercio.nombre} />}
+        {comercio.categoria && <a href={categoriaUrl}>{categoriaNombre}</a>}
+
+        {
+            comercio.subcategoria && (
+                <>
+                    {" > "}
+                    <a href={subcategoriaUrl}>{subcategoriaNombre}</a>
+                </>
+            )
+        }
+
+        {" > "}
+        <span>{comercioNombre}</span>
+    </nav>
+    <h1>{comercioNombre}</h1>
+
+    {imageUrl && <img src={imageUrl} alt={comercioNombre} />}
 
     {descripcionCorta && <p>{descripcionCorta}</p>}
 

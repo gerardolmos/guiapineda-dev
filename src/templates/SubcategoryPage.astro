@@ -7,6 +7,8 @@ import { getLocalizedName } from "../lib/getLocalizedName";
 
 type Comercio = {
     nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
     slug: string;
     descripcion_corta?: string | null;
     descripcion_corta_en?: string | null;
@@ -111,6 +113,8 @@ const description =
             comercios.map((c: Comercio) => (
                 <ComercioCard
                     nombre={c.nombre}
+                    nombre_es={c.nombre_es}
+                    nombre_en={c.nombre_en}
                     slug={c.slug}
                     categoriaSlug={subcategoriaActual?.categoria?.slug ?? ""}
                     subcategoriaSlug={subcategoriaActual?.slug ?? ""}

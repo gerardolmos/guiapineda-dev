@@ -1,11 +1,14 @@
 ---
 import { getTranslations } from "../i18n/getTranslations";
+import { getLocalizedName } from "../lib/getLocalizedName";
 
 interface Props {
-    nombre: string;
+    nombre?: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
     slug: string;
     categoriaSlug: string;
-    subcategoriaSlug: string;
+    subcategoriaSlug?: string;
     lang: "ca" | "es" | "en";
     descripcion_corta?: string | null;
     descripcion_corta_en?: string | null;
@@ -17,6 +20,8 @@ interface Props {
 
 const {
     nombre,
+    nombre_es,
+    nombre_en,
     slug,
     categoriaSlug,
     subcategoriaSlug,
@@ -26,6 +31,15 @@ const {
     direccion,
     imagen_principal,
 } = Astro.props;
+
+const localizedName = getLocalizedName(
+    {
+        nombre,
+        nombre_es,
+        nombre_en,
+    },
+    lang,
+);
 
 const descripcion =
     lang === "en"
@@ -38,10 +52,16 @@ const imageUrl = imagen_principal?.[0]?.url
 
 const detalleUrl =
     lang === "es"
-        ? `/es/${categoriaSlug}/${subcategoriaSlug}/${slug}`
+        ? subcategoriaSlug
+            ? `/es/${categoriaSlug}/${subcategoriaSlug}/${slug}`
+            : `/es/${categoriaSlug}/${slug}`
         : lang === "en"
-          ? `/en/${categoriaSlug}/${subcategoriaSlug}/${slug}`
-          : `/${categoriaSlug}/${subcategoriaSlug}/${slug}`;
+          ? subcategoriaSlug
+              ? `/en/${categoriaSlug}/${subcategoriaSlug}/${slug}`
+              : `/en/${categoriaSlug}/${slug}`
+          : subcategoriaSlug
+            ? `/${categoriaSlug}/${subcategoriaSlug}/${slug}`
+            : `/${categoriaSlug}/${slug}`;
 
 const t = getTranslations(lang);
 ---
@@ -51,13 +71,13 @@ const t = getTranslations(lang);
         imageUrl && (
             <img
                 src={imageUrl}
-                alt={nombre}
+                alt={localizedName}
                 style="max-width:200px; display:block; margin-bottom:10px;"
             />
         )
     }
 
-    <h2>{nombre}</h2>
+    <h2>{localizedName}</h2>
 
     {direccion && <p>{direccion}</p>}
 
