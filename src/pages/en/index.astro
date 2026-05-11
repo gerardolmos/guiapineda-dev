@@ -6,18 +6,63 @@ import { getLocalizedName } from "../../lib/getLocalizedName";
 
 type Categoria = {
     nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
     slug: string;
 };
 
 const lang = "en";
 const t = getTranslations(lang);
 
+const homeData = await fetchAPI(endpoints.home);
+const home = homeData.data;
+
+const heroTitulo = home?.hero_titulo_en || home?.hero_titulo || "GUIAPINEDA";
+const heroSubtitulo =
+    home?.hero_subtitulo_en || home?.hero_subtitulo || "La web del ciudadano";
+const textoIntro = home?.texto_intro_en || home?.texto_intro || [];
+const heroImagen = home?.hero_imagen;
+const heroVideo = home?.hero_video;
+
 const data = await fetchAPI(endpoints.categorias);
 const categorias: Categoria[] = data.data;
 ---
 
 <Layout title="GUIAPINEDA" lang={lang}>
-    <h1>{t.nav.categories}</h1>
+    <h1>{heroTitulo}</h1>
+
+    <p>{heroSubtitulo}</p>
+
+    {
+        textoIntro.map((block: any) => (
+            <p>{block.children?.map((child: any) => child.text).join("")}</p>
+        ))
+    }
+
+    {
+        heroVideo && (
+            <video
+                src={`http://localhost:1337${heroVideo.url}`}
+                autoplay
+                muted
+                loop
+                playsinline
+                width="600"
+            />
+        )
+    }
+
+    {
+        !heroVideo && heroImagen && (
+            <img
+                src={`http://localhost:1337${heroImagen.url}`}
+                alt={heroTitulo}
+                width="600"
+            />
+        )
+    }
+
+    <h2>{t.nav.categories}</h2>
 
     <ul>
         {

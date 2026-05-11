@@ -1,6 +1,7 @@
 const STRAPI_URL = "http://localhost:1337";
 
 export const endpoints = {
+    home: "/api/home?populate=*",
     categorias: "/api/categoria-comercios?populate=*",
     subcategorias: "/api/subcategorias?populate=*",
     comercios: "/api/comercios?populate=*",
