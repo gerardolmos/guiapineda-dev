@@ -1,0 +1,65 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { fetchAPI, endpoints } from "../../lib/api";
+
+const { lang = "ca" } = Astro.props;
+
+const opinionsData = await fetchAPI(endpoints.opinions);
+
+const opinions = opinionsData.data || [];
+
+const publishedOpinions = opinions
+    .filter((item: any) => item.publicat)
+    .sort(
+        (a: any, b: any) =>
+            new Date(b.data_publicacio).getTime() -
+            new Date(a.data_publicacio).getTime(),
+    );
+---
+
+<Layout
+    lang={lang}
+    title={lang === "es"
+        ? "Opinión | GUIAPINEDA"
+        : lang === "en"
+          ? "Opinion | GUIAPINEDA"
+          : "Opinió | GUIAPINEDA"}
+>
+    <main>
+        <h1>
+            {lang === "es" ? "Opinión" : lang === "en" ? "Opinion" : "Opinió"}
+        </h1>
+
+        {
+            publishedOpinions.map((opinio: any) => (
+                <article>
+                    {opinio.imatge?.url && (
+                        <img
+                            src={`http://localhost:1337${opinio.imatge.url}`}
+                            alt={opinio.titol}
+                            width="400"
+                        />
+                    )}
+
+                    <h2>
+                        <a
+                            href={
+                                lang === "ca"
+                                    ? `/opinio/${opinio.slug}`
+                                    : `/${lang}/opinio/${opinio.slug}`
+                            }
+                        >
+                            {opinio.titol}
+                        </a>
+                    </h2>
+
+                    <p>{opinio.resum}</p>
+
+                    <p>
+                        {opinio.autor} — {opinio.data_publicacio}
+                    </p>
+                </article>
+            ))
+        }
+    </main>
+</Layout>

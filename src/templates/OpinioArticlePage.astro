@@ -1,0 +1,54 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const { lang = "ca", opinio } = Astro.props as {
+    lang?: string;
+    opinio: any;
+};
+
+const backUrl = lang === "ca" ? "/opinio" : `/${lang}/opinio`;
+const sectionTitle =
+    lang === "es" ? "Opinión" : lang === "en" ? "Opinion" : "Opinió";
+const backText =
+    lang === "es"
+        ? "← Volver a Opinión"
+        : lang === "en"
+          ? "← Back to Opinion"
+          : "← Tornar a Opinió";
+---
+
+<Layout lang={lang} title={`${opinio.titol} | ${sectionTitle} | GUIAPINEDA`}>
+    <main>
+        <a href={backUrl}>{backText}</a>
+
+        <article>
+            {
+                opinio.imatge?.url && (
+                    <img
+                        src={`http://localhost:1337${opinio.imatge.url}`}
+                        alt={opinio.titol}
+                        width="800"
+                    />
+                )
+            }
+
+            <h1>{opinio.titol}</h1>
+
+            <p>
+                {opinio.autor} — {opinio.data_publicacio}
+            </p>
+
+            <div>
+                {
+                    opinio.contingut?.map((block: any) => (
+                        <p>
+                            {block.children
+                                ?.map((child: any) => child.text)
+                                .join("")}
+                        </p>
+                    ))
+                }
+            </div>
+        </article>
+    </main>
+</Layout>
