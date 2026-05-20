@@ -1,8 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { fetchAPI, endpoints } from "../../lib/api";
+import { getTranslations } from "../../i18n/getTranslations";
+import { getReadingTime } from "../../lib/readingTime";
+import { formatDate } from "../../lib/formatDate";
 
 const { lang = "ca" } = Astro.props;
+const t = getTranslations(lang);
 
 const opinionsData = await fetchAPI(endpoints.opinions);
 
@@ -17,49 +21,68 @@ const publishedOpinions = opinions
     );
 ---
 
-<Layout
-    lang={lang}
-    title={lang === "es"
-        ? "Opinión | GUIAPINEDA"
-        : lang === "en"
-          ? "Opinion | GUIAPINEDA"
-          : "Opinió | GUIAPINEDA"}
->
+<Layout lang={lang} title={`${t.opinio.title} | GUIAPINEDA`}>
     <main>
-        <h1>
-            {lang === "es" ? "Opinión" : lang === "en" ? "Opinion" : "Opinió"}
-        </h1>
+        <h1>{t.opinio.title}</h1>
+
+        <section>
+            <h2>{t.opinio.submitTitle}</h2>
+
+            <p>{t.opinio.submitText1}</p>
+
+            <p>{t.opinio.submitText2}</p>
+
+            <p>
+                {t.opinio.submitEmailText}
+                <a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
+            </p>
+        </section>
 
         {
-            publishedOpinions.map((opinio: any) => (
-                <article>
-                    {opinio.imatge?.url && (
-                        <img
-                            src={`http://localhost:1337${opinio.imatge.url}`}
-                            alt={opinio.titol}
-                            width="400"
-                        />
-                    )}
+            publishedOpinions.length === 0 ? (
+                <p>{t.opinio.empty}</p>
+            ) : (
+                publishedOpinions.map((opinio: any) => (
+                    <article>
+                        {opinio.imatge?.url && (
+                            <img
+                                src={`http://localhost:1337${opinio.imatge.url}`}
+                                alt={opinio.titol}
+                                width="400"
+                            />
+                        )}
 
-                    <h2>
-                        <a
-                            href={
-                                lang === "ca"
-                                    ? `/opinio/${opinio.slug}`
-                                    : `/${lang}/opinio/${opinio.slug}`
-                            }
-                        >
-                            {opinio.titol}
-                        </a>
-                    </h2>
+                        <h2>
+                            <a
+                                href={
+                                    lang === "ca"
+                                        ? `/opinio/${opinio.slug}`
+                                        : `/${lang}/opinio/${opinio.slug}`
+                                }
+                            >
+                                {opinio.titol}
+                            </a>
+                        </h2>
 
-                    <p>{opinio.resum}</p>
+                        <p>{opinio.resum}</p>
 
-                    <p>
-                        {opinio.autor} — {opinio.data_publicacio}
-                    </p>
-                </article>
-            ))
+                        <p>
+                            <p>
+                                {opinio.autor} —{" "}
+                                {formatDate(
+                                    opinio.data_publicacio,
+                                    lang as "ca" | "es" | "en",
+                                )}
+                            </p>
+                        </p>
+
+                        <p>
+                            {getReadingTime(opinio.contingut)}{" "}
+                            {t.opinio.readingSuffix}
+                        </p>
+                    </article>
+                ))
+            )
         }
     </main>
 </Layout>

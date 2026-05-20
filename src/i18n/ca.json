@@ -7,6 +7,16 @@
         "categoryTitle": "Categories",
         "subcategoryTitle": "Subcategories"
     },
+    "opinio": {
+        "title": "Opinió",
+        "submitTitle": "Vols publicar un article d’opinió?",
+        "submitText1": "Si vols compartir una opinió, reflexió o article sobre qualsevol tema relacionat amb Pineda de Mar, pots enviar-nos el teu text per correu electrònic.",
+        "submitText2": "Els articles seran revisats abans de publicar-se. GUIAPINEDA es reserva el dret de no publicar textos ofensius, difamatoris o que no respectin unes normes bàsiques de convivència.",
+        "submitEmailText": "Envia el teu article a:",
+        "backToList": "← Tornar a Opinió",
+        "readingSuffix": "de lectura",
+        "empty": "Encara no hi ha articles d’opinió."
+    },
     "common": {
         "noDescription": "Sense descripció",
         "notFound": "No trobat",

@@ -1,10 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getReadingTime } from "../lib/readingTime";
+import { getTranslations } from "../i18n/getTranslations";
+import { formatDate } from "../lib/formatDate";
 
 const { lang = "ca", opinio } = Astro.props as {
-    lang?: string;
+    lang: string;
     opinio: any;
 };
+
+const t = getTranslations(lang as "ca" | "es" | "en");
 
 const backUrl = lang === "ca" ? "/opinio" : `/${lang}/opinio`;
 const sectionTitle =
@@ -35,7 +40,19 @@ const backText =
             <h1>{opinio.titol}</h1>
 
             <p>
-                {opinio.autor} — {opinio.data_publicacio}
+                <p>
+                    {opinio.autor} — {
+                        formatDate(
+                            opinio.data_publicacio,
+                            lang as "ca" | "es" | "en",
+                        )
+                    }
+                </p>
+            </p>
+
+            <p>
+                {getReadingTime(opinio.contingut)}
+                {t.opinio.readingSuffix}
             </p>
 
             <div>

@@ -7,6 +7,16 @@
         "categoryTitle": "Categories",
         "subcategoryTitle": "Subcategories"
     },
+    "opinio": {
+        "title": "Opinion",
+        "submitTitle": "Do you want to publish an opinion article?",
+        "submitText1": "If you want to share an opinion, reflection or article about any topic related to Pineda de Mar, you can send us your text by email.",
+        "submitText2": "Articles will be reviewed before publication. GUIAPINEDA reserves the right not to publish offensive, defamatory or inappropriate content.",
+        "submitEmailText": "Send your article to:",
+        "backToList": "← Back to Opinion",
+        "readingSuffix": "read",
+        "empty": "There are no opinion articles yet."
+    },
     "common": {
         "noDescription": "No description",
         "notFound": "Not found",
