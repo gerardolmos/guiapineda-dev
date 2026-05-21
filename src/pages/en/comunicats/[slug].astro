@@ -1,0 +1,25 @@
+---
+import { fetchAPI, endpoints } from "../../../lib/api";
+import ComunicatArticlePage from "../../../templates/ComunicatArticlePage.astro";
+
+export async function getStaticPaths() {
+    const comunicatsData = await fetchAPI(endpoints.comunicats);
+    const comunicats = comunicatsData.data || [];
+
+    return comunicats
+        .filter((comunicat: any) => comunicat.publicat)
+        .map((comunicat: any) => ({
+            params: {
+                slug: comunicat.slug,
+            },
+            props: {
+                comunicat,
+                lang: "en",
+            },
+        }));
+}
+
+const { comunicat, lang } = Astro.props;
+---
+
+<ComunicatArticlePage comunicat={comunicat} lang={lang} />

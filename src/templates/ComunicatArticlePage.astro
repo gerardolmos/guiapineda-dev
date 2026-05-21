@@ -11,9 +11,8 @@ const { lang = "ca", opinio } = Astro.props as {
 
 const t = getTranslations(lang as "ca" | "es" | "en");
 
-const backUrl = lang === "ca" ? "/opinio" : `/${lang}/opinio`;
-const sectionTitle =
-    lang === "es" ? "Opinión" : lang === "en" ? "Opinion" : "Opinió";
+const backUrl = lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
+const sectionTitle = t.comunicats.title;
 const backText =
     lang === "es"
         ? "← Volver a Opinión"
@@ -52,7 +51,7 @@ const backText =
 
             <p>
                 {getReadingTime(opinio.contingut)}
-                {t.opinio.readingSuffix}
+                {t.comunicats.readingSuffix}
             </p>
 
             <div>

@@ -7,20 +7,26 @@
         "categoryTitle": "Categories",
         "subcategoryTitle": "Subcategories"
     },
-    "opinio": {
-        "title": "Opinió",
-        "submitTitle": "Vols publicar un article d’opinió?",
-        "submitText1": "Si vols compartir una opinió, reflexió o article sobre qualsevol tema relacionat amb Pineda de Mar, pots enviar-nos el teu text per correu electrònic.",
-        "submitText2": "Els articles seran revisats abans de publicar-se. GUIAPINEDA es reserva el dret de no publicar textos ofensius, difamatoris o que no respectin unes normes bàsiques de convivència.",
-        "submitEmailText": "Envia el teu article a:",
-        "backToList": "← Tornar a Opinió",
+    "comunicats": {
+        "title": "Comunicats",
+        "submitTitle": "Vols publicar un comunicat?",
+        "submitText1": "Si formes part d’una entitat, associació o grup local i vols anunciar una activitat, acte o informació d’interès ciutadà, pots enviar-nos el teu comunicat per correu electrònic.",
+        "submitText2": "Els comunicats seran revisats abans de publicar-se. GUIAPINEDA es reserva el dret de no publicar continguts ofensius, difamatoris o que no respectin unes normes bàsiques de convivència.",
+        "submitEmailText": "Envia el teu comunicat a:",
+        "backToList": "← Tornar a Comunicats",
         "readingSuffix": "de lectura",
-        "empty": "Encara no hi ha articles d’opinió."
+        "empty": "Encara no hi ha comunicats publicats."
     },
     "common": {
         "noDescription": "Sense descripció",
         "notFound": "No trobat",
         "viewMore": "Veure més",
         "home": "Inici"
+    },
+    "comercios": {
+        "missingInfo": "GUIAPINEDA creix amb la participació dels comerços locals. Si no trobes un negoci, pot ser que encara no ens hagi enviat la seva informació.",
+        "emptyTitle": "Sigues el primer",
+        "emptyText": "Encara no hi ha negocis publicats en aquesta secció. Si tens un comerç o servei i vols aparèixer a GUIAPINEDA, envia’ns la teva informació.",
+        "contactText": "Contacta amb nosaltres a:"
     }
 }

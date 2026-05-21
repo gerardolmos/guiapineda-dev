@@ -110,6 +110,8 @@ const description =
         }
     </h1>
 
+    <p>{t.comercios.missingInfo}</p>
+
     <ul>
         {
             subcategorias.map((subcategoria: Subcategoria) => (
@@ -124,7 +126,7 @@ const description =
         }
     </ul>
     {
-        comerciosDirectos.length > 0 && (
+        comerciosDirectos.length > 0 ? (
             <ul>
                 {comerciosDirectos.map((comercio: Comercio) => (
                     <ComercioCard
@@ -141,6 +143,21 @@ const description =
                     />
                 ))}
             </ul>
+        ) : (
+            subcategorias.length === 0 && (
+                <section>
+                    <h2>{t.comercios.emptyTitle}</h2>
+
+                    <p>{t.comercios.emptyText}</p>
+
+                    <p>
+                        {t.comercios.contactText}
+                        <a href="mailto:info@guiapineda.com">
+                            info@guiapineda.com
+                        </a>
+                    </p>
+                </section>
+            )
         )
     }
 </Layout>

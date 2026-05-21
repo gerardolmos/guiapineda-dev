@@ -7,20 +7,26 @@
         "categoryTitle": "Categorías",
         "subcategoryTitle": "Subcategorías"
     },
-    "opinio": {
-        "title": "Opinión",
-        "submitTitle": "¿Quieres publicar un artículo de opinión?",
-        "submitText1": "Si quieres compartir una opinión, reflexión o artículo sobre cualquier tema relacionado con Pineda de Mar, puedes enviarnos tu texto por correo electrónico.",
-        "submitText2": "Los artículos serán revisados antes de publicarse. GUIAPINEDA se reserva el derecho de no publicar textos ofensivos, difamatorios o que no respeten unas normas básicas de convivencia.",
-        "submitEmailText": "Envía tu artículo a:",
-        "backToList": "← Volver a Opinión",
+    "comunicats": {
+        "title": "Comunicados",
+        "submitTitle": "¿Quieres publicar un comunicado?",
+        "submitText1": "Si formas parte de una entidad, asociación o grupo local y quieres anunciar una actividad, acto o información de interés ciudadano, puedes enviarnos tu comunicado por correo electrónico.",
+        "submitText2": "Los comunicados serán revisados antes de publicarse. GUIAPINEDA se reserva el derecho de no publicar contenidos ofensivos, difamatorios o que no respeten unas normas básicas de convivencia.",
+        "submitEmailText": "Envía tu comunicado a:",
+        "backToList": "← Volver a Comunicados",
         "readingSuffix": "de lectura",
-        "empty": "Todavía no hay artículos de opinión."
+        "empty": "Todavía no hay comunicados publicados."
     },
     "common": {
         "noDescription": "Sin descripción",
         "notFound": "No encontrado",
         "viewMore": "Ver más",
         "home": "Inicio"
+    },
+    "comercios": {
+        "missingInfo": "GUIAPINEDA crece con la participación de los comercios locales. Si no encuentras un negocio, puede ser que todavía no nos haya enviado su información.",
+        "emptyTitle": "Sé el primero",
+        "emptyText": "Todavía no hay negocios publicados en esta sección. Si tienes un comercio o servicio y quieres aparecer en GUIAPINEDA, envíanos tu información.",
+        "contactText": "Contacta con nosotros en:"
     }
 }

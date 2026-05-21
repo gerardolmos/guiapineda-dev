@@ -21,14 +21,8 @@ const { currentLang, links } = getLanguageLinks(pathname);
         <nav>
             <a href={lang === "ca" ? "/" : `/${lang}`}>Home</a>
 
-            <a href={lang === "ca" ? "/opinio" : `/${lang}/opinio`}>
-                {
-                    lang === "es"
-                        ? "Opinión"
-                        : lang === "en"
-                          ? "Opinion"
-                          : "Opinió"
-                }
+            <a href={lang === "ca" ? "/comunicats" : `/${lang}/comunicats`}>
+                {t.comunicats.title}
             </a>
 
             <div style="margin-top: 1rem;">

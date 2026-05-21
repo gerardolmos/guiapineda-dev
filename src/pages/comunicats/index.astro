@@ -1,0 +1,86 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { fetchAPI, endpoints } from "../../lib/api";
+import { getTranslations } from "../../i18n/getTranslations";
+import { getReadingTime } from "../../lib/readingTime";
+import { formatDate } from "../../lib/formatDate";
+
+const { lang = "ca" } = Astro.props;
+const t = getTranslations(lang);
+
+const comunicatsData = await fetchAPI(endpoints.comunicats);
+
+const comunicats = comunicatsData.data || [];
+
+const publishedComunicats = comunicats
+    .filter((item: any) => item.publicat)
+    .sort(
+        (a: any, b: any) =>
+            new Date(b.data_publicacio).getTime() -
+            new Date(a.data_publicacio).getTime(),
+    );
+---
+
+<Layout lang={lang} title={`${t.comunicats.title} | GUIAPINEDA`}>
+    <main>
+        <h1>{t.comunicats.title}</h1>
+
+        <section>
+            <h2>{t.comunicats.submitTitle}</h2>
+
+            <p>{t.comunicats.submitText1}</p>
+
+            <p>{t.comunicats.submitText2}</p>
+
+            <p>
+                {t.comunicats.submitEmailText}
+                <a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
+            </p>
+        </section>
+
+        {
+            publishedComunicats.length === 0 ? (
+                <p>{t.comunicats.empty}</p>
+            ) : (
+                publishedComunicats.map((comunicat: any) => (
+                    <article>
+                        {comunicat.imatge?.url && (
+                            <img
+                                src={`http://localhost:1337${comunicat.imatge.url}`}
+                                alt={comunicat.titol}
+                                width="400"
+                            />
+                        )}
+
+                        <h2>
+                            <a
+                                href={
+                                    lang === "ca"
+                                        ? `/comunicats/${comunicat.slug}`
+                                        : `/${lang}/comunicats/${comunicat.slug}`
+                                }
+                            >
+                                {comunicat.titol}
+                            </a>
+                        </h2>
+
+                        <p>{comunicat.resum}</p>
+
+                        <p>
+                            {comunicat.autor} —{" "}
+                            {formatDate(
+                                comunicat.data_publicacio,
+                                lang as "ca" | "es" | "en",
+                            )}
+                        </p>
+
+                        <p>
+                            {getReadingTime(comunicat.contingut)}{" "}
+                            {t.comunicats.readingSuffix}
+                        </p>
+                    </article>
+                ))
+            )
+        }
+    </main>
+</Layout>

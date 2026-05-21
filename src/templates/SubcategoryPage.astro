@@ -108,23 +108,38 @@ const description =
         }
     </h1>
 
-    <ul>
-        {
-            comercios.map((c: Comercio) => (
-                <ComercioCard
-                    nombre={c.nombre}
-                    nombre_es={c.nombre_es}
-                    nombre_en={c.nombre_en}
-                    slug={c.slug}
-                    categoriaSlug={subcategoriaActual?.categoria?.slug ?? ""}
-                    subcategoriaSlug={subcategoriaActual?.slug ?? ""}
-                    lang={lang}
-                    descripcion_corta={c.descripcion_corta}
-                    descripcion_corta_en={c.descripcion_corta_en}
-                    direccion={c.direccion}
-                    imagen_principal={c.imagen_principal}
-                />
-            ))
-        }
-    </ul>
+    {
+        comercios.length > 0 ? (
+            <ul>
+                {comercios.map((c: Comercio) => (
+                    <ComercioCard
+                        nombre={c.nombre}
+                        nombre_es={c.nombre_es}
+                        nombre_en={c.nombre_en}
+                        slug={c.slug}
+                        categoriaSlug={
+                            subcategoriaActual?.categoria?.slug ?? ""
+                        }
+                        subcategoriaSlug={subcategoriaActual?.slug ?? ""}
+                        lang={lang}
+                        descripcion_corta={c.descripcion_corta}
+                        descripcion_corta_en={c.descripcion_corta_en}
+                        direccion={c.direccion}
+                        imagen_principal={c.imagen_principal}
+                    />
+                ))}
+            </ul>
+        ) : (
+            <section>
+                <h2>{t.comercios.emptyTitle}</h2>
+
+                <p>{t.comercios.emptyText}</p>
+
+                <p>
+                    {t.comercios.contactText}
+                    <a href="mailto:info@guiapineda.com">info@guiapineda.com</a>
+                </p>
+            </section>
+        )
+    }
 </Layout>
