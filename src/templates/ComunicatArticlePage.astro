@@ -4,9 +4,9 @@ import { getReadingTime } from "../lib/readingTime";
 import { getTranslations } from "../i18n/getTranslations";
 import { formatDate } from "../lib/formatDate";
 
-const { lang = "ca", opinio } = Astro.props as {
+const { lang = "ca", comunicat } = Astro.props as {
     lang: string;
-    opinio: any;
+    comunicat: any;
 };
 
 const t = getTranslations(lang as "ca" | "es" | "en");
@@ -15,48 +15,47 @@ const backUrl = lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
 const sectionTitle = t.comunicats.title;
 const backText =
     lang === "es"
-        ? "← Volver a Opinión"
+        ? "← Volver a Comunicados"
         : lang === "en"
-          ? "← Back to Opinion"
-          : "← Tornar a Opinió";
+          ? "← Back to Announcements"
+          : "← Tornar a Comunicats";
 ---
 
-<Layout lang={lang} title={`${opinio.titol} | ${sectionTitle} | GUIAPINEDA`}>
+<Layout lang={lang} title={`${comunicat.titol} | ${sectionTitle} | GUIAPINEDA`}>
     <main>
         <a href={backUrl}>{backText}</a>
 
         <article>
             {
-                opinio.imatge?.url && (
+                comunicat.imatge?.url && (
                     <img
-                        src={`http://localhost:1337${opinio.imatge.url}`}
-                        alt={opinio.titol}
+                        src={`http://localhost:1337${comunicat.imatge.url}`}
+                        alt={comunicat.titol}
                         width="800"
                     />
                 )
             }
 
-            <h1>{opinio.titol}</h1>
+            <h1>{comunicat.titol}</h1>
 
             <p>
-                <p>
-                    {opinio.autor} — {
-                        formatDate(
-                            opinio.data_publicacio,
-                            lang as "ca" | "es" | "en",
-                        )
-                    }
-                </p>
+                {comunicat.autor} —{" "}
+                {
+                    formatDate(
+                        comunicat.data_publicacio,
+                        lang as "ca" | "es" | "en",
+                    )
+                }
             </p>
 
             <p>
-                {getReadingTime(opinio.contingut)}
+                {getReadingTime(comunicat.contingut)}{" "}
                 {t.comunicats.readingSuffix}
             </p>
 
             <div>
                 {
-                    opinio.contingut?.map((block: any) => (
+                    comunicat.contingut?.map((block: any) => (
                         <p>
                             {block.children
                                 ?.map((child: any) => child.text)

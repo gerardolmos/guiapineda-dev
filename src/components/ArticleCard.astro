@@ -1,0 +1,43 @@
+---
+import { formatDate } from "../lib/formatDate";
+import { getReadingTime } from "../lib/readingTime";
+
+const {
+    item,
+    href,
+    lang = "ca",
+    readingSuffix = "",
+} = Astro.props as {
+    item: any;
+    href: string;
+    lang?: "ca" | "es" | "en";
+    readingSuffix?: string;
+};
+---
+
+<article>
+    {
+        item.imatge?.url && (
+            <img
+                src={`http://localhost:1337${item.imatge.url}`}
+                alt={item.titol}
+                width="400"
+            />
+        )
+    }
+
+    <h2>
+        <a href={href}>{item.titol}</a>
+    </h2>
+
+    <p>{item.resum}</p>
+
+    <p>
+        {item.autor} — {formatDate(item.data_publicacio, lang)}
+    </p>
+
+    <p>
+        {getReadingTime(item.contingut)}
+        {readingSuffix}
+    </p>
+</article>

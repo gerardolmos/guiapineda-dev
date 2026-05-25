@@ -1,0 +1,81 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getTranslations } from "../i18n/getTranslations";
+import { formatDate } from "../lib/formatDate";
+import { getReadingTime } from "../lib/readingTime";
+
+const { millora, lang = "ca" } = Astro.props;
+
+const t = getTranslations(lang);
+
+if (!millora || !millora.publicat) {
+    return Astro.redirect("/404");
+}
+---
+
+<Layout lang={lang} title={`${millora.titol} | GUIAPINEDA`}>
+    <main>
+        <article>
+            <h1>{millora.titol}</h1>
+
+            <p>
+                {millora.autor} —{" "}
+                {
+                    formatDate(
+                        millora.data_publicacio,
+                        lang as "ca" | "es" | "en",
+                    )
+                }
+            </p>
+
+            <p>
+                {getReadingTime(millora.contingut)}{" "}
+                {t.millores.readingSuffix}
+            </p>
+
+            {
+                millora.imatge?.url && (
+                    <img
+                        src={`http://localhost:1337${millora.imatge.url}`}
+                        alt={millora.titol}
+                        width="800"
+                    />
+                )
+            }
+
+            <p>
+                <strong>{t.millores.categoryLabel}:</strong>{" "}
+                {
+                    t.millores.categories[
+                        millora.categoria as keyof typeof t.millores.categories
+                    ]
+                }
+            </p>
+
+            <p>
+                <strong>{t.millores.zoneLabel}:</strong>{" "}
+                {
+                    t.millores.zones[
+                        millora.zona as keyof typeof t.millores.zones
+                    ]
+                }
+            </p>
+
+            {
+                millora.contingut?.map((block: any) => {
+                    if (block.type === "paragraph") {
+                        return (
+                            <p>
+                                {block.children
+                                    ?.map((child: any) => child.text)
+                                    .join("")}
+                            </p>
+                        );
+                    }
+
+                    return null;
+                })
+            }
+        </article>
+    </main>
+</Layout>

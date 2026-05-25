@@ -1,0 +1,92 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getTranslations } from "../i18n/getTranslations";
+
+const { lang = "ca" } = Astro.props;
+const t = getTranslations(lang);
+---
+
+<Layout title={`${t.fotoMes.pageTitle} | GUIAPINEDA`} lang={lang}>
+    <main>
+        <h1>{t.fotoMes.pageTitle}</h1>
+
+        <p>{t.fotoMes.pageIntro}</p>
+
+        <form
+            name="foto-del-mes"
+            method="POST"
+            data-netlify="true"
+            enctype="multipart/form-data"
+            netlify-honeypot="bot-field"
+        >
+            <input type="hidden" name="form-name" value="foto-del-mes" />
+
+            <p hidden>
+                <label>
+                    Don’t fill this out:
+                    <input name="bot-field" />
+                </label>
+            </p>
+
+            <div>
+                <label for="nom">
+                    {t.fotoMes.formName}
+                </label>
+
+                <input type="text" id="nom" name="nom" required />
+            </div>
+
+            <div>
+                <label for="email">
+                    {t.fotoMes.formEmail}
+                </label>
+
+                <input type="email" id="email" name="email" required />
+            </div>
+
+            <div>
+                <label for="titol">
+                    {t.fotoMes.formTitle}
+                </label>
+
+                <input type="text" id="titol" name="titol" />
+            </div>
+
+            <div>
+                <label for="lloc">
+                    {t.fotoMes.formPlace}
+                </label>
+
+                <input type="text" id="lloc" name="lloc" />
+            </div>
+
+            <div>
+                <label for="foto">
+                    {t.fotoMes.formPhoto}
+                </label>
+
+                <input
+                    type="file"
+                    id="foto"
+                    name="foto"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    required
+                />
+
+                <p>{t.fotoMes.formPhotoHelp}</p>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" name="acceptacio" required />
+
+                    {t.fotoMes.formAccept}
+                </label>
+            </div>
+
+            <button type="submit">
+                {t.fotoMes.formSubmit}
+            </button>
+        </form>
+    </main>
+</Layout>

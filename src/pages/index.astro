@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { getTranslations } from "../i18n/getTranslations";
 import { fetchAPI, endpoints } from "../lib/api";
 import { getLocalizedName } from "../lib/getLocalizedName";
+import FotoMesCard from "../components/FotoMesCard.astro";
 
 type Categoria = {
 	nombre: string;
@@ -11,7 +12,7 @@ type Categoria = {
 	slug: string;
 };
 
-const lang = "ca";
+const { lang = "ca" } = Astro.props;
 const t = getTranslations(lang);
 
 const homeData = await fetchAPI(endpoints.home);
@@ -24,43 +25,119 @@ const textoIntro = home?.texto_intro || [];
 const heroImagen = home?.hero_imagen;
 const heroVideo = home?.hero_video;
 
+const fotoMesImagen = home?.foto_mes_imagen;
+const fotoMesTitulo = home?.foto_mes_titulo;
+const fotoMesAutor = home?.foto_mes_autor;
+const fotoMesLugar = home?.foto_mes_lugar;
+const fotoMesActiva = home?.foto_mes_activa;
+
+const mostrarFotoMes = fotoMesActiva && fotoMesImagen?.url;
+
 const data = await fetchAPI(endpoints.categorias);
 const categorias: Categoria[] = data.data;
 ---
 
 <Layout title="GUIAPINEDA" lang={lang}>
-	<h1>{heroTitulo}</h1>
+	<section>
+		<div>
+			<h1>{heroTitulo}</h1>
 
-	<p>{heroSubtitulo}</p>
+			<p>{heroSubtitulo}</p>
 
-	{
-		textoIntro.map((block: any) => (
-			<p>{block.children?.map((child: any) => child.text).join("")}</p>
-		))
-	}
+			{
+				textoIntro.map((block: any) => (
+					<p>
+						{block.children
+							?.map((child: any) => child.text)
+							.join("")}
+					</p>
+				))
+			}
+		</div>
 
-	{
-		heroVideo && (
-			<video
-				src={`http://localhost:1337${heroVideo.url}`}
-				autoplay
-				muted
-				loop
-				playsinline
-				width="600"
-			/>
-		)
-	}
+		{
+			heroVideo && (
+				<video
+					src={`http://localhost:1337${heroVideo.url}`}
+					autoplay
+					muted
+					loop
+					playsinline
+					width="600"
+				/>
+			)
+		}
 
-	{
-		!heroVideo && heroImagen && (
-			<img
-				src={`http://localhost:1337${heroImagen.url}`}
-				alt={heroTitulo}
-				width="600"
-			/>
-		)
-	}
+		{
+			!heroVideo && heroImagen && (
+				<img
+					src={`http://localhost:1337${heroImagen.url}`}
+					alt={heroTitulo}
+					width="600"
+				/>
+			)
+		}
+
+		{
+			mostrarFotoMes && (
+				<FotoMesCard
+					fotoMesImagen={fotoMesImagen}
+					fotoMesTitulo={fotoMesTitulo}
+					fotoMesAutor={fotoMesAutor}
+					fotoMesLugar={fotoMesLugar}
+					lang={lang}
+					t={t}
+				/>
+			)
+		}
+	</section>
+
+	<dialog id="photo-month-modal">
+		<h2>{t.fotoMes.modalTitle}</h2>
+
+		<p>{t.fotoMes.modalIntro}</p>
+
+		<ul>
+			<li>{t.fotoMes.rule1}</li>
+			<li>{t.fotoMes.rule2}</li>
+			<li>{t.fotoMes.rule3}</li>
+			<li>{t.fotoMes.rule4}</li>
+			<li>{t.fotoMes.rule5}</li>
+		</ul>
+
+		<p>
+			{t.fotoMes.emailText}
+			<a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
+		</p>
+
+		<p>
+			<a href={lang === "ca" ? "/foto-del-mes" : `/${lang}/foto-del-mes`}>
+				{t.fotoMes.goToForm}
+			</a>
+		</p>
+
+		<button type="button" id="close-photo-month-modal">
+			{t.fotoMes.closeButton}
+		</button>
+	</dialog>
+
+	<script>
+		const modal = document.getElementById("photo-month-modal");
+		const openButton = document.getElementById("open-photo-month-modal");
+		const closeButton = document.getElementById("close-photo-month-modal");
+
+		openButton?.addEventListener("click", () => {
+			if (modal instanceof HTMLDialogElement) {
+				modal.showModal();
+			}
+		});
+
+		closeButton?.addEventListener("click", () => {
+			if (modal instanceof HTMLDialogElement) {
+				modal.close();
+			}
+		});
+	</script>
 
 	<h2>{t.nav.categories}</h2>
 

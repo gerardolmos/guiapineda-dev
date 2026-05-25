@@ -1,7 +1,7 @@
 {
     "nav": {
         "home": "Home",
-        "categories": "Categories"
+        "categories": "What are you looking for?"
     },
     "pages": {
         "categoryTitle": "Categories",
@@ -27,6 +27,79 @@
         "missingInfo": "GUIAPINEDA grows with the participation of local businesses. If you cannot find a business, it may simply not have sent us its information yet.",
         "emptyTitle": "Be the first",
         "emptyText": "There are no businesses published in this section yet. If you own a business or service and want to appear on GUIAPINEDA, send us your information.",
-        "contactText": "Contact us at:"
+        "contactText": "Contact us at:",
+        "sortLabel": "Sort by",
+        "sortNewest": "Newest",
+        "sortAZ": "A-Z",
+        "sortZA": "Z-A",
+        "applySort": "Apply",
+        "paginationLabel": "Pagination",
+        "previousPage": "← Previous",
+        "nextPage": "Next →",
+        "pageLabel": "Page"
+    },
+    "millores": {
+        "title": "Improving Pineda",
+        "submitTitle": "Would you like to suggest an improvement?",
+        "submitText1": "This section collects issues, proposals and civic matters that may help improve Pineda de Mar.",
+        "submitText2": "All submissions are reviewed before publication and must keep a respectful and constructive tone.",
+        "submitEmailText": "You can send your proposal to",
+        "empty": "There are no posts in Improving Pineda yet.",
+        "readingSuffix": "read",
+        "categoryLabel": "Category",
+        "zoneLabel": "Area",
+        "categories": {
+            "incidencies": "Issues",
+            "civisme": "Civility",
+            "propostes": "Proposals"
+        },
+        "zones": {
+            "centre": "Centre",
+            "poblenou": "Poblenou",
+            "les_creus": "Les Creus",
+            "pinemar": "Pinemar",
+            "can_cornet": "Can Cornet",
+            "can_pelai": "Can Pelai",
+            "can_more": "Can More",
+            "feliu_de_manola": "Feliu de Manola",
+            "verge_del_carme": "Verge del Carme",
+            "montessol_can_carreras": "Montessol / Can Carreras",
+            "altres": "Other areas"
+        },
+        "filtersTitle": "Filters",
+        "allCategories": "All categories",
+        "allZones": "All areas",
+        "applyFilters": "Apply filters",
+        "clearFilters": "Clear filters",
+        "paginationLabel": "Pagination",
+        "previousPage": "← Previous",
+        "nextPage": "Next →",
+        "pageLabel": "Page"
+    },
+    "fotoMes": {
+        "label": "📸 Photo of the month",
+        "authorLabel": "Photo:",
+        "placeLabel": "Place:",
+        "submitButton": "Send your photo",
+        "modalTitle": "Participate in the Photo of the month",
+        "modalIntro": "You can send your photographs of Pineda de Mar to participate in the GUIAPINEDA Photo of the month section.",
+        "rule1": "Photographs must be taken in Pineda de Mar.",
+        "rule2": "Horizontal format and good quality are recommended.",
+        "rule3": "Avoid offensive photographs or watermarks.",
+        "rule4": "Do not send close-up photos of minors or people without permission.",
+        "rule5": "GUIAPINEDA reserves the right of selection and publication.",
+        "emailText": "Send your photograph to:",
+        "closeButton": "Close",
+        "pageTitle": "Photo of the month",
+        "pageIntro": "Send your photograph of Pineda de Mar to participate in GUIAPINEDA’s Photo of the month.",
+        "formName": "Name",
+        "formEmail": "Email",
+        "formTitle": "Photo title (optional)",
+        "formPlace": "Place or area (optional)",
+        "formPhoto": "Photograph",
+        "formPhotoHelp": "Allowed formats: JPG, PNG or WEBP. Recommended maximum: 5 MB.",
+        "formAccept": "I confirm that I am the author of the photograph and accept that GUIAPINEDA may review it and publish it if selected.",
+        "formSubmit": "Send photograph",
+        "goToForm": "Go to form"
     }
 }

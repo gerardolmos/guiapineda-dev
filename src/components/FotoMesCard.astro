@@ -1,0 +1,86 @@
+---
+const {
+    fotoMesImagen,
+    fotoMesTitulo,
+    fotoMesAutor,
+    fotoMesLugar,
+    lang = "ca",
+    t,
+} = Astro.props;
+
+const formUrl = lang === "ca" ? "/foto-del-mes" : `/${lang}/foto-del-mes`;
+---
+
+<aside>
+    <p>{t.fotoMes.label}</p>
+
+    <img
+        src={`http://localhost:1337${fotoMesImagen.url}`}
+        alt={fotoMesTitulo || t.fotoMes.label}
+        width="300"
+    />
+
+    {fotoMesTitulo && <h2>{fotoMesTitulo}</h2>}
+
+    <p>
+        {t.fotoMes.authorLabel}
+        {fotoMesAutor}
+    </p>
+
+    {
+        fotoMesLugar && (
+            <p>
+                {t.fotoMes.placeLabel} {fotoMesLugar}
+            </p>
+        )
+    }
+
+    <button type="button" id="open-photo-month-modal">
+        {t.fotoMes.submitButton}
+    </button>
+</aside>
+
+<dialog id="photo-month-modal">
+    <h2>{t.fotoMes.modalTitle}</h2>
+
+    <p>{t.fotoMes.modalIntro}</p>
+
+    <ul>
+        <li>{t.fotoMes.rule1}</li>
+        <li>{t.fotoMes.rule2}</li>
+        <li>{t.fotoMes.rule3}</li>
+        <li>{t.fotoMes.rule4}</li>
+        <li>{t.fotoMes.rule5}</li>
+    </ul>
+
+    <p>
+        {t.fotoMes.emailText}
+        <a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
+    </p>
+
+    <p>
+        <a href={formUrl}>{t.fotoMes.goToForm}</a>
+    </p>
+
+    <button type="button" id="close-photo-month-modal">
+        {t.fotoMes.closeButton}
+    </button>
+</dialog>
+
+<script>
+    const modal = document.getElementById("photo-month-modal");
+    const openButton = document.getElementById("open-photo-month-modal");
+    const closeButton = document.getElementById("close-photo-month-modal");
+
+    openButton?.addEventListener("click", () => {
+        if (modal instanceof HTMLDialogElement) {
+            modal.showModal();
+        }
+    });
+
+    closeButton?.addEventListener("click", () => {
+        if (modal instanceof HTMLDialogElement) {
+            modal.close();
+        }
+    });
+</script>

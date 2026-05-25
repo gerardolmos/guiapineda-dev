@@ -6,6 +6,7 @@ export const endpoints = {
     subcategorias: "/api/subcategorias?populate=*",
     comercios: "/api/comercios?populate=*",
     comunicats: "/api/comunicats?populate=*",
+    millores: "/api/millores?populate=*",
 };
 
 export async function fetchAPI(endpoint: string) {

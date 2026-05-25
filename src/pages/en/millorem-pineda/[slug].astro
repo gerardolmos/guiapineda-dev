@@ -1,0 +1,25 @@
+---
+import { fetchAPI, endpoints } from "../../../lib/api";
+import MilloraArticlePage from "../../../templates/MilloraArticlePage.astro";
+
+export async function getStaticPaths() {
+    const milloresData = await fetchAPI(endpoints.millores);
+    const millores = milloresData.data || [];
+
+    return millores
+        .filter((millora: any) => millora.publicat)
+        .map((millora: any) => ({
+            params: {
+                slug: millora.slug,
+            },
+            props: {
+                millora,
+                lang: "en",
+            },
+        }));
+}
+
+const { millora, lang } = Astro.props;
+---
+
+<MilloraArticlePage millora={millora} lang={lang} />

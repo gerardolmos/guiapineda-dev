@@ -1,0 +1,266 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import { fetchAPI, endpoints } from "../../lib/api";
+import { getTranslations } from "../../i18n/getTranslations";
+
+const { lang = "ca" } = Astro.props;
+const t = getTranslations(lang);
+
+const milloresData = await fetchAPI(endpoints.millores);
+const millores = milloresData.data || [];
+
+const itemsPerPage = 6;
+
+const basePath =
+    lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
+
+const publishedMillores = millores
+    .filter((item: any) => item.publicat)
+    .sort(
+        (a: any, b: any) =>
+            new Date(b.data_publicacio).getTime() -
+            new Date(a.data_publicacio).getTime(),
+    );
+---
+
+<Layout lang={lang} title={`${t.millores.title} | GUIAPINEDA`}>
+    <main>
+        <h1>{t.millores.title}</h1>
+
+        <section>
+            <h2>{t.millores.submitTitle}</h2>
+
+            <p>{t.millores.submitText1}</p>
+
+            <p>{t.millores.submitText2}</p>
+
+            <p>
+                {t.millores.submitEmailText}
+                <a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
+            </p>
+        </section>
+
+        <section>
+            <h2>{t.millores.filtersTitle}</h2>
+
+            <form id="millores-filters">
+                <label>
+                    {t.millores.categoryLabel}
+
+                    <select name="categoria" id="filter-categoria">
+                        <option value="totes">
+                            {t.millores.allCategories}
+                        </option>
+
+                        {
+                            Object.entries(t.millores.categories).map(
+                                ([value, label]) => (
+                                    <option value={value}>{label}</option>
+                                ),
+                            )
+                        }
+                    </select>
+                </label>
+
+                <label>
+                    {t.millores.zoneLabel}
+
+                    <select name="zona" id="filter-zona">
+                        <option value="totes">
+                            {t.millores.allZones}
+                        </option>
+
+                        {
+                            Object.entries(t.millores.zones).map(
+                                ([value, label]) => (
+                                    <option value={value}>{label}</option>
+                                ),
+                            )
+                        }
+                    </select>
+                </label>
+
+                <button type="submit">
+                    {t.millores.applyFilters}
+                </button>
+
+                <a href={basePath}>
+                    {t.millores.clearFilters}
+                </a>
+            </form>
+        </section>
+
+        <section id="millores-list">
+            {
+                publishedMillores.length === 0 ? (
+                    <p>{t.millores.empty}</p>
+                ) : (
+                    publishedMillores.map((millora: any) => (
+                        <div
+                            class="millora-item"
+                            data-categoria={millora.categoria}
+                            data-zona={millora.zona}
+                        >
+                            <ArticleCard
+                                item={millora}
+                                href={
+                                    lang === "ca"
+                                        ? `/millorem-pineda/${millora.slug}`
+                                        : `/${lang}/millorem-pineda/${millora.slug}`
+                                }
+                                lang={lang as "ca" | "es" | "en"}
+                                readingSuffix={t.millores.readingSuffix}
+                            />
+                        </div>
+                    ))
+                )
+            }
+        </section>
+
+        <p id="millores-empty" hidden>
+            {t.millores.empty}
+        </p>
+
+        <nav id="millores-pagination" aria-label={t.millores.paginationLabel}>
+            <button type="button" id="prev-page">
+                {t.millores.previousPage}
+            </button>
+
+            <span id="page-info"></span>
+
+            <button type="button" id="next-page">
+                {t.millores.nextPage}
+            </button>
+        </nav>
+
+        <script
+            define:vars={{
+                itemsPerPage,
+                basePath,
+                pageLabel: t.millores.pageLabel,
+            }}
+        >
+            const form = document.getElementById("millores-filters");
+
+            const categorySelect = document.getElementById("filter-categoria");
+
+            const zoneSelect = document.getElementById("filter-zona");
+
+            const items = Array.from(
+                document.querySelectorAll(".millora-item"),
+            );
+
+            const emptyMessage = document.getElementById("millores-empty");
+
+            const pagination = document.getElementById("millores-pagination");
+
+            const prevButton = document.getElementById("prev-page");
+
+            const nextButton = document.getElementById("next-page");
+
+            const pageInfo = document.getElementById("page-info");
+
+            let currentPage = 1;
+
+            const params = new URLSearchParams(window.location.search);
+
+            categorySelect.value = params.get("categoria") || "totes";
+
+            zoneSelect.value = params.get("zona") || "totes";
+
+            currentPage = Number(params.get("page") || "1");
+
+            function updateUrl(category, zone, page) {
+                const newParams = new URLSearchParams();
+
+                if (category !== "totes") {
+                    newParams.set("categoria", category);
+                }
+
+                if (zone !== "totes") {
+                    newParams.set("zona", zone);
+                }
+
+                if (page > 1) {
+                    newParams.set("page", String(page));
+                }
+
+                const query = newParams.toString();
+
+                const newUrl = query ? `${basePath}?${query}` : basePath;
+
+                window.history.replaceState({}, "", newUrl);
+            }
+
+            function render() {
+                const category = categorySelect.value;
+
+                const zone = zoneSelect.value;
+
+                const filteredItems = items.filter((item) => {
+                    const matchesCategory =
+                        category === "totes" ||
+                        item.dataset.categoria === category;
+
+                    const matchesZone =
+                        zone === "totes" || item.dataset.zona === zone;
+
+                    return matchesCategory && matchesZone;
+                });
+
+                const totalPages = Math.max(
+                    1,
+                    Math.ceil(filteredItems.length / itemsPerPage),
+                );
+
+                currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+
+                items.forEach((item) => {
+                    item.hidden = true;
+                });
+
+                const start = (currentPage - 1) * itemsPerPage;
+
+                const visibleItems = filteredItems.slice(
+                    start,
+                    start + itemsPerPage,
+                );
+
+                visibleItems.forEach((item) => {
+                    item.hidden = false;
+                });
+
+                emptyMessage.hidden = filteredItems.length !== 0;
+
+                pagination.hidden = filteredItems.length <= itemsPerPage;
+
+                prevButton.disabled = currentPage <= 1;
+
+                nextButton.disabled = currentPage >= totalPages;
+
+                pageInfo.textContent = `${pageLabel} ${currentPage} / ${totalPages}`;
+
+                updateUrl(category, zone, currentPage);
+            }
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                currentPage = 1;
+                render();
+            });
+
+            prevButton.addEventListener("click", () => {
+                currentPage -= 1;
+                render();
+            });
+
+            nextButton.addEventListener("click", () => {
+                currentPage += 1;
+                render();
+            });
+
+            render();
+        </script>
+    </main>
+</Layout>

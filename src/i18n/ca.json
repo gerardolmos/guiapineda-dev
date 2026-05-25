@@ -1,7 +1,7 @@
 {
     "nav": {
         "home": "Inici",
-        "categories": "Categories"
+        "categories": "Què busques?"
     },
     "pages": {
         "categoryTitle": "Categories",
@@ -27,6 +27,79 @@
         "missingInfo": "GUIAPINEDA creix amb la participació dels comerços locals. Si no trobes un negoci, pot ser que encara no ens hagi enviat la seva informació.",
         "emptyTitle": "Sigues el primer",
         "emptyText": "Encara no hi ha negocis publicats en aquesta secció. Si tens un comerç o servei i vols aparèixer a GUIAPINEDA, envia’ns la teva informació.",
-        "contactText": "Contacta amb nosaltres a:"
+        "contactText": "Contacta amb nosaltres a:",
+        "sortLabel": "Ordenar per",
+        "sortNewest": "Més recents",
+        "sortAZ": "A-Z",
+        "sortZA": "Z-A",
+        "applySort": "Aplicar",
+        "paginationLabel": "Paginació",
+        "previousPage": "← Anterior",
+        "nextPage": "Següent →",
+        "pageLabel": "Pàgina"
+    },
+    "millores": {
+        "title": "Millorem Pineda",
+        "submitTitle": "Vols proposar una millora?",
+        "submitText1": "Aquest espai recull incidències, propostes i temes de civisme que poden ajudar a millorar Pineda de Mar.",
+        "submitText2": "Les publicacions són revisades abans de ser publicades i han de tenir un to respectuós i constructiu.",
+        "submitEmailText": "Pots enviar la teva proposta a",
+        "empty": "Encara no hi ha publicacions a Millorem Pineda.",
+        "readingSuffix": "de lectura",
+        "categoryLabel": "Categoria",
+        "zoneLabel": "Zona",
+        "categories": {
+            "incidencies": "Incidències",
+            "civisme": "Civisme",
+            "propostes": "Propostes"
+        },
+        "filtersTitle": "Filtres",
+        "allCategories": "Totes les categories",
+        "allZones": "Totes les zones",
+        "applyFilters": "Aplicar filtres",
+        "clearFilters": "Netejar filtres",
+        "paginationLabel": "Paginació",
+        "previousPage": "← Anterior",
+        "nextPage": "Següent →",
+        "pageLabel": "Pàgina",
+        "zones": {
+            "centre": "Centre",
+            "poblenou": "Poblenou",
+            "les_creus": "Les Creus",
+            "pinemar": "Pinemar",
+            "can_cornet": "Can Cornet",
+            "can_pelai": "Can Pelai",
+            "can_more": "Can Moré",
+            "feliu_de_manola": "Feliu de Manola",
+            "verge_del_carme": "Verge del Carme",
+            "montessol_can_carreras": "Montessol / Can Carreras",
+            "altres": "Altres zones"
+        }
+    },
+    "fotoMes": {
+        "label": "📸 Foto del mes",
+        "authorLabel": "Foto:",
+        "placeLabel": "Lloc:",
+        "submitButton": "Envia la teva foto",
+        "modalTitle": "Participa a la Foto del mes",
+        "modalIntro": "Pots enviar les teves fotografies de Pineda de Mar per participar a la secció Foto del mes de GUIAPINEDA.",
+        "rule1": "Les fotografies han d'estar fetes a Pineda de Mar.",
+        "rule2": "Es recomana format horitzontal i bona qualitat.",
+        "rule3": "Evita fotografies ofensives o amb marques d’aigua.",
+        "rule4": "No enviïs primers plans de menors o persones sense permís.",
+        "rule5": "GUIAPINEDA es reserva el dret de selecció i publicació.",
+        "emailText": "Envia la teva fotografia a:",
+        "closeButton": "Tancar",
+        "pageTitle": "Foto del mes",
+        "pageIntro": "Envia la teva fotografia de Pineda de Mar per participar a la Foto del mes de GUIAPINEDA.",
+        "formName": "Nom",
+        "formEmail": "Email",
+        "formTitle": "Títol de la foto (opcional)",
+        "formPlace": "Lloc o zona (opcional)",
+        "formPhoto": "Fotografia",
+        "formPhotoHelp": "Formats permesos: JPG, PNG o WEBP. Màxim recomanat: 5 MB.",
+        "formAccept": "Confirmo que soc autor/a de la fotografia i accepto que GUIAPINEDA pugui revisar-la i publicar-la si és seleccionada.",
+        "formSubmit": "Enviar fotografia",
+        "goToForm": "Anar al formulari"
     }
 }

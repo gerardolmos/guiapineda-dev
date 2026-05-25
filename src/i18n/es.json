@@ -1,7 +1,7 @@
 {
     "nav": {
         "home": "Inicio",
-        "categories": "Categorías"
+        "categories": "¿Qué buscas?"
     },
     "pages": {
         "categoryTitle": "Categorías",
@@ -27,6 +27,79 @@
         "missingInfo": "GUIAPINEDA crece con la participación de los comercios locales. Si no encuentras un negocio, puede ser que todavía no nos haya enviado su información.",
         "emptyTitle": "Sé el primero",
         "emptyText": "Todavía no hay negocios publicados en esta sección. Si tienes un comercio o servicio y quieres aparecer en GUIAPINEDA, envíanos tu información.",
-        "contactText": "Contacta con nosotros en:"
+        "contactText": "Contacta con nosotros en:",
+        "sortLabel": "Ordenar por",
+        "sortNewest": "Más recientes",
+        "sortAZ": "A-Z",
+        "sortZA": "Z-A",
+        "applySort": "Aplicar",
+        "paginationLabel": "Paginación",
+        "previousPage": "← Anterior",
+        "nextPage": "Siguiente →",
+        "pageLabel": "Página"
+    },
+    "millores": {
+        "title": "Mejoremos Pineda",
+        "submitTitle": "¿Quieres proponer una mejora?",
+        "submitText1": "Este espacio recoge incidencias, propuestas y temas de civismo que pueden ayudar a mejorar Pineda de Mar.",
+        "submitText2": "Las publicaciones se revisan antes de ser publicadas y deben mantener un tono respetuoso y constructivo.",
+        "submitEmailText": "Puedes enviar tu propuesta a",
+        "empty": "Todavía no hay publicaciones en Mejoremos Pineda.",
+        "readingSuffix": "de lectura",
+        "categoryLabel": "Categoría",
+        "zoneLabel": "Zona",
+        "categories": {
+            "incidencies": "Incidencias",
+            "civisme": "Civismo",
+            "propostes": "Propuestas"
+        },
+        "zones": {
+            "centre": "Centre",
+            "poblenou": "Poblenou",
+            "les_creus": "Les Creus",
+            "pinemar": "Pinemar",
+            "can_cornet": "Can Cornet",
+            "can_pelai": "Can Pelai",
+            "can_more": "Can More",
+            "feliu_de_manola": "Feliu de Manola",
+            "verge_del_carme": "Verge del Carme",
+            "montessol_can_carreras": "Montessol / Can Carreras",
+            "altres": "Other areas"
+        },
+        "filtersTitle": "Filtros",
+        "allCategories": "Todas las categorías",
+        "allZones": "Todas las zonas",
+        "applyFilters": "Aplicar filtros",
+        "clearFilters": "Limpiar filtros",
+        "paginationLabel": "Paginación",
+        "previousPage": "← Anterior",
+        "nextPage": "Siguiente →",
+        "pageLabel": "Página"
+    },
+    "fotoMes": {
+        "label": "📸 Foto del mes",
+        "authorLabel": "Foto:",
+        "placeLabel": "Lugar:",
+        "submitButton": "Envía tu foto",
+        "modalTitle": "Participa en la Foto del mes",
+        "modalIntro": "Puedes enviar tus fotografías de Pineda de Mar para participar en la sección Foto del mes de GUIAPINEDA.",
+        "rule1": "Las fotografías deben estar hechas en Pineda de Mar.",
+        "rule2": "Se recomienda formato horizontal y buena calidad.",
+        "rule3": "Evita fotografías ofensivas o con marcas de agua.",
+        "rule4": "No envíes primeros planos de menores o personas sin permiso.",
+        "rule5": "GUIAPINEDA se reserva el derecho de selección y publicación.",
+        "emailText": "Envía tu fotografía a:",
+        "closeButton": "Cerrar",
+        "pageTitle": "Foto del mes",
+        "pageIntro": "Envía tu fotografía de Pineda de Mar para participar en la Foto del mes de GUIAPINEDA.",
+        "formName": "Nombre",
+        "formEmail": "Email",
+        "formTitle": "Título de la foto (opcional)",
+        "formPlace": "Lugar o zona (opcional)",
+        "formPhoto": "Fotografía",
+        "formPhotoHelp": "Formatos permitidos: JPG, PNG o WEBP. Máximo recomendado: 5 MB.",
+        "formAccept": "Confirmo que soy autor/a de la fotografía y acepto que GUIAPINEDA pueda revisarla y publicarla si es seleccionada.",
+        "formSubmit": "Enviar fotografía",
+        "goToForm": "Ir al formulario"
     }
 }

@@ -24,6 +24,13 @@ const { currentLang, links } = getLanguageLinks(pathname);
             <a href={lang === "ca" ? "/comunicats" : `/${lang}/comunicats`}>
                 {t.comunicats.title}
             </a>
+            <a
+                href={lang === "ca"
+                    ? "/millorem-pineda"
+                    : `/${lang}/millorem-pineda`}
+            >
+                {t.millores.title}
+            </a>
 
             <div style="margin-top: 1rem;">
                 {
