@@ -10,7 +10,7 @@ type Comercio = {
     };
     subcategoria?: {
         slug: string;
-    };
+    } | null;
 };
 
 export async function getStaticPaths() {
@@ -18,11 +18,17 @@ export async function getStaticPaths() {
     const comercios: Comercio[] = data.data;
 
     return comercios
-        .filter((comercio) => comercio.activo === true)
+        .filter(
+            (comercio) =>
+                comercio.activo === true &&
+                comercio.slug &&
+                comercio.categoria?.slug &&
+                comercio.subcategoria?.slug,
+        )
         .map((comercio) => ({
             params: {
-                categoriaSlug: comercio.categoria?.slug,
-                subcategoriaSlug: comercio.subcategoria?.slug,
+                categoriaSlug: comercio.categoria!.slug,
+                subcategoriaSlug: comercio.subcategoria!.slug,
                 comercioSlug: comercio.slug,
             },
         }));
