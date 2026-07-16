@@ -4,17 +4,24 @@ import { fetchAPI, endpoints } from "../lib/api";
 
 type Categoria = {
     slug: string;
+    activa?: boolean;
 };
 
 export async function getStaticPaths() {
     const data = await fetchAPI(endpoints.categorias);
     const categorias: Categoria[] = data.data;
 
-    return categorias.map((categoria) => ({
-        params: {
-            categoriaSlug: categoria.slug,
-        },
-    }));
+    return categorias
+        .filter(
+            (categoria) =>
+                categoria.activa === true &&
+                categoria.slug,
+        )
+        .map((categoria) => ({
+            params: {
+                categoriaSlug: categoria.slug,
+            },
+        }));
 }
 
 const { categoriaSlug } = Astro.params;
