@@ -39,7 +39,7 @@ type Subcategoria = {
 const { slug, lang } = Astro.props;
 
 const t = getTranslations(lang);
-const itemsPerPage = 10;
+const itemsPerPage = 24;
 
 const data = await fetchAPI(endpoints.comercios);
 const todos: Comercio[] = data.data;
