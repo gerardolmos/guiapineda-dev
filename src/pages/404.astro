@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getTranslations } from "../i18n/getTranslations";
+
+const ca = getTranslations("ca");
+const es = getTranslations("es");
+const en = getTranslations("en");
+---
+
+<Layout
+    lang="ca"
+    title="404 | GUIAPINEDA"
+    description="La pàgina sol·licitada no existeix."
+    robots="noindex, follow"
+    showLanguageSwitcher={false}
+>
+    <main>
+        <h1>404</h1>
+
+        <section lang="ca">
+            <h2>{ca.common.notFound}</h2>
+            <a href="/">{ca.common.home}</a>
+        </section>
+
+        <section lang="es">
+            <h2>{es.common.notFound}</h2>
+            <a href="/es">{es.common.home}</a>
+        </section>
+
+        <section lang="en">
+            <h2>{en.common.notFound}</h2>
+            <a href="/en">{en.common.home}</a>
+        </section>
+    </main>
+</Layout>
