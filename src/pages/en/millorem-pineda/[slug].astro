@@ -7,7 +7,12 @@ export async function getStaticPaths() {
     const millores = milloresData.data || [];
 
     return millores
-        .filter((millora: any) => millora.publicat)
+        .filter(
+            (millora: any) =>
+                millora.publicat === true &&
+                typeof millora.slug === "string" &&
+                millora.slug.trim().length > 0,
+        )
         .map((millora: any) => ({
             params: {
                 slug: millora.slug,

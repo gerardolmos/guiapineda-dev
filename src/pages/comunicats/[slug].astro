@@ -7,7 +7,12 @@ export async function getStaticPaths() {
     const comunicats = comunicatsData.data || [];
 
     return comunicats
-        .filter((comunicat: any) => comunicat.publicat)
+        .filter(
+            (comunicat: any) =>
+                comunicat.publicat === true &&
+                typeof comunicat.slug === "string" &&
+                comunicat.slug.trim().length > 0,
+        )
         .map((comunicat: any) => ({
             params: {
                 slug: comunicat.slug,
