@@ -39,9 +39,6 @@ type Subcategoria = {
 const { slug, lang } = Astro.props;
 
 const t = getTranslations(lang);
-
-const sortOrder = Astro.url.searchParams.get("orden") || "recientes";
-const currentPage = Number(Astro.url.searchParams.get("page") || "1");
 const itemsPerPage = 10;
 
 const data = await fetchAPI(endpoints.comercios);
@@ -65,54 +62,16 @@ const basePath =
           ? `/en/${subcategoriaActual?.categoria?.slug}/${subcategoriaActual?.slug}`
           : `/${subcategoriaActual?.categoria?.slug}/${subcategoriaActual?.slug}`;
 
-const comercios = todos
-    .filter((c) => c.subcategoria?.slug === slug && c.activo === true)
-    .sort((a, b) => {
-        if (sortOrder === "az") {
-            return getLocalizedName(a, lang).localeCompare(
-                getLocalizedName(b, lang),
-            );
-        }
-
-        if (sortOrder === "za") {
-            return getLocalizedName(b, lang).localeCompare(
-                getLocalizedName(a, lang),
-            );
-        }
-
-        return (
-            new Date(b.fecha_publicacion || "").getTime() -
-            new Date(a.fecha_publicacion || "").getTime()
-        );
-    });
-
-const totalPages = Math.max(1, Math.ceil(comercios.length / itemsPerPage));
-const safeCurrentPage = Math.min(Math.max(currentPage, 1), totalPages);
-
-const startIndex = (safeCurrentPage - 1) * itemsPerPage;
-const paginatedComercios = comercios.slice(
-    startIndex,
-    startIndex + itemsPerPage,
+const comercios = todos.filter(
+    (comercio) =>
+        comercio.subcategoria?.slug === slug &&
+        comercio.activo === true,
 );
 
-function buildUrl(params: { orden?: string; page?: number }) {
-    const searchParams = new URLSearchParams();
-
-    const orden = params.orden ?? sortOrder;
-    const page = params.page ?? safeCurrentPage;
-
-    if (orden !== "recientes") {
-        searchParams.set("orden", orden);
-    }
-
-    if (page > 1) {
-        searchParams.set("page", String(page));
-    }
-
-    const query = searchParams.toString();
-
-    return query ? `${basePath}?${query}` : basePath;
-}
+const comerciosMeta = comercios.map((comercio) => ({
+    nombre: getLocalizedName(comercio, lang),
+    fecha: comercio.fecha_publicacion || "",
+}));
 
 const description =
     lang === "es"
@@ -167,26 +126,29 @@ const description =
 
     {
         comercios.length > 0 && (
-            <form method="get" action={basePath}>
+            <form
+                id="comercios-controls"
+                method="get"
+                action={basePath}
+            >
                 <label>
                     {t.comercios.sortLabel}
-                    <select name="orden">
-                        <option
-                            value="recientes"
-                            selected={sortOrder === "recientes"}
-                        >
+                    <select name="orden" id="comercios-order">
+                        <option value="recientes">
                             {t.comercios.sortNewest}
                         </option>
-                        <option value="az" selected={sortOrder === "az"}>
+                        <option value="az">
                             {t.comercios.sortAZ}
                         </option>
-                        <option value="za" selected={sortOrder === "za"}>
+                        <option value="za">
                             {t.comercios.sortZA}
                         </option>
                     </select>
                 </label>
 
-                <button type="submit">{t.comercios.applySort}</button>
+                <button type="submit">
+                    {t.comercios.applySort}
+                </button>
             </form>
         )
     }
@@ -194,46 +156,287 @@ const description =
     {
         comercios.length > 0 ? (
             <>
-                <ul>
-                    {paginatedComercios.map((c: Comercio) => (
+                <ul id="comercios-list">
+                    {comercios.map((comercio: Comercio) => (
                         <ComercioCard
-                            nombre={c.nombre}
-                            nombre_es={c.nombre_es}
-                            nombre_en={c.nombre_en}
-                            slug={c.slug}
+                            nombre={comercio.nombre}
+                            nombre_es={comercio.nombre_es}
+                            nombre_en={comercio.nombre_en}
+                            slug={comercio.slug}
                             categoriaSlug={
                                 subcategoriaActual?.categoria?.slug ?? ""
                             }
-                            subcategoriaSlug={subcategoriaActual?.slug ?? ""}
+                            subcategoriaSlug={
+                                subcategoriaActual?.slug ?? ""
+                            }
                             lang={lang}
-                            descripcion_corta={c.descripcion_corta}
-                            descripcion_corta_en={c.descripcion_corta_en}
-                            direccion={c.direccion}
-                            imagen_principal={c.imagen_principal}
+                            descripcion_corta={
+                                comercio.descripcion_corta
+                            }
+                            descripcion_corta_en={
+                                comercio.descripcion_corta_en
+                            }
+                            direccion={comercio.direccion}
+                            imagen_principal={
+                                comercio.imagen_principal
+                            }
                         />
                     ))}
                 </ul>
 
-                {totalPages > 1 && (
-                    <nav aria-label={t.comercios.paginationLabel}>
-                        {safeCurrentPage > 1 && (
-                            <a href={buildUrl({ page: safeCurrentPage - 1 })}>
-                                {t.comercios.previousPage}
-                            </a>
-                        )}
+                <nav
+                    id="comercios-pagination"
+                    aria-label={t.comercios.paginationLabel}
+                    hidden
+                >
+                    <button type="button" id="comercios-prev">
+                        {t.comercios.previousPage}
+                    </button>
 
-                        <span>
-                            {t.comercios.pageLabel} {safeCurrentPage} /{" "}
-                            {totalPages}
-                        </span>
+                    <span
+                        id="comercios-page-info"
+                        aria-live="polite"
+                    ></span>
 
-                        {safeCurrentPage < totalPages && (
-                            <a href={buildUrl({ page: safeCurrentPage + 1 })}>
-                                {t.comercios.nextPage}
-                            </a>
-                        )}
-                    </nav>
-                )}
+                    <button type="button" id="comercios-next">
+                        {t.comercios.nextPage}
+                    </button>
+                </nav>
+
+                <script
+                    define:vars={{
+                        itemsPerPage,
+                        basePath,
+                        lang,
+                        comerciosMeta,
+                        pageLabel: t.comercios.pageLabel,
+                    }}
+                >
+                    const form =
+                        document.getElementById("comercios-controls");
+
+                    const orderSelect =
+                        document.getElementById("comercios-order");
+
+                    const list =
+                        document.getElementById("comercios-list");
+
+                    const pagination =
+                        document.getElementById("comercios-pagination");
+
+                    const prevButton =
+                        document.getElementById("comercios-prev");
+
+                    const nextButton =
+                        document.getElementById("comercios-next");
+
+                    const pageInfo =
+                        document.getElementById("comercios-page-info");
+
+                    if (
+                        form &&
+                        orderSelect &&
+                        list &&
+                        pagination &&
+                        prevButton &&
+                        nextButton &&
+                        pageInfo
+                    ) {
+                        const elements = Array.from(
+                            list.querySelectorAll(":scope > li"),
+                        );
+
+                        const metadata = Array.isArray(comerciosMeta)
+                            ? comerciosMeta
+                            : [];
+
+                        const rows = elements.map((element, index) => ({
+                            element,
+                            nombre: metadata[index]?.nombre || "",
+                            fecha: metadata[index]?.fecha || "",
+                        }));
+
+                        const validOrders = new Set([
+                            "recientes",
+                            "az",
+                            "za",
+                        ]);
+
+                        const params = new URLSearchParams(
+                            window.location.search,
+                        );
+
+                        const requestedOrder = params.get("orden");
+
+                        let sortOrder = validOrders.has(requestedOrder)
+                            ? requestedOrder
+                            : "recientes";
+
+                        const requestedPage = Number.parseInt(
+                            params.get("page") || "1",
+                            10,
+                        );
+
+                        let currentPage =
+                            Number.isFinite(requestedPage) &&
+                            requestedPage > 0
+                                ? requestedPage
+                                : 1;
+
+                        orderSelect.value = sortOrder;
+
+                        function compareNames(a, b, direction = 1) {
+                            return (
+                                direction *
+                                a.nombre.localeCompare(
+                                    b.nombre,
+                                    lang,
+                                    { sensitivity: "base" },
+                                )
+                            );
+                        }
+
+                        function getSortedRows() {
+                            return [...rows].sort((a, b) => {
+                                if (sortOrder === "az") {
+                                    return compareNames(a, b);
+                                }
+
+                                if (sortOrder === "za") {
+                                    return compareNames(a, b, -1);
+                                }
+
+                                const aTime =
+                                    Date.parse(a.fecha) || 0;
+
+                                const bTime =
+                                    Date.parse(b.fecha) || 0;
+
+                                return (
+                                    bTime -
+                                        aTime ||
+                                    compareNames(a, b)
+                                );
+                            });
+                        }
+
+                        function updateUrl() {
+                            const newParams =
+                                new URLSearchParams();
+
+                            if (sortOrder !== "recientes") {
+                                newParams.set(
+                                    "orden",
+                                    sortOrder,
+                                );
+                            }
+
+                            if (currentPage > 1) {
+                                newParams.set(
+                                    "page",
+                                    String(currentPage),
+                                );
+                            }
+
+                            const query = newParams.toString();
+
+                            const newUrl = query
+                                ? `${basePath}?${query}`
+                                : basePath;
+
+                            window.history.replaceState(
+                                {},
+                                "",
+                                newUrl,
+                            );
+                        }
+
+                        function render() {
+                            const sortedRows = getSortedRows();
+
+                            sortedRows.forEach((row) => {
+                                list.appendChild(row.element);
+                                row.element.hidden = true;
+                            });
+
+                            const totalPages = Math.max(
+                                1,
+                                Math.ceil(
+                                    sortedRows.length /
+                                        itemsPerPage,
+                                ),
+                            );
+
+                            currentPage = Math.min(
+                                Math.max(currentPage, 1),
+                                totalPages,
+                            );
+
+                            const start =
+                                (currentPage - 1) *
+                                itemsPerPage;
+
+                            sortedRows
+                                .slice(
+                                    start,
+                                    start + itemsPerPage,
+                                )
+                                .forEach((row) => {
+                                    row.element.hidden = false;
+                                });
+
+                            pagination.hidden =
+                                sortedRows.length <=
+                                itemsPerPage;
+
+                            prevButton.disabled =
+                                currentPage <= 1;
+
+                            nextButton.disabled =
+                                currentPage >= totalPages;
+
+                            pageInfo.textContent =
+                                `${pageLabel} ` +
+                                `${currentPage} / ${totalPages}`;
+
+                            updateUrl();
+                        }
+
+                        form.addEventListener(
+                            "submit",
+                            (event) => {
+                                event.preventDefault();
+
+                                sortOrder = validOrders.has(
+                                    orderSelect.value,
+                                )
+                                    ? orderSelect.value
+                                    : "recientes";
+
+                                currentPage = 1;
+                                render();
+                            },
+                        );
+
+                        prevButton.addEventListener(
+                            "click",
+                            () => {
+                                currentPage -= 1;
+                                render();
+                            },
+                        );
+
+                        nextButton.addEventListener(
+                            "click",
+                            () => {
+                                currentPage += 1;
+                                render();
+                            },
+                        );
+
+                        render();
+                    }
+                </script>
             </>
         ) : (
             <section>
@@ -243,7 +446,9 @@ const description =
 
                 <p>
                     {t.comercios.contactText}
-                    <a href="mailto:info@guiapineda.com">info@guiapineda.com</a>
+                    <a href="mailto:info@guiapineda.com">
+                        info@guiapineda.com
+                    </a>
                 </p>
             </section>
         )
