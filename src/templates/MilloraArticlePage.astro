@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { getTranslations } from "../i18n/getTranslations";
 import { formatDate } from "../lib/formatDate";
 import { getReadingTime } from "../lib/readingTime";
+import { getStrapiMediaUrl } from "../lib/strapi";
 
 const { millora, lang = "ca" } = Astro.props;
 
@@ -36,7 +37,7 @@ if (!millora || !millora.publicat) {
             {
                 millora.imatge?.url && (
                     <img
-                        src={`http://localhost:1337${millora.imatge.url}`}
+                        src={getStrapiMediaUrl(millora.imatge.url)}
                         alt={millora.titol}
                         width="800"
                     />

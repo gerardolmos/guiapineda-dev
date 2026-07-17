@@ -1,6 +1,7 @@
 ---
 import { getTranslations } from "../i18n/getTranslations";
 import { getLocalizedName } from "../lib/getLocalizedName";
+import { getStrapiMediaUrl } from "../lib/strapi";
 
 interface Props {
     nombre?: string;
@@ -47,7 +48,7 @@ const descripcion =
         : descripcion_corta;
 
 const imageUrl = imagen_principal?.[0]?.url
-    ? `http://localhost:1337${imagen_principal[0].url}`
+    ? getStrapiMediaUrl(imagen_principal[0].url)
     : null;
 
 const detalleUrl =

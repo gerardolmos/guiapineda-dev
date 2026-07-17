@@ -1,4 +1,6 @@
 ---
+import { getStrapiMediaUrl } from "../lib/strapi";
+
 const {
     fotoMesImagen,
     fotoMesTitulo,
@@ -15,7 +17,7 @@ const formUrl = lang === "ca" ? "/foto-del-mes" : `/${lang}/foto-del-mes`;
     <p>{t.fotoMes.label}</p>
 
     <img
-        src={`http://localhost:1337${fotoMesImagen.url}`}
+        src={getStrapiMediaUrl(fotoMesImagen.url)}
         alt={fotoMesTitulo || t.fotoMes.label}
         width="300"
     />

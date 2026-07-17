@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { getReadingTime } from "../lib/readingTime";
 import { getTranslations } from "../i18n/getTranslations";
 import { formatDate } from "../lib/formatDate";
+import { getStrapiMediaUrl } from "../lib/strapi";
 
 const { lang = "ca", comunicat } = Astro.props as {
     lang: string;
@@ -29,7 +30,7 @@ const backText =
             {
                 comunicat.imatge?.url && (
                     <img
-                        src={`http://localhost:1337${comunicat.imatge.url}`}
+                        src={getStrapiMediaUrl(comunicat.imatge.url)}
                         alt={comunicat.titol}
                         width="800"
                     />

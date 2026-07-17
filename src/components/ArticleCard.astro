@@ -1,6 +1,7 @@
 ---
 import { formatDate } from "../lib/formatDate";
 import { getReadingTime } from "../lib/readingTime";
+import { getStrapiMediaUrl } from "../lib/strapi";
 
 const {
     item,
@@ -19,7 +20,7 @@ const {
     {
         item.imatge?.url && (
             <img
-                src={`http://localhost:1337${item.imatge.url}`}
+                src={getStrapiMediaUrl(item.imatge.url)}
                 alt={item.titol}
                 width="400"
             />

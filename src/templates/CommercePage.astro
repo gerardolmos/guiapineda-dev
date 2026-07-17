@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { fetchAPI, endpoints } from "../lib/api";
 import { getTranslations } from "../i18n/getTranslations";
 import { getLocalizedName } from "../lib/getLocalizedName";
+import { getStrapiMediaUrl } from "../lib/strapi";
 
 type RichTextChild = {
     text?: string;
@@ -83,7 +84,7 @@ const descripcionCompleta =
 const horarioTexto = richTextToPlainText(comercio.horario);
 
 const imageUrl = comercio.imagen_principal?.[0]?.url
-    ? `http://localhost:1337${comercio.imagen_principal[0].url}`
+    ? getStrapiMediaUrl(comercio.imagen_principal[0].url)
     : null;
 
 const comercioNombre = getLocalizedName(comercio, lang);

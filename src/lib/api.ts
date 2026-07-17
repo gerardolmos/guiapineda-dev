@@ -1,4 +1,4 @@
-const STRAPI_URL = "http://localhost:1337";
+import { STRAPI_URL } from "./strapi";
 
 export const endpoints = {
     home: "/api/home?populate=*",

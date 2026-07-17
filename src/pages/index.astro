@@ -4,6 +4,7 @@ import { getTranslations } from "../i18n/getTranslations";
 import { fetchAPI, endpoints } from "../lib/api";
 import { getLocalizedName } from "../lib/getLocalizedName";
 import FotoMesCard from "../components/FotoMesCard.astro";
+import { getStrapiMediaUrl } from "../lib/strapi";
 
 type Categoria = {
     nombre: string;
@@ -87,7 +88,7 @@ const categoriaBasePath =
         {
             heroVideo && (
                 <video
-                    src={`http://localhost:1337${heroVideo.url}`}
+                    src={getStrapiMediaUrl(heroVideo.url)}
                     autoplay
                     muted
                     loop
@@ -100,7 +101,7 @@ const categoriaBasePath =
         {
             !heroVideo && heroImagen && (
                 <img
-                    src={`http://localhost:1337${heroImagen.url}`}
+                    src={getStrapiMediaUrl(heroImagen.url)}
                     alt={heroTitulo}
                     width="600"
                 />
