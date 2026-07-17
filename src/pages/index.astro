@@ -6,10 +6,11 @@ import { getLocalizedName } from "../lib/getLocalizedName";
 import FotoMesCard from "../components/FotoMesCard.astro";
 
 type Categoria = {
-	nombre: string;
-	nombre_es?: string | null;
-	nombre_en?: string | null;
-	slug: string;
+    nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
+    slug: string;
+    activa?: boolean;
 };
 
 const { lang = "ca" } = Astro.props;
@@ -18,10 +19,31 @@ const t = getTranslations(lang);
 const homeData = await fetchAPI(endpoints.home);
 const home = homeData.data;
 
-const heroTitulo = home?.hero_titulo || "GUIAPINEDA";
-const heroSubtitulo = home?.hero_subtitulo || "La web del ciutadà";
+const heroTitulo =
+    lang === "es"
+        ? home?.hero_titulo_es || home?.hero_titulo || "GUIAPINEDA"
+        : lang === "en"
+          ? home?.hero_titulo_en || home?.hero_titulo || "GUIAPINEDA"
+          : home?.hero_titulo || "GUIAPINEDA";
 
-const textoIntro = home?.texto_intro || [];
+const heroSubtitulo =
+    lang === "es"
+        ? home?.hero_subtitulo_es ||
+          home?.hero_subtitulo ||
+          "La web del ciutadà"
+        : lang === "en"
+          ? home?.hero_subtitulo_en ||
+            home?.hero_subtitulo ||
+            "La web del ciutadà"
+          : home?.hero_subtitulo || "La web del ciutadà";
+
+const textoIntro =
+    lang === "es"
+        ? home?.texto_intro_es || home?.texto_intro || []
+        : lang === "en"
+          ? home?.texto_intro_en || home?.texto_intro || []
+          : home?.texto_intro || [];
+
 const heroImagen = home?.hero_imagen;
 const heroVideo = home?.hero_video;
 
@@ -34,122 +56,82 @@ const fotoMesActiva = home?.foto_mes_activa;
 const mostrarFotoMes = fotoMesActiva && fotoMesImagen?.url;
 
 const data = await fetchAPI(endpoints.categorias);
-const categorias: Categoria[] = data.data;
+const categorias: Categoria[] = (data.data || []).filter(
+    (categoria: Categoria) =>
+        categoria.activa === true &&
+        Boolean(categoria.slug),
+);
+
+const categoriaBasePath =
+    lang === "es" ? "/es" : lang === "en" ? "/en" : "";
 ---
 
 <Layout title="GUIAPINEDA" lang={lang}>
-	<section>
-		<div>
-			<h1>{heroTitulo}</h1>
+    <section>
+        <div>
+            <h1>{heroTitulo}</h1>
 
-			<p>{heroSubtitulo}</p>
+            <p>{heroSubtitulo}</p>
 
-			{
-				textoIntro.map((block: any) => (
-					<p>
-						{block.children
-							?.map((child: any) => child.text)
-							.join("")}
-					</p>
-				))
-			}
-		</div>
+            {
+                textoIntro.map((block: any) => (
+                    <p>
+                        {block.children
+                            ?.map((child: any) => child.text)
+                            .join("")}
+                    </p>
+                ))
+            }
+        </div>
 
-		{
-			heroVideo && (
-				<video
-					src={`http://localhost:1337${heroVideo.url}`}
-					autoplay
-					muted
-					loop
-					playsinline
-					width="600"
-				/>
-			)
-		}
+        {
+            heroVideo && (
+                <video
+                    src={`http://localhost:1337${heroVideo.url}`}
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    width="600"
+                />
+            )
+        }
 
-		{
-			!heroVideo && heroImagen && (
-				<img
-					src={`http://localhost:1337${heroImagen.url}`}
-					alt={heroTitulo}
-					width="600"
-				/>
-			)
-		}
+        {
+            !heroVideo && heroImagen && (
+                <img
+                    src={`http://localhost:1337${heroImagen.url}`}
+                    alt={heroTitulo}
+                    width="600"
+                />
+            )
+        }
 
-		{
-			mostrarFotoMes && (
-				<FotoMesCard
-					fotoMesImagen={fotoMesImagen}
-					fotoMesTitulo={fotoMesTitulo}
-					fotoMesAutor={fotoMesAutor}
-					fotoMesLugar={fotoMesLugar}
-					lang={lang}
-					t={t}
-				/>
-			)
-		}
-	</section>
+        {
+            mostrarFotoMes && (
+                <FotoMesCard
+                    fotoMesImagen={fotoMesImagen}
+                    fotoMesTitulo={fotoMesTitulo}
+                    fotoMesAutor={fotoMesAutor}
+                    fotoMesLugar={fotoMesLugar}
+                    lang={lang}
+                    t={t}
+                />
+            )
+        }
+    </section>
 
-	<dialog id="photo-month-modal">
-		<h2>{t.fotoMes.modalTitle}</h2>
+    <h2>{t.nav.categories}</h2>
 
-		<p>{t.fotoMes.modalIntro}</p>
-
-		<ul>
-			<li>{t.fotoMes.rule1}</li>
-			<li>{t.fotoMes.rule2}</li>
-			<li>{t.fotoMes.rule3}</li>
-			<li>{t.fotoMes.rule4}</li>
-			<li>{t.fotoMes.rule5}</li>
-		</ul>
-
-		<p>
-			{t.fotoMes.emailText}
-			<a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
-		</p>
-
-		<p>
-			<a href={lang === "ca" ? "/foto-del-mes" : `/${lang}/foto-del-mes`}>
-				{t.fotoMes.goToForm}
-			</a>
-		</p>
-
-		<button type="button" id="close-photo-month-modal">
-			{t.fotoMes.closeButton}
-		</button>
-	</dialog>
-
-	<script>
-		const modal = document.getElementById("photo-month-modal");
-		const openButton = document.getElementById("open-photo-month-modal");
-		const closeButton = document.getElementById("close-photo-month-modal");
-
-		openButton?.addEventListener("click", () => {
-			if (modal instanceof HTMLDialogElement) {
-				modal.showModal();
-			}
-		});
-
-		closeButton?.addEventListener("click", () => {
-			if (modal instanceof HTMLDialogElement) {
-				modal.close();
-			}
-		});
-	</script>
-
-	<h2>{t.nav.categories}</h2>
-
-	<ul>
-		{
-			categorias.map((categoria: Categoria) => (
-				<li>
-					<a href={`/${categoria.slug}`}>
-						{getLocalizedName(categoria, lang)}
-					</a>
-				</li>
-			))
-		}
-	</ul>
+    <ul>
+        {
+            categorias.map((categoria: Categoria) => (
+                <li>
+                    <a href={`${categoriaBasePath}/${categoria.slug}`}>
+                        {getLocalizedName(categoria, lang)}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
 </Layout>
