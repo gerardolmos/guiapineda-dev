@@ -11,7 +11,9 @@ const { millora, lang = "ca" } = Astro.props;
 const t = getTranslations(lang);
 
 if (!millora) {
-    return Astro.redirect("/404");
+    throw new Error(
+        "No se recibió la mejora necesaria para generar la página.",
+    );
 }
 ---
 

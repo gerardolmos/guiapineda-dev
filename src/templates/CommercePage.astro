@@ -56,7 +56,9 @@ const comercio = todos.find(
 );
 
 if (!comercio) {
-    return Astro.redirect("/404");
+    throw new Error(
+        `No se encontró el comercio necesario para generar el slug: ${slug}`,
+    );
 }
 
 const descripcionCorta =
