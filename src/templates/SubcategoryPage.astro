@@ -18,6 +18,9 @@ type Comercio = {
     imagen_principal?: {
         url: string;
     }[];
+    categoria?: {
+        slug: string;
+    };
     subcategoria?: {
         slug: string;
     };
@@ -28,15 +31,17 @@ type Subcategoria = {
     nombre_es?: string | null;
     nombre_en?: string | null;
     slug: string;
+    activa?: boolean;
     categoria?: {
         slug: string;
+        activa?: boolean;
         nombre: string;
         nombre_es?: string | null;
         nombre_en?: string | null;
     };
 };
 
-const { slug, lang } = Astro.props;
+const { slug, categoriaSlug, lang } = Astro.props;
 
 const t = getTranslations(lang);
 const itemsPerPage = 24;
@@ -48,8 +53,18 @@ const subData = await fetchAPI(endpoints.subcategorias);
 const todasLasSubcategorias: Subcategoria[] = subData.data;
 
 const subcategoriaActual = todasLasSubcategorias.find(
-    (sub) => sub.slug === slug,
+    (subcategoria) =>
+        subcategoria.activa === true &&
+        subcategoria.slug === slug &&
+        subcategoria.categoria?.activa === true &&
+        subcategoria.categoria?.slug === categoriaSlug,
 );
+
+if (!subcategoriaActual) {
+    throw new Error(
+        `No se encontró la subcategoría activa "${slug}" dentro de la categoría "${categoriaSlug}".`,
+    );
+}
 
 const subcategoryName = subcategoriaActual
     ? getLocalizedName(subcategoriaActual, lang)
@@ -57,15 +72,16 @@ const subcategoryName = subcategoriaActual
 
 const basePath =
     lang === "es"
-        ? `/es/${subcategoriaActual?.categoria?.slug}/${subcategoriaActual?.slug}`
+        ? `/es/${categoriaSlug}/${slug}`
         : lang === "en"
-          ? `/en/${subcategoriaActual?.categoria?.slug}/${subcategoriaActual?.slug}`
-          : `/${subcategoriaActual?.categoria?.slug}/${subcategoriaActual?.slug}`;
+          ? `/en/${categoriaSlug}/${slug}`
+          : `/${categoriaSlug}/${slug}`;
 
 const comercios = todos.filter(
     (comercio) =>
-        comercio.subcategoria?.slug === slug &&
-        comercio.activo === true,
+        comercio.activo === true &&
+        comercio.categoria?.slug === categoriaSlug &&
+        comercio.subcategoria?.slug === slug,
 );
 
 const comerciosMeta = comercios.map((comercio) => ({

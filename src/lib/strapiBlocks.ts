@@ -172,7 +172,7 @@ function renderBlockNode(node: StrapiNode): string {
             const requestedLevel =
                 typeof node.level === "number" ? node.level : 2;
 
-            const level = Math.min(6, Math.max(1, requestedLevel));
+            const level = Math.min(6, Math.max(2, requestedLevel));
 
             return `<h${level}>${renderInlineChildren(node)}</h${level}>`;
         }

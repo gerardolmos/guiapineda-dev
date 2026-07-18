@@ -8,6 +8,7 @@ import ComercioCard from "../components/ComercioCard.astro";
 type Subcategoria = {
     nombre: string;
     slug: string;
+    activa?: boolean;
     categoria?: {
         slug: string;
     };
@@ -61,7 +62,7 @@ const subcategorias = todasLasSubcategorias.filter((sub: any) => {
     const categoriaSlug =
         sub.categoria?.slug || sub.categoria?.data?.attributes?.slug;
 
-    return categoriaSlug === slug;
+    return sub.activa === true && categoriaSlug === slug;
 });
 
 const comerciosDirectos = todosLosComercios.filter(

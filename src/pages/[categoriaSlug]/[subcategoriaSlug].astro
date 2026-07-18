@@ -7,6 +7,7 @@ type Subcategoria = {
     activa?: boolean;
     categoria?: {
         slug: string;
+        activa?: boolean;
     };
 };
 
@@ -19,6 +20,7 @@ export async function getStaticPaths() {
             (subcategoria) =>
                 subcategoria.activa === true &&
                 subcategoria.slug &&
+                subcategoria.categoria?.activa === true &&
                 subcategoria.categoria?.slug,
         )
         .map((subcategoria) => ({
