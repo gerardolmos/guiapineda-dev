@@ -1,4 +1,5 @@
 ---
+import "../styles/global.css";
 import { getTranslations } from "../i18n/getTranslations";
 import { getLanguageLinks } from "../lib/languageSwitcher";
 
@@ -24,7 +25,7 @@ const { currentLang, links } = getLanguageLinks(pathname);
         {description && <meta name="description" content={description} />}
         {robots && <meta name="robots" content={robots} />}
     </head>
-    <body>
+    <body class="min-h-screen bg-stone-50 font-sans text-slate-950 antialiased">
         <nav>
             <a href={lang === "ca" ? "/" : `/${lang}`}>
                 {t.common.home}
