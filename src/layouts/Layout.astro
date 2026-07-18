@@ -1,7 +1,20 @@
 ---
 import "../styles/global.css";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import { getTranslations } from "../i18n/getTranslations";
-import { getLanguageLinks } from "../lib/languageSwitcher";
+import {
+    getLanguageLinks,
+    type Lang,
+} from "../lib/languageSwitcher";
+
+interface Props {
+    lang?: Lang;
+    title?: string;
+    description?: string;
+    robots?: string;
+    showLanguageSwitcher?: boolean;
+}
 
 const {
     lang = "ca",
@@ -17,73 +30,56 @@ const { currentLang, links } = getLanguageLinks(pathname);
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html
+    lang={lang}
+    class="scroll-smooth motion-reduce:scroll-auto"
+>
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
         <title>{title}</title>
         {description && <meta name="description" content={description} />}
         {robots && <meta name="robots" content={robots} />}
     </head>
-    <body class="min-h-screen bg-stone-50 font-sans text-slate-950 antialiased">
-        <nav>
-            <a href={lang === "ca" ? "/" : `/${lang}`}>
-                {t.common.home}
-            </a>
 
-            <a href={lang === "ca" ? "/comunicats" : `/${lang}/comunicats`}>
-                {t.comunicats.title}
-            </a>
-            <a
-                href={lang === "ca"
-                    ? "/millorem-pineda"
-                    : `/${lang}/millorem-pineda`}
+    <body
+        class="min-h-screen bg-stone-50 font-sans text-slate-950 antialiased selection:bg-amber-200 selection:text-slate-950"
+    >
+        <a
+            href="#main-content"
+            class="sr-only rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white shadow-lg outline-none focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:not-sr-only focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+        >
+            {t.nav.skipToContent}
+        </a>
+
+        <div class="flex min-h-screen flex-col">
+            <SiteHeader
+                lang={lang}
+                pathname={pathname}
+                currentLang={currentLang}
+                links={links}
+                showLanguageSwitcher={showLanguageSwitcher}
+                t={t}
+            />
+
+            <div
+                id="main-content"
+                tabindex="-1"
+                class="flex-1 scroll-mt-24 focus:outline-none"
             >
-                {t.millores.title}
-            </a>
+                <slot />
+            </div>
 
-            {
-                showLanguageSwitcher && (
-                    <div style="margin-top: 1rem;">
-                        {
-                            "ca" in links &&
-                                (currentLang === "ca" ? (
-                                    <strong>CA</strong>
-                                ) : (
-                                    <a href={links.ca}>CA</a>
-                                ))
-                        }
-
-                        {
-                            "es" in links && (
-                                <>
-                                    {" | "}
-                                    {currentLang === "es" ? (
-                                        <strong>ES</strong>
-                                    ) : (
-                                        <a href={links.es}>ES</a>
-                                    )}
-                                </>
-                            )
-                        }
-
-                        {
-                            "en" in links && (
-                                <>
-                                    {" | "}
-                                    {currentLang === "en" ? (
-                                        <strong>EN</strong>
-                                    ) : (
-                                        <a href={links.en}>EN</a>
-                                    )}
-                                </>
-                            )
-                        }
-                    </div>
-                )
-            }
-        </nav>
-
-        <slot />
+            <SiteFooter
+                lang={lang}
+                currentLang={currentLang}
+                links={links}
+                showLanguageSwitcher={showLanguageSwitcher}
+                t={t}
+            />
+        </div>
     </body>
 </html>

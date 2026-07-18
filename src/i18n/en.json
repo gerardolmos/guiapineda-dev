@@ -1,7 +1,13 @@
 {
     "nav": {
         "home": "Home",
-        "categories": "What are you looking for?"
+        "categories": "What are you looking for?",
+        "guide": "Local guide",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu",
+        "mainLabel": "Main navigation",
+        "languageLabel": "Language selector",
+        "skipToContent": "Skip to content"
     },
     "pages": {
         "categoryTitle": "Categories",
@@ -104,5 +110,11 @@
         "formAccept": "I confirm that I am the author of the photograph and accept that GUIAPINEDA may review it and publish it if selected.",
         "formSubmit": "Send photograph",
         "goToForm": "Go to form"
+    },
+    "footer": {
+        "description": "The citizens’ guide to businesses, services, organisations and local resources in Pineda de Mar.",
+        "navigation": "Navigation",
+        "contact": "Contact",
+        "rights": "The citizens’ guide to Pineda de Mar."
     }
 }

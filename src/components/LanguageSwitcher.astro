@@ -1,0 +1,75 @@
+---
+import type { Lang } from "../lib/languageSwitcher";
+
+interface Props {
+    currentLang: Lang;
+    links: Record<Lang, string>;
+    label: string;
+    tone?: "light" | "dark";
+}
+
+const {
+    currentLang,
+    links,
+    label,
+    tone = "light",
+} = Astro.props;
+
+const languages: { code: string; lang: Lang }[] = [
+    { code: "CA", lang: "ca" },
+    { code: "ES", lang: "es" },
+    { code: "EN", lang: "en" },
+];
+
+const activeClass =
+    tone === "dark"
+        ? "bg-white text-slate-950"
+        : "bg-slate-950 text-white";
+
+const inactiveClass =
+    tone === "dark"
+        ? "text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-amber-400"
+        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-sky-600";
+---
+
+<nav aria-label={label}>
+    <ul
+        class:list={[
+            "inline-flex items-center rounded-xl p-1",
+            tone === "dark"
+                ? "bg-slate-900 ring-1 ring-slate-700"
+                : "bg-slate-100 ring-1 ring-slate-200",
+        ]}
+    >
+        {
+            languages.map((language) => (
+                <li>
+                    {currentLang === language.lang ? (
+                        <span
+                            lang={language.lang}
+                            aria-current="page"
+                            class:list={[
+                                "inline-flex min-h-9 min-w-10 items-center justify-center rounded-lg px-2 text-xs font-bold tracking-wide",
+                                activeClass,
+                            ]}
+                        >
+                            {language.code}
+                        </span>
+                    ) : (
+                        <a
+                            href={links[language.lang]}
+                            lang={language.lang}
+                            hreflang={language.lang}
+                            class:list={[
+                                "inline-flex min-h-9 min-w-10 items-center justify-center rounded-lg px-2 text-xs font-semibold tracking-wide outline-none transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2",
+                                inactiveClass,
+                            ]}
+                        >
+                            {language.code}
+                        </a>
+                    )}
+                </li>
+            ))
+        }
+    </ul>
+</nav>

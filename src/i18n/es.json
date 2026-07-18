@@ -1,7 +1,13 @@
 {
     "nav": {
         "home": "Inicio",
-        "categories": "¿Qué buscas?"
+        "categories": "¿Qué buscas?",
+        "guide": "Guía local",
+        "openMenu": "Abrir el menú",
+        "closeMenu": "Cerrar el menú",
+        "mainLabel": "Navegación principal",
+        "languageLabel": "Selector de idioma",
+        "skipToContent": "Saltar al contenido"
     },
     "pages": {
         "categoryTitle": "Categorías",
@@ -104,5 +110,11 @@
         "formAccept": "Confirmo que soy autor/a de la fotografía y acepto que GUIAPINEDA pueda revisarla y publicarla si es seleccionada.",
         "formSubmit": "Enviar fotografía",
         "goToForm": "Ir al formulario"
+    },
+    "footer": {
+        "description": "La guía ciudadana para descubrir comercios, servicios, entidades y recursos de Pineda de Mar.",
+        "navigation": "Navegación",
+        "contact": "Contacto",
+        "rights": "La guía ciudadana de Pineda de Mar."
     }
 }

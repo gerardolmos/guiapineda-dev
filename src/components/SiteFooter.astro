@@ -1,0 +1,104 @@
+---
+import type { Lang } from "../lib/languageSwitcher";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import SiteBrand from "./SiteBrand.astro";
+
+interface Props {
+    lang: Lang;
+    currentLang: Lang;
+    links: Record<Lang, string>;
+    showLanguageSwitcher?: boolean;
+    t: any;
+}
+
+const {
+    lang,
+    currentLang,
+    links,
+    showLanguageSwitcher = true,
+    t,
+} = Astro.props;
+
+const year = new Date().getFullYear();
+
+const homeUrl = lang === "ca" ? "/" : `/${lang}`;
+const communicatsUrl =
+    lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
+const milloresUrl =
+    lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
+
+const navigationItems = [
+    { label: t.nav.guide, href: homeUrl },
+    { label: t.comunicats.title, href: communicatsUrl },
+    { label: t.millores.title, href: milloresUrl },
+];
+---
+
+<footer class="mt-16 bg-slate-950 text-slate-100">
+    <div
+        class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-3 lg:px-8"
+    >
+        <div>
+            <SiteBrand href={homeUrl} tone="dark" />
+
+            <p class="mt-5 max-w-md text-sm leading-6 text-slate-300">
+                {t.footer.description}
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-white">
+                {t.footer.navigation}
+            </h2>
+
+            <ul class="mt-4 space-y-2">
+                {
+                    navigationItems.map((item) => (
+                        <li>
+                            <a
+                                href={item.href}
+                                class="inline-flex min-h-11 items-center rounded-lg text-sm font-medium text-slate-300 underline-offset-4 outline-none transition-colors duration-200 hover:text-white hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-400"
+                            >
+                                {item.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-white">
+                {t.footer.contact}
+            </h2>
+
+            <a
+                href="mailto:info@guiapineda.com"
+                class="mt-4 inline-flex min-h-11 items-center rounded-lg text-sm font-medium text-sky-300 underline underline-offset-4 outline-none transition-colors duration-200 hover:text-sky-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-400"
+            >
+                info@guiapineda.com
+            </a>
+
+            {
+                showLanguageSwitcher && (
+                    <div class="mt-6">
+                        <LanguageSwitcher
+                            currentLang={currentLang}
+                            links={links}
+                            label={t.nav.languageLabel}
+                            tone="dark"
+                        />
+                    </div>
+                )
+            }
+        </div>
+    </div>
+
+    <div class="border-t border-slate-800">
+        <div
+            class="mx-auto max-w-7xl px-4 py-5 text-sm text-slate-400 sm:px-6 lg:px-8"
+        >
+            <p>© {year} GUIAPINEDA. {t.footer.rights}</p>
+        </div>
+    </div>
+</footer>
