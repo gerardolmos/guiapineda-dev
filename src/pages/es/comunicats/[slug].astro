@@ -1,10 +1,13 @@
 ---
 import { fetchAPI, endpoints } from "../../../lib/api";
 import ComunicatArticlePage from "../../../templates/ComunicatArticlePage.astro";
+import { filterVisibleComunicats } from "../../../lib/comunicats";
 
 export async function getStaticPaths() {
     const comunicatsData = await fetchAPI(endpoints.comunicats);
-    const comunicats = comunicatsData.data || [];
+    const comunicats = filterVisibleComunicats(
+        comunicatsData.data || [],
+    );
 
     return comunicats
         .filter(

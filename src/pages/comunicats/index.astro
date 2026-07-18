@@ -3,12 +3,15 @@ import Layout from "../../layouts/Layout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import { fetchAPI, endpoints } from "../../lib/api";
 import { getTranslations } from "../../i18n/getTranslations";
+import { filterVisibleComunicats } from "../../lib/comunicats";
 
 const { lang = "ca" } = Astro.props;
 const t = getTranslations(lang);
 
 const comunicatsData = await fetchAPI(endpoints.comunicats);
-const comunicats = comunicatsData.data || [];
+const comunicats = filterVisibleComunicats(
+    comunicatsData.data || [],
+);
 
 const sortedComunicats = [...comunicats].sort(
         (a: any, b: any) =>
