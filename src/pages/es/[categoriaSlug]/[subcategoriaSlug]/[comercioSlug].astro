@@ -7,9 +7,11 @@ type Comercio = {
     activo?: boolean;
     categoria?: {
         slug: string;
+        activa?: boolean;
     };
     subcategoria?: {
         slug: string;
+        activa?: boolean;
     } | null;
 };
 
@@ -21,8 +23,11 @@ export async function getStaticPaths() {
         .filter(
             (comercio) =>
                 comercio.activo === true &&
-                comercio.slug &&
+                typeof comercio.slug === "string" &&
+                comercio.slug.trim().length > 0 &&
+                comercio.categoria?.activa === true &&
                 comercio.categoria?.slug &&
+                comercio.subcategoria?.activa === true &&
                 comercio.subcategoria?.slug,
         )
         .map((comercio) => ({
