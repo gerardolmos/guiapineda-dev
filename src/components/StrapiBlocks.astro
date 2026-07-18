@@ -1,0 +1,16 @@
+---
+import {
+    renderStrapiBlocksToHtml,
+    type StrapiBlock,
+} from "../lib/strapiBlocks";
+
+interface Props {
+    blocks?: StrapiBlock[] | null;
+    class?: string;
+}
+
+const { blocks, class: className } = Astro.props;
+const html = renderStrapiBlocksToHtml(blocks);
+---
+
+{html && <div class={className} set:html={html} />}

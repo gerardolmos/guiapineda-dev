@@ -4,6 +4,7 @@ import { getTranslations } from "../i18n/getTranslations";
 import { fetchAPI, endpoints } from "../lib/api";
 import { getLocalizedName } from "../lib/getLocalizedName";
 import FotoMesCard from "../components/FotoMesCard.astro";
+import StrapiBlocks from "../components/StrapiBlocks.astro";
 import { getStrapiMediaUrl } from "../lib/strapi";
 
 type Categoria = {
@@ -74,15 +75,7 @@ const categoriaBasePath =
 
             <p>{heroSubtitulo}</p>
 
-            {
-                textoIntro.map((block: any) => (
-                    <p>
-                        {block.children
-                            ?.map((child: any) => child.text)
-                            .join("")}
-                    </p>
-                ))
-            }
+            <StrapiBlocks blocks={textoIntro} />
         </div>
 
         {

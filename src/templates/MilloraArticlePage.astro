@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import StrapiBlocks from "../components/StrapiBlocks.astro";
 import { getTranslations } from "../i18n/getTranslations";
 import { formatDate } from "../lib/formatDate";
 import { getReadingTime } from "../lib/readingTime";
@@ -62,21 +63,7 @@ if (!millora) {
                 }
             </p>
 
-            {
-                millora.contingut?.map((block: any) => {
-                    if (block.type === "paragraph") {
-                        return (
-                            <p>
-                                {block.children
-                                    ?.map((child: any) => child.text)
-                                    .join("")}
-                            </p>
-                        );
-                    }
-
-                    return null;
-                })
-            }
+            <StrapiBlocks blocks={millora.contingut} />
         </article>
     </main>
 </Layout>

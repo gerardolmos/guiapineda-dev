@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import StrapiBlocks from "../components/StrapiBlocks.astro";
 import { getReadingTime } from "../lib/readingTime";
 import { getTranslations } from "../i18n/getTranslations";
 import { formatDate } from "../lib/formatDate";
@@ -16,7 +17,10 @@ const backUrl = lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
 const sectionTitle = t.comunicats.title;
 ---
 
-<Layout lang={lang} title={`${comunicat.titol} | ${sectionTitle} | GUIAPINEDA`}>
+<Layout
+    lang={lang}
+    title={`${comunicat.titol} | ${sectionTitle} | GUIAPINEDA`}
+>
     <main>
         <a href={backUrl}>{t.comunicats.backToList}</a>
 
@@ -48,17 +52,7 @@ const sectionTitle = t.comunicats.title;
                 {t.comunicats.readingSuffix}
             </p>
 
-            <div>
-                {
-                    comunicat.contingut?.map((block: any) => (
-                        <p>
-                            {block.children
-                                ?.map((child: any) => child.text)
-                                .join("")}
-                        </p>
-                    ))
-                }
-            </div>
+            <StrapiBlocks blocks={comunicat.contingut} />
         </article>
     </main>
 </Layout>

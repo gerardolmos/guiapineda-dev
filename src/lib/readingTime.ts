@@ -1,16 +1,13 @@
-export function getReadingTime(blocks: any[]): string {
-    if (!blocks) return "1 min";
+import {
+    getStrapiBlocksText,
+    type StrapiBlock,
+} from "./strapiBlocks";
 
-    const text = blocks
-        .map((block) =>
-            block.children
-                ?.map((child: any) => child.text)
-                .join(" ")
-        )
-        .join(" ");
-
-    const words = text.trim().split(/\s+/).length;
-
+export function getReadingTime(
+    blocks?: StrapiBlock[] | null,
+): string {
+    const text = getStrapiBlocksText(blocks);
+    const words = text ? text.split(/\s+/).length : 0;
     const minutes = Math.max(1, Math.ceil(words / 200));
 
     return `${minutes} min`;
