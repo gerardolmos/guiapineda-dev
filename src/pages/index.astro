@@ -86,7 +86,7 @@ const categoriaBasePath =
         </div>
 
         {
-            heroVideo && (
+            heroVideo?.url && (
                 <video
                     src={getStrapiMediaUrl(heroVideo.url)}
                     autoplay
@@ -99,7 +99,7 @@ const categoriaBasePath =
         }
 
         {
-            !heroVideo && heroImagen && (
+            !heroVideo?.url && heroImagen?.url && (
                 <img
                     src={getStrapiMediaUrl(heroImagen.url)}
                     alt={heroTitulo}
