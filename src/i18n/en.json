@@ -7,6 +7,9 @@
         "categoryTitle": "Categories",
         "subcategoryTitle": "Subcategories"
     },
+    "home": {
+        "heroSubtitleFallback": "The citizens' website"
+    },
     "comunicats": {
         "title": "Announcements",
         "submitTitle": "Do you want to publish an announcement?",

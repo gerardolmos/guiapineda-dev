@@ -7,6 +7,9 @@
         "categoryTitle": "Categories",
         "subcategoryTitle": "Subcategories"
     },
+    "home": {
+        "heroSubtitleFallback": "La web del ciutadà"
+    },
     "comunicats": {
         "title": "Comunicats",
         "submitTitle": "Vols publicar un comunicat?",

@@ -14,17 +14,11 @@ const t = getTranslations(lang as "ca" | "es" | "en");
 
 const backUrl = lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
 const sectionTitle = t.comunicats.title;
-const backText =
-    lang === "es"
-        ? "← Volver a Comunicados"
-        : lang === "en"
-          ? "← Back to Announcements"
-          : "← Tornar a Comunicats";
 ---
 
 <Layout lang={lang} title={`${comunicat.titol} | ${sectionTitle} | GUIAPINEDA`}>
     <main>
-        <a href={backUrl}>{backText}</a>
+        <a href={backUrl}>{t.comunicats.backToList}</a>
 
         <article>
             {

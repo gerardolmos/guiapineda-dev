@@ -31,12 +31,12 @@ const heroSubtitulo =
     lang === "es"
         ? home?.hero_subtitulo_es ||
           home?.hero_subtitulo ||
-          "La web del ciutadà"
+          t.home.heroSubtitleFallback
         : lang === "en"
           ? home?.hero_subtitulo_en ||
             home?.hero_subtitulo ||
-            "La web del ciutadà"
-          : home?.hero_subtitulo || "La web del ciutadà";
+            t.home.heroSubtitleFallback
+          : home?.hero_subtitulo || t.home.heroSubtitleFallback;
 
 const textoIntro =
     lang === "es"

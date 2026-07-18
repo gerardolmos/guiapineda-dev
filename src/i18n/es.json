@@ -7,6 +7,9 @@
         "categoryTitle": "Categorías",
         "subcategoryTitle": "Subcategorías"
     },
+    "home": {
+        "heroSubtitleFallback": "La web del ciudadano"
+    },
     "comunicats": {
         "title": "Comunicados",
         "submitTitle": "¿Quieres publicar un comunicado?",
