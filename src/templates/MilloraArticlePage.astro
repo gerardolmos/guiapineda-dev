@@ -9,7 +9,7 @@ const { millora, lang = "ca" } = Astro.props;
 
 const t = getTranslations(lang);
 
-if (!millora || !millora.publicat) {
+if (!millora) {
     return Astro.redirect("/404");
 }
 ---

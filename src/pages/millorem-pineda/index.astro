@@ -15,9 +15,7 @@ const itemsPerPage = 6;
 const basePath =
     lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
 
-const publishedMillores = millores
-    .filter((item: any) => item.publicat)
-    .sort(
+const sortedMillores = [...millores].sort(
         (a: any, b: any) =>
             new Date(b.data_publicacio).getTime() -
             new Date(a.data_publicacio).getTime(),
@@ -93,10 +91,10 @@ const publishedMillores = millores
 
         <section id="millores-list">
             {
-                publishedMillores.length === 0 ? (
+                sortedMillores.length === 0 ? (
                     <p>{t.millores.empty}</p>
                 ) : (
-                    publishedMillores.map((millora: any) => (
+                    sortedMillores.map((millora: any) => (
                         <div
                             class="millora-item"
                             data-categoria={millora.categoria}

@@ -9,7 +9,6 @@ export async function getStaticPaths() {
     return millores
         .filter(
             (millora: any) =>
-                millora.publicat === true &&
                 typeof millora.slug === "string" &&
                 millora.slug.trim().length > 0,
         )

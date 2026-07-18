@@ -10,9 +10,7 @@ const t = getTranslations(lang);
 const comunicatsData = await fetchAPI(endpoints.comunicats);
 const comunicats = comunicatsData.data || [];
 
-const publishedComunicats = comunicats
-    .filter((item: any) => item.publicat)
-    .sort(
+const sortedComunicats = [...comunicats].sort(
         (a: any, b: any) =>
             new Date(b.data_publicacio).getTime() -
             new Date(a.data_publicacio).getTime(),
@@ -37,10 +35,10 @@ const publishedComunicats = comunicats
         </section>
 
         {
-            publishedComunicats.length === 0 ? (
+            sortedComunicats.length === 0 ? (
                 <p>{t.comunicats.empty}</p>
             ) : (
-                publishedComunicats.map((comunicat: any) => (
+                sortedComunicats.map((comunicat: any) => (
                     <ArticleCard
                         item={comunicat}
                         href={

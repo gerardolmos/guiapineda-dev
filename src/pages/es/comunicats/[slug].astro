@@ -9,7 +9,6 @@ export async function getStaticPaths() {
     return comunicats
         .filter(
             (comunicat: any) =>
-                comunicat.publicat === true &&
                 typeof comunicat.slug === "string" &&
                 comunicat.slug.trim().length > 0,
         )
