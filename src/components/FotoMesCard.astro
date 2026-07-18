@@ -10,79 +10,283 @@ const {
     t,
 } = Astro.props;
 
-const formUrl = lang === "ca" ? "/foto-del-mes" : `/${lang}/foto-del-mes`;
+const formUrl =
+    lang === "ca" ? "/foto-del-mes" : `/${lang}/foto-del-mes`;
+
+const rules = [
+    t.fotoMes.rule1,
+    t.fotoMes.rule2,
+    t.fotoMes.rule3,
+    t.fotoMes.rule4,
+    t.fotoMes.rule5,
+];
 ---
 
-<aside>
-    <p>{t.fotoMes.label}</p>
+<aside
+    class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+>
+    <div
+        class="flex items-center gap-3 border-b border-slate-200 px-5 py-4 sm:px-6"
+    >
+        <span
+            aria-hidden="true"
+            class="h-px w-8 bg-cyan-700"
+        ></span>
 
-    <img
-        src={getStrapiMediaUrl(fotoMesImagen.url)}
-        alt={fotoMesTitulo || t.fotoMes.label}
-        width="300"
-    />
+        <p class="text-sm font-black uppercase tracking-wider text-slate-700">
+            {t.fotoMes.label}
+        </p>
+    </div>
 
-    {fotoMesTitulo && <h2>{fotoMesTitulo}</h2>}
+    <div class="aspect-[4/3] overflow-hidden bg-slate-200">
+        <img
+            src={getStrapiMediaUrl(fotoMesImagen.url)}
+            alt={fotoMesTitulo || t.fotoMes.label}
+            width="900"
+            height="675"
+            loading="lazy"
+            class="size-full object-cover"
+        />
+    </div>
 
-    <p>
-        {t.fotoMes.authorLabel}
-        {fotoMesAutor}
-    </p>
+    <div class="p-5 sm:p-6">
+        <h2 class="text-2xl font-black tracking-tight text-slate-950">
+            {fotoMesTitulo || t.fotoMes.label}
+        </h2>
 
-    {
-        fotoMesLugar && (
-            <p>
-                {t.fotoMes.placeLabel} {fotoMesLugar}
-            </p>
-        )
-    }
+        {
+            (fotoMesAutor || fotoMesLugar) && (
+                <div class="mt-4 space-y-2 text-sm text-slate-600">
+                    {fotoMesAutor && (
+                        <p class="flex items-start gap-2">
+                            <svg
+                                aria-hidden="true"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="mt-0.5 size-4 shrink-0 text-cyan-700"
+                            >
+                                <circle cx="12" cy="8" r="4" />
+                                <path d="M4 21a8 8 0 0 1 16 0" />
+                            </svg>
 
-    <button type="button" id="open-photo-month-modal">
-        {t.fotoMes.submitButton}
-    </button>
+                            <span>
+                                <strong class="font-semibold text-slate-800">
+                                    {t.fotoMes.authorLabel}
+                                </strong>{" "}
+                                {fotoMesAutor}
+                            </span>
+                        </p>
+                    )}
+
+                    {fotoMesLugar && (
+                        <p class="flex items-start gap-2">
+                            <svg
+                                aria-hidden="true"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="mt-0.5 size-4 shrink-0 text-cyan-700"
+                            >
+                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+                                <circle cx="12" cy="10" r="2" />
+                            </svg>
+
+                            <span>
+                                <strong class="font-semibold text-slate-800">
+                                    {t.fotoMes.placeLabel}
+                                </strong>{" "}
+                                {fotoMesLugar}
+                            </span>
+                        </p>
+                    )}
+                </div>
+            )
+        }
+
+        <button
+            type="button"
+            id="open-photo-month-modal"
+            aria-haspopup="dialog"
+            class="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-cyan-700 px-5 py-3 text-sm font-bold text-white shadow-sm outline-none transition-colors duration-200 hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+        >
+            {t.fotoMes.submitButton}
+
+            <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="size-5"
+            >
+                <path d="M12 5v14" />
+                <path d="M5 12h14" />
+            </svg>
+        </button>
+    </div>
 </aside>
 
-<dialog id="photo-month-modal">
-    <h2>{t.fotoMes.modalTitle}</h2>
+<dialog
+    id="photo-month-modal"
+    aria-labelledby="photo-month-modal-title"
+    aria-describedby="photo-month-modal-description"
+    class="m-auto w-[calc(100%-2rem)] max-w-2xl rounded-3xl border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/70"
+>
+    <div class="max-h-[calc(100dvh-2rem)] overflow-y-auto p-5 sm:p-8">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <p class="text-sm font-bold text-cyan-700">
+                    {t.fotoMes.label}
+                </p>
 
-    <p>{t.fotoMes.modalIntro}</p>
+                <h2
+                    id="photo-month-modal-title"
+                    class="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl"
+                >
+                    {t.fotoMes.modalTitle}
+                </h2>
+            </div>
 
-    <ul>
-        <li>{t.fotoMes.rule1}</li>
-        <li>{t.fotoMes.rule2}</li>
-        <li>{t.fotoMes.rule3}</li>
-        <li>{t.fotoMes.rule4}</li>
-        <li>{t.fotoMes.rule5}</li>
-    </ul>
+            <button
+                type="button"
+                id="close-photo-month-modal"
+                aria-label={t.fotoMes.closeButton}
+                class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-slate-300 text-slate-700 outline-none transition-colors duration-200 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+            >
+                <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    class="size-5"
+                >
+                    <path d="M6 6l12 12" />
+                    <path d="M18 6 6 18" />
+                </svg>
+            </button>
+        </div>
 
-    <p>
-        {t.fotoMes.emailText}
-        <a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
-    </p>
+        <p
+            id="photo-month-modal-description"
+            class="mt-5 text-base leading-7 text-slate-600"
+        >
+            {t.fotoMes.modalIntro}
+        </p>
 
-    <p>
-        <a href={formUrl}>{t.fotoMes.goToForm}</a>
-    </p>
+        <ul class="mt-6 space-y-3">
+            {
+                rules.map((rule: string) => (
+                    <li class="flex gap-3 rounded-xl bg-stone-100 p-3 text-sm leading-6 text-slate-700">
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="mt-0.5 size-5 shrink-0 text-lime-700"
+                        >
+                            <path d="m5 12 4 4L19 6" />
+                        </svg>
 
-    <button type="button" id="close-photo-month-modal">
-        {t.fotoMes.closeButton}
-    </button>
+                        <span>{rule}</span>
+                    </li>
+                ))
+            }
+        </ul>
+
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a
+                href={formUrl}
+                class="inline-flex min-h-12 flex-1 items-center justify-center rounded-xl bg-cyan-700 px-5 py-3 text-center text-sm font-bold text-white outline-none transition-colors duration-200 hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+            >
+                {t.fotoMes.goToForm}
+            </a>
+
+            <button
+                type="button"
+                data-close-photo-month-modal
+                class="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 outline-none transition-colors duration-200 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+            >
+                {t.fotoMes.closeButton}
+            </button>
+        </div>
+
+        <p class="mt-6 text-sm leading-6 text-slate-600">
+            {t.fotoMes.emailText}
+
+            <a
+                href="mailto:info@guiapineda.com"
+                class="font-semibold text-cyan-700 underline underline-offset-4 outline-none hover:text-cyan-800 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+            >
+                info@guiapineda.com
+            </a>
+        </p>
+    </div>
 </dialog>
 
 <script>
     const modal = document.getElementById("photo-month-modal");
-    const openButton = document.getElementById("open-photo-month-modal");
-    const closeButton = document.getElementById("close-photo-month-modal");
+    const openButton = document.getElementById(
+        "open-photo-month-modal",
+    );
+    const closeButtons = document.querySelectorAll(
+        "#close-photo-month-modal, [data-close-photo-month-modal]",
+    );
 
-    openButton?.addEventListener("click", () => {
-        if (modal instanceof HTMLDialogElement) {
+    let previouslyFocused: HTMLElement | null = null;
+
+    if (
+        modal instanceof HTMLDialogElement &&
+        openButton instanceof HTMLButtonElement
+    ) {
+        openButton.addEventListener("click", () => {
+            previouslyFocused =
+                document.activeElement instanceof HTMLElement
+                    ? document.activeElement
+                    : null;
+
             modal.showModal();
-        }
-    });
+        });
 
-    closeButton?.addEventListener("click", () => {
-        if (modal instanceof HTMLDialogElement) {
-            modal.close();
-        }
-    });
+        closeButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                modal.close();
+            });
+        });
+
+        modal.addEventListener("close", () => {
+            previouslyFocused?.focus();
+        });
+
+        modal.addEventListener("click", (event) => {
+            if (!(event instanceof MouseEvent)) {
+                return;
+            }
+
+            const bounds = modal.getBoundingClientRect();
+
+            const clickedInside =
+                event.clientX >= bounds.left &&
+                event.clientX <= bounds.right &&
+                event.clientY >= bounds.top &&
+                event.clientY <= bounds.bottom;
+
+            if (!clickedInside) {
+                modal.close();
+            }
+        });
+    }
 </script>

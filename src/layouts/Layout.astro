@@ -65,13 +65,13 @@ const { currentLang, links } = getLanguageLinks(pathname);
                 t={t}
             />
 
-            <div
+            <main
                 id="main-content"
                 tabindex="-1"
                 class="flex-1 scroll-mt-24 focus:outline-none"
             >
                 <slot />
-            </div>
+            </main>
 
             <SiteFooter
                 lang={lang}

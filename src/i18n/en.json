@@ -14,7 +14,10 @@
         "subcategoryTitle": "Subcategories"
     },
     "home": {
-        "heroSubtitleFallback": "The citizens' website"
+        "heroSubtitleFallback": "The citizens' website",
+        "exploreCategories": "Explore the guide",
+        "categoriesIntro": "Find local businesses, services, organisations and resources organised by category.",
+        "welcomeText": "Welcome to GUIAPINEDA, the guide to local businesses, services, organisations and resources in Pineda de Mar, and to everything happening around town."
     },
     "comunicats": {
         "title": "Announcements",
@@ -86,7 +89,7 @@
         "pageLabel": "Page"
     },
     "fotoMes": {
-        "label": "📸 Photo of the month",
+        "label": "Photo of the month",
         "authorLabel": "Photo:",
         "placeLabel": "Place:",
         "submitButton": "Send your photo",

@@ -14,7 +14,10 @@
         "subcategoryTitle": "Subcategories"
     },
     "home": {
-        "heroSubtitleFallback": "La web del ciutadà"
+        "heroSubtitleFallback": "La web del ciutadà",
+        "exploreCategories": "Explora la guia",
+        "categoriesIntro": "Troba comerços, serveis, entitats i recursos locals organitzats per categories.",
+        "welcomeText": "Et donem la benvinguda a GUIAPINEDA, la guia per trobar comerços, serveis, entitats i recursos de Pineda de Mar, i per descobrir tot allò que passa al municipi."
     },
     "comunicats": {
         "title": "Comunicats",
@@ -86,7 +89,7 @@
         }
     },
     "fotoMes": {
-        "label": "📸 Foto del mes",
+        "label": "Foto del mes",
         "authorLabel": "Foto:",
         "placeLabel": "Lloc:",
         "submitButton": "Envia la teva foto",

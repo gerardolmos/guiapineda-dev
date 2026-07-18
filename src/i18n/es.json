@@ -14,7 +14,10 @@
         "subcategoryTitle": "Subcategorías"
     },
     "home": {
-        "heroSubtitleFallback": "La web del ciudadano"
+        "heroSubtitleFallback": "La web del ciudadano",
+        "exploreCategories": "Explora la guía",
+        "categoriesIntro": "Encuentra comercios, servicios, entidades y recursos locales organizados por categorías.",
+        "welcomeText": "Te damos la bienvenida a GUIAPINEDA, la guía para encontrar comercios, servicios, entidades y recursos de Pineda de Mar, y para descubrir todo lo que ocurre en el municipio."
     },
     "comunicats": {
         "title": "Comunicados",
@@ -86,7 +89,7 @@
         "pageLabel": "Página"
     },
     "fotoMes": {
-        "label": "📸 Foto del mes",
+        "label": "Foto del mes",
         "authorLabel": "Foto:",
         "placeLabel": "Lugar:",
         "submitButton": "Envía tu foto",

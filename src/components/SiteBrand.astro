@@ -1,4 +1,7 @@
 ---
+import brandMark from "../assets/images/marca.svg?url";
+import logoDark from "../assets/images/guiapinedaInv.svg?url";
+
 interface Props {
     href: string;
     tone?: "light" | "dark";
@@ -6,41 +9,31 @@ interface Props {
 
 const { href, tone = "light" } = Astro.props;
 
-const primaryTextClass = tone === "dark" ? "text-white" : "text-slate-950";
-const accentTextClass = tone === "dark" ? "text-sky-300" : "text-sky-700";
-const symbolSurfaceClass = tone === "dark" ? "bg-white" : "bg-slate-950";
+const logoSrc = tone === "dark" ? logoDark : brandMark;
+
+const logoClass =
+    tone === "dark"
+        ? "block h-8 w-auto sm:h-9"
+        : "block h-8 w-auto lg:h-9";
+
 const focusClass =
     tone === "dark"
-        ? "focus-visible:outline-amber-400"
-        : "focus-visible:outline-sky-600";
+        ? "focus-visible:outline-orange-400"
+        : "focus-visible:outline-cyan-600";
 ---
 
 <a
     href={href}
+    aria-label="GUIAPINEDA"
     class:list={[
-        "group inline-flex min-h-11 items-center gap-3 rounded-xl outline-none focus-visible:outline-2 focus-visible:outline-offset-4",
+        "inline-flex min-h-11 items-center rounded-md outline-none focus-visible:outline-2 focus-visible:outline-offset-4",
         focusClass,
     ]}
 >
-    <span
-        aria-hidden="true"
-        class:list={[
-            "grid size-10 shrink-0 grid-cols-2 gap-1 rounded-xl p-2 shadow-sm transition-transform duration-200 motion-safe:group-hover:-rotate-2",
-            symbolSurfaceClass,
-        ]}
-    >
-        <span class="rounded-sm bg-sky-500"></span>
-        <span class="rounded-sm bg-amber-400"></span>
-        <span class="rounded-sm bg-slate-400"></span>
-        <span class="rounded-sm bg-sky-300"></span>
-    </span>
-
-    <span
-        class="text-lg font-extrabold tracking-tight sm:text-xl"
-        aria-label="GUIAPINEDA"
-    >
-        <span class={primaryTextClass}>GUIA</span><span class={accentTextClass}
-            >PINEDA</span
-        >
-    </span>
+    <img
+        src={logoSrc}
+        alt=""
+        decoding="async"
+        class={logoClass}
+    />
 </a>
