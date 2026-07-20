@@ -2,70 +2,95 @@
 import { getTranslations } from "../i18n/getTranslations";
 import { getLocalizedName } from "../lib/getLocalizedName";
 import { getStrapiMediaUrl } from "../lib/strapi";
+import { getPrimaryMediaUrl } from "../lib/primaryMedia";
 import {
-    getPrimaryMediaUrl,
-    type PrimaryMedia,
-} from "../lib/primaryMedia";
+    formatCommerceScheduleSummary,
+    getCommerceAttentionModes,
+} from "../lib/commercePresentation";
+import type { Commerce } from "../types/commerce";
 
 interface Props {
-    nombre?: string;
-    nombre_es?: string | null;
-    nombre_en?: string | null;
-    slug: string;
+    comercio: Commerce;
     categoriaSlug: string;
     subcategoriaSlug?: string;
     lang: "ca" | "es" | "en";
-    descripcion_corta?: string | null;
-    descripcion_corta_en?: string | null;
-    direccion?: string | null;
-    imagen_principal?: PrimaryMedia;
 }
 
 const {
-    nombre,
-    nombre_es,
-    nombre_en,
-    slug,
+    comercio,
     categoriaSlug,
     subcategoriaSlug,
     lang,
-    descripcion_corta,
-    descripcion_corta_en,
-    direccion,
-    imagen_principal,
 } = Astro.props;
 
-const localizedName = getLocalizedName(
-    {
-        nombre,
-        nombre_es,
-        nombre_en,
-    },
-    lang,
-);
+const t = getTranslations(lang);
+
+const localizedName = getLocalizedName(comercio, lang);
 
 const descripcion =
     lang === "en"
-        ? descripcion_corta_en || descripcion_corta
-        : descripcion_corta;
+        ? comercio.descripcion_corta_en ||
+          comercio.descripcion_corta
+        : comercio.descripcion_corta;
 
-const imagePath = getPrimaryMediaUrl(imagen_principal);
-const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+const primaryMedia = Array.isArray(comercio.imagen_principal)
+    ? comercio.imagen_principal[0]
+    : comercio.imagen_principal;
+
+const imagePath = getPrimaryMediaUrl(comercio.imagen_principal);
+const imageUrl = imagePath
+    ? getStrapiMediaUrl(imagePath)
+    : null;
+
+const imageAlt =
+    primaryMedia?.alternativeText?.trim() ||
+    localizedName;
 
 const detalleUrl =
     lang === "es"
         ? subcategoriaSlug
-            ? `/es/${categoriaSlug}/${subcategoriaSlug}/${slug}`
-            : `/es/${categoriaSlug}/${slug}`
+            ? `/es/${categoriaSlug}/${subcategoriaSlug}/${comercio.slug}`
+            : `/es/${categoriaSlug}/${comercio.slug}`
         : lang === "en"
           ? subcategoriaSlug
-              ? `/en/${categoriaSlug}/${subcategoriaSlug}/${slug}`
-              : `/en/${categoriaSlug}/${slug}`
+              ? `/en/${categoriaSlug}/${subcategoriaSlug}/${comercio.slug}`
+              : `/en/${categoriaSlug}/${comercio.slug}`
           : subcategoriaSlug
-            ? `/${categoriaSlug}/${subcategoriaSlug}/${slug}`
-            : `/${categoriaSlug}/${slug}`;
+            ? `/${categoriaSlug}/${subcategoriaSlug}/${comercio.slug}`
+            : `/${categoriaSlug}/${comercio.slug}`;
 
-const t = getTranslations(lang);
+const locationText = [
+    comercio.zona?.trim(),
+    comercio.direccion?.trim(),
+]
+    .filter(Boolean)
+    .join(" · ");
+
+const highlightedServices = [
+    ...(comercio.servicios || []),
+]
+    .filter((service) => service.destacado)
+    .sort(
+        (first, second) =>
+            (first.orden ?? Number.MAX_SAFE_INTEGER) -
+            (second.orden ?? Number.MAX_SAFE_INTEGER),
+    )
+    .slice(0, 3)
+    .map((service) =>
+        lang === "en"
+            ? service.nombre_en || service.nombre
+            : service.nombre,
+    );
+
+const scheduleSummary =
+    formatCommerceScheduleSummary(
+        comercio.horario_semanal,
+        lang,
+        2,
+    );
+
+const attentionModes =
+    getCommerceAttentionModes(comercio, lang);
 ---
 
 <li class="h-full">
@@ -73,21 +98,19 @@ const t = getTranslations(lang);
         href={detalleUrl}
         class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm outline-none transition-[border-color,box-shadow] duration-200 hover:border-cyan-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
     >
-        <div class="aspect-[4/3] overflow-hidden bg-stone-100">
+        <div class="aspect-video overflow-hidden bg-stone-100">
             {
                 imageUrl ? (
                     <img
                         src={imageUrl}
-                        alt={localizedName}
+                        alt={imageAlt}
                         width="720"
                         height="540"
                         loading="lazy"
-                        class="size-full object-cover"
+                        class="size-full object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.02]"
                     />
                 ) : (
-                    <div
-                        class="flex size-full flex-col items-center justify-center gap-3 p-6 text-center text-slate-500"
-                    >
+                    <div class="flex size-full flex-col items-center justify-center gap-3 p-6 text-center text-slate-500">
                         <svg
                             aria-hidden="true"
                             viewBox="0 0 24 24"
@@ -112,15 +135,13 @@ const t = getTranslations(lang);
             }
         </div>
 
-        <div class="flex flex-1 flex-col p-5">
-            <h3
-                class="text-xl font-black leading-tight tracking-tight text-slate-950"
-            >
+        <div class="flex flex-1 flex-col p-4 sm:p-5">
+            <h3 class="text-xl font-black leading-tight tracking-tight text-slate-950">
                 {localizedName}
             </h3>
 
             {
-                direccion && (
+                locationText && (
                     <p class="mt-3 flex items-start gap-2 text-sm leading-6 text-slate-600">
                         <svg
                             aria-hidden="true"
@@ -136,18 +157,92 @@ const t = getTranslations(lang);
                             <circle cx="12" cy="10" r="2" />
                         </svg>
 
-                        <span>{direccion}</span>
+                        <span>{locationText}</span>
                     </p>
                 )
             }
 
-            <p class="mt-4 text-sm leading-6 text-slate-600">
+            <p class="mt-4 line-clamp-3 text-sm leading-6 text-slate-600">
                 {descripcion || t.common.noDescription}
             </p>
 
-            <span
-                class="mt-auto inline-flex min-h-11 items-end gap-2 pt-5 text-sm font-bold text-cyan-700"
-            >
+            {
+                highlightedServices.length > 0 && (
+                    <div class="mt-4 border-t border-slate-100 pt-4">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                            {t.comercios.servicesLabel}
+                        </p>
+
+                        <p class="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-slate-800">
+                            {highlightedServices.join(" · ")}
+                        </p>
+                    </div>
+                )
+            }
+
+            {
+                scheduleSummary.length > 0 && (
+                    <div class="mt-3 flex items-start gap-2.5 sm:gap-3">
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="mt-0.5 size-4 shrink-0 text-cyan-700"
+                        >
+                            <circle cx="12" cy="12" r="9" />
+                            <path d="M12 7v5l3 2" />
+                        </svg>
+
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                {t.comercios.scheduleLabel}
+                            </p>
+
+                            <div class="mt-1 space-y-1 text-sm leading-5 text-slate-700">
+                                {scheduleSummary.map((summary) => (
+                                    <p>{summary}</p>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+
+            {
+                attentionModes.length > 0 && (
+                    <div class="mt-3 flex items-start gap-2.5 sm:gap-3">
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="mt-0.5 size-4 shrink-0 text-cyan-700"
+                        >
+                            <path d="M4 20V10l8-6 8 6v10" />
+                            <path d="M9 20v-6h6v6" />
+                        </svg>
+
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                {t.comercios.attentionLabel}
+                            </p>
+
+                            <p class="mt-1 text-sm leading-5 text-slate-700">
+                                {attentionModes.join(" · ")}
+                            </p>
+                        </div>
+                    </div>
+                )
+            }
+
+            <span class="mt-auto inline-flex min-h-11 items-end gap-2 border-t border-slate-100 pt-4 text-sm font-bold text-cyan-700">
                 {t.common.viewMore}
 
                 <svg

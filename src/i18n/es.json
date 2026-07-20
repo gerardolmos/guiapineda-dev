@@ -63,7 +63,10 @@
         "resultsHeading": "Comercios y servicios",
         "resultSingular": "{count} resultado",
         "resultPlural": "{count} resultados",
-        "noImage": "Sin imagen"
+        "noImage": "Sin imagen",
+        "servicesLabel": "Especialidades",
+        "scheduleLabel": "Horario",
+        "attentionLabel": "Atención"
     },
     "millores": {
         "title": "Mejoremos Pineda",

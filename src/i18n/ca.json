@@ -63,7 +63,10 @@
         "resultsHeading": "Comerços i serveis",
         "resultSingular": "{count} resultat",
         "resultPlural": "{count} resultats",
-        "noImage": "Sense imatge"
+        "noImage": "Sense imatge",
+        "servicesLabel": "Especialitats",
+        "scheduleLabel": "Horari",
+        "attentionLabel": "Atenció"
     },
     "millores": {
         "title": "Millorem Pineda",

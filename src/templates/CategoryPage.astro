@@ -246,22 +246,9 @@ const noContent =
                     <ul class="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                         {comerciosDirectos.map((comercio: Comercio) => (
                             <ComercioCard
-                                nombre={comercio.nombre}
-                                nombre_es={comercio.nombre_es}
-                                nombre_en={comercio.nombre_en}
-                                slug={comercio.slug}
+                                comercio={comercio}
                                 categoriaSlug={slug}
                                 lang={lang}
-                                descripcion_corta={
-                                    comercio.descripcion_corta
-                                }
-                                descripcion_corta_en={
-                                    comercio.descripcion_corta_en
-                                }
-                                direccion={comercio.direccion}
-                                imagen_principal={
-                                    comercio.imagen_principal
-                                }
                             />
                         ))}
                     </ul>

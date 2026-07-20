@@ -63,7 +63,10 @@
         "resultsHeading": "Businesses and services",
         "resultSingular": "{count} result",
         "resultPlural": "{count} results",
-        "noImage": "No image"
+        "noImage": "No image",
+        "servicesLabel": "Specialities",
+        "scheduleLabel": "Opening hours",
+        "attentionLabel": "Available services"
     },
     "millores": {
         "title": "Improving Pineda",

@@ -206,23 +206,10 @@ const resultCount =
                     >
                         {comercios.map((comercio: Comercio) => (
                             <ComercioCard
-                                nombre={comercio.nombre}
-                                nombre_es={comercio.nombre_es}
-                                nombre_en={comercio.nombre_en}
-                                slug={comercio.slug}
+                                comercio={comercio}
                                 categoriaSlug={categoriaSlug}
                                 subcategoriaSlug={slug}
                                 lang={lang}
-                                descripcion_corta={
-                                    comercio.descripcion_corta
-                                }
-                                descripcion_corta_en={
-                                    comercio.descripcion_corta_en
-                                }
-                                direccion={comercio.direccion}
-                                imagen_principal={
-                                    comercio.imagen_principal
-                                }
                             />
                         ))}
                     </ul>
