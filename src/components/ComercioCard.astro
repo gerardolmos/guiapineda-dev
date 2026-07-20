@@ -2,6 +2,10 @@
 import { getTranslations } from "../i18n/getTranslations";
 import { getLocalizedName } from "../lib/getLocalizedName";
 import { getStrapiMediaUrl } from "../lib/strapi";
+import {
+    getPrimaryMediaUrl,
+    type PrimaryMedia,
+} from "../lib/primaryMedia";
 
 interface Props {
     nombre?: string;
@@ -14,9 +18,7 @@ interface Props {
     descripcion_corta?: string | null;
     descripcion_corta_en?: string | null;
     direccion?: string | null;
-    imagen_principal?: {
-        url: string;
-    }[];
+    imagen_principal?: PrimaryMedia;
 }
 
 const {
@@ -47,9 +49,8 @@ const descripcion =
         ? descripcion_corta_en || descripcion_corta
         : descripcion_corta;
 
-const imageUrl = imagen_principal?.[0]?.url
-    ? getStrapiMediaUrl(imagen_principal[0].url)
-    : null;
+const imagePath = getPrimaryMediaUrl(imagen_principal);
+const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
 
 const detalleUrl =
     lang === "es"

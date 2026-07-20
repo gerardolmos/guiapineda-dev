@@ -11,6 +11,10 @@ import {
     getWebsiteHref,
 } from "../lib/contactLinks";
 import type { StrapiBlock } from "../lib/strapiBlocks";
+import {
+    getPrimaryMediaUrl,
+    type PrimaryMedia,
+} from "../lib/primaryMedia";
 
 type Comercio = {
     nombre: string;
@@ -39,9 +43,7 @@ type Comercio = {
         nombre_en?: string | null;
         slug: string;
     } | null;
-    imagen_principal?: {
-        url: string;
-    }[];
+    imagen_principal?: PrimaryMedia;
 };
 
 const { slug, lang } = Astro.props;
@@ -77,9 +79,8 @@ const telephoneHref = getTelephoneHref(comercio.telefono);
 const emailHref = getEmailHref(comercio.email);
 const websiteHref = getWebsiteHref(comercio.web);
 
-const imageUrl = comercio.imagen_principal?.[0]?.url
-    ? getStrapiMediaUrl(comercio.imagen_principal[0].url)
-    : null;
+const imagePath = getPrimaryMediaUrl(comercio.imagen_principal);
+const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
 
 const comercioNombre = getLocalizedName(comercio, lang);
 

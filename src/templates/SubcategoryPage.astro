@@ -5,6 +5,7 @@ import { getTranslations } from "../i18n/getTranslations";
 import Layout from "../layouts/Layout.astro";
 import { endpoints, fetchAPI } from "../lib/api";
 import { getLocalizedName } from "../lib/getLocalizedName";
+import type { PrimaryMedia } from "../lib/primaryMedia";
 
 type Comercio = {
     nombre: string;
@@ -16,9 +17,7 @@ type Comercio = {
     direccion?: string | null;
     activo?: boolean;
     fecha_publicacion?: string | null;
-    imagen_principal?: {
-        url: string;
-    }[];
+    imagen_principal?: PrimaryMedia;
     categoria?: {
         slug: string;
     };
