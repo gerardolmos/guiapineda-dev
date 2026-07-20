@@ -23,7 +23,11 @@
         "heroSubtitleFallback": "La web del ciutadà",
         "exploreCategories": "Explora la guia",
         "categoriesIntro": "Troba comerços, serveis, entitats i recursos locals organitzats per categories.",
-        "welcomeText": "Et donem la benvinguda a GUIAPINEDA, la guia per trobar comerços, serveis, entitats i recursos de Pineda de Mar, i per descobrir tot allò que passa al municipi."
+        "welcomeText": "Et donem la benvinguda a GUIAPINEDA, la guia per trobar comerços, serveis, entitats i recursos de Pineda de Mar, i per descobrir tot allò que passa al municipi.",
+        "businessCtaTitle": "Tens un comerç o ofereixes un servei a Pineda?",
+        "businessCtaText": "Forma part de GUIAPINEDA i fes que més persones et trobin. Estem preparant una manera clara i senzilla perquè puguis afegir-hi la teva activitat.",
+        "businessCtaButton": "Vull aparèixer a GUIAPINEDA",
+        "businessCtaSoon": "Properament"
     },
     "comunicats": {
         "title": "Comunicats",
@@ -123,7 +127,8 @@
         "formPhotoHelp": "Formats permesos: JPG, PNG o WEBP. Màxim recomanat: 5 MB.",
         "formAccept": "Confirmo que soc autor/a de la fotografia i accepto que GUIAPINEDA pugui revisar-la i publicar-la si és seleccionada.",
         "formSubmit": "Enviar fotografia",
-        "goToForm": "Anar al formulari"
+        "goToForm": "Anar al formulari",
+        "homeIntro": "Comparteix la teva mirada de Pineda de Mar. Cada mes seleccionem una fotografia per donar protagonisme als racons, moments i persones que fan especial el municipi."
     },
     "footer": {
         "description": "La guia ciutadana per descobrir comerços, serveis, entitats i recursos de Pineda de Mar.",

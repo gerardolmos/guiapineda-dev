@@ -23,7 +23,11 @@
         "heroSubtitleFallback": "La web del ciudadano",
         "exploreCategories": "Explora la guía",
         "categoriesIntro": "Encuentra comercios, servicios, entidades y recursos locales organizados por categorías.",
-        "welcomeText": "Te damos la bienvenida a GUIAPINEDA, la guía para encontrar comercios, servicios, entidades y recursos de Pineda de Mar, y para descubrir todo lo que ocurre en el municipio."
+        "welcomeText": "Te damos la bienvenida a GUIAPINEDA, la guía para encontrar comercios, servicios, entidades y recursos de Pineda de Mar, y para descubrir todo lo que ocurre en el municipio.",
+        "businessCtaTitle": "¿Tienes un comercio u ofreces un servicio en Pineda?",
+        "businessCtaText": "Forma parte de GUIAPINEDA y haz que más personas te encuentren. Estamos preparando una forma clara y sencilla para que puedas añadir tu actividad.",
+        "businessCtaButton": "Quiero aparecer en GUIAPINEDA",
+        "businessCtaSoon": "Próximamente"
     },
     "comunicats": {
         "title": "Comunicados",
@@ -123,7 +127,8 @@
         "formPhotoHelp": "Formatos permitidos: JPG, PNG o WEBP. Máximo recomendado: 5 MB.",
         "formAccept": "Confirmo que soy autor/a de la fotografía y acepto que GUIAPINEDA pueda revisarla y publicarla si es seleccionada.",
         "formSubmit": "Enviar fotografía",
-        "goToForm": "Ir al formulario"
+        "goToForm": "Ir al formulario",
+        "homeIntro": "Comparte tu mirada de Pineda de Mar. Cada mes seleccionamos una fotografía para dar protagonismo a los rincones, momentos y personas que hacen especial el municipio."
     },
     "footer": {
         "description": "La guía ciudadana para descubrir comercios, servicios, entidades y recursos de Pineda de Mar.",

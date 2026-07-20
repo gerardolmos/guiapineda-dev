@@ -23,7 +23,11 @@
         "heroSubtitleFallback": "The citizens' website",
         "exploreCategories": "Explore the guide",
         "categoriesIntro": "Find local businesses, services, organisations and resources organised by category.",
-        "welcomeText": "Welcome to GUIAPINEDA, the guide to local businesses, services, organisations and resources in Pineda de Mar, and to everything happening around town."
+        "welcomeText": "Welcome to GUIAPINEDA, the guide to local businesses, services, organisations and resources in Pineda de Mar, and to everything happening around town.",
+        "businessCtaTitle": "Do you run a business or offer a service in Pineda?",
+        "businessCtaText": "Join GUIAPINEDA and help more people find you. We are preparing a clear and simple way for you to add your activity.",
+        "businessCtaButton": "I want to join GUIAPINEDA",
+        "businessCtaSoon": "Coming soon"
     },
     "comunicats": {
         "title": "Announcements",
@@ -123,7 +127,8 @@
         "formPhotoHelp": "Allowed formats: JPG, PNG or WEBP. Recommended maximum: 5 MB.",
         "formAccept": "I confirm that I am the author of the photograph and accept that GUIAPINEDA may review it and publish it if selected.",
         "formSubmit": "Send photograph",
-        "goToForm": "Go to form"
+        "goToForm": "Go to form",
+        "homeIntro": "Share your view of Pineda de Mar. Each month we select a photograph that highlights the places, moments and people that make the town special."
     },
     "footer": {
         "description": "The citizens’ guide to businesses, services, organisations and local resources in Pineda de Mar.",

@@ -1,0 +1,76 @@
+---
+import alimentacioIcon from "../assets/icons/alimentacio.svg?url";
+import allotjamentIcon from "../assets/icons/allotjament.svg?url";
+import bellesaIcon from "../assets/icons/bellesa.svg?url";
+import comercosIcon from "../assets/icons/comercos.svg?url";
+import comunitatsIcon from "../assets/icons/comunitats_i_associacions.svg?url";
+import construccioIcon from "../assets/icons/construccio.svg?url";
+import educacioIcon from "../assets/icons/educacio.svg?url";
+import legalIcon from "../assets/icons/legal.svg?url";
+import modaIcon from "../assets/icons/moda.svg?url";
+import ociIcon from "../assets/icons/oci.svg?url";
+import partitsPoliticsIcon from "../assets/icons/partits_politics.svg?url";
+import puntsInteresIcon from "../assets/icons/puntsInteres.svg?url";
+import restaurantsIcon from "../assets/icons/restaurants.svg?url";
+import salutBenestarIcon from "../assets/icons/salut_i_benestar.svg?url";
+import serveisProfessionalsIcon from "../assets/icons/serveis_profesionals.svg?url";
+import transportsIcon from "../assets/icons/transports.svg?url";
+import vehiclesIcon from "../assets/icons/vehicles.svg?url";
+
+interface Props {
+    slug: string;
+    className?: string;
+}
+
+const {
+    slug,
+    className = "size-10",
+} = Astro.props;
+
+const iconsBySlug: Record<string, string> = {
+    alimentacio: alimentacioIcon,
+    allotjament: allotjamentIcon,
+    bellesa: bellesaIcon,
+    comercos: comercosIcon,
+    "comunitat-i-associacions": comunitatsIcon,
+    construccio: construccioIcon,
+    educacio: educacioIcon,
+    "finances-legal": legalIcon,
+    moda: modaIcon,
+    oci: ociIcon,
+    "partits-politics": partitsPoliticsIcon,
+    "punts-de-interes": puntsInteresIcon,
+    restauracio: restaurantsIcon,
+    "salut-i-benestar": salutBenestarIcon,
+    "serveis-professionals": serveisProfessionalsIcon,
+    transport: transportsIcon,
+    vehicles: vehiclesIcon,
+};
+
+const iconUrl = iconsBySlug[slug];
+---
+
+{
+    iconUrl ? (
+        <img
+            src={iconUrl}
+            alt=""
+            aria-hidden="true"
+            width="48"
+            height="48"
+            loading="lazy"
+            decoding="async"
+            class:list={["block shrink-0 rounded-xl", className]}
+        />
+    ) : (
+        <span
+            aria-hidden="true"
+            class:list={[
+                "inline-flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-xs font-black tracking-wider text-slate-600",
+                className,
+            ]}
+        >
+            IC
+        </span>
+    )
+}
