@@ -11,7 +11,13 @@
     },
     "pages": {
         "categoryTitle": "Categories",
-        "subcategoryTitle": "Subcategories"
+        "subcategoryTitle": "Subcategories",
+        "categoryIntro": "Explore {category} and find the local businesses, services and resources you need.",
+        "subcategoryIntro": "Browse businesses and services for {subcategory}, within the {category} category.",
+        "subcategoriesHeading": "Choose a subcategory",
+        "categoryBusinessesHeading": "Businesses and services",
+        "backToGuide": "Back to the guide",
+        "backToCategory": "Back to {category}"
     },
     "home": {
         "heroSubtitleFallback": "The citizens' website",
@@ -33,7 +39,8 @@
         "noDescription": "No description",
         "notFound": "Not found",
         "viewMore": "View more",
-        "home": "Home"
+        "home": "Home",
+        "breadcrumbLabel": "Breadcrumb"
     },
     "comercios": {
         "missingInfo": "GUIAPINEDA grows with the participation of local businesses. If you cannot find a business, it may simply not have sent us its information yet.",
@@ -48,7 +55,11 @@
         "paginationLabel": "Pagination",
         "previousPage": "← Previous",
         "nextPage": "Next →",
-        "pageLabel": "Page"
+        "pageLabel": "Page",
+        "resultsHeading": "Businesses and services",
+        "resultSingular": "{count} result",
+        "resultPlural": "{count} results",
+        "noImage": "No image"
     },
     "millores": {
         "title": "Improving Pineda",

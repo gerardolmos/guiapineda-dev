@@ -1,12 +1,15 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { fetchAPI, endpoints } from "../lib/api";
-import { getTranslations } from "../i18n/getTranslations";
-import { getLocalizedName } from "../lib/getLocalizedName";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import ComercioCard from "../components/ComercioCard.astro";
+import { getTranslations } from "../i18n/getTranslations";
+import Layout from "../layouts/Layout.astro";
+import { endpoints, fetchAPI } from "../lib/api";
+import { getLocalizedName } from "../lib/getLocalizedName";
 
 type Subcategoria = {
     nombre: string;
+    nombre_es?: string | null;
+    nombre_en?: string | null;
     slug: string;
     activa?: boolean;
     categoria?: {
@@ -41,28 +44,29 @@ type Comercio = {
     }[];
 };
 
-const { slug, lang } = Astro.props;
+const { slug, lang = "ca" } = Astro.props;
 
 const t = getTranslations(lang);
 
 const data = await fetchAPI(endpoints.subcategorias);
-const todasLasSubcategorias: Subcategoria[] = data.data;
+const todasLasSubcategorias: Subcategoria[] = data.data || [];
 
 const categoriasData = await fetchAPI(endpoints.categorias);
-const todasLasCategorias: Categoria[] = categoriasData.data;
+const todasLasCategorias: Categoria[] = categoriasData.data || [];
 
 const comerciosData = await fetchAPI(endpoints.comercios);
-const todosLosComercios: Comercio[] = comerciosData.data;
+const todosLosComercios: Comercio[] = comerciosData.data || [];
 
 const categoriaActual = todasLasCategorias.find(
     (categoria) => categoria.slug === slug,
 );
 
-const subcategorias = todasLasSubcategorias.filter((sub: any) => {
+const subcategorias = todasLasSubcategorias.filter((subcategoria) => {
     const categoriaSlug =
-        sub.categoria?.slug || sub.categoria?.data?.attributes?.slug;
+        subcategoria.categoria?.slug ||
+        (subcategoria.categoria as any)?.data?.attributes?.slug;
 
-    return sub.activa === true && categoriaSlug === slug;
+    return subcategoria.activa === true && categoriaSlug === slug;
 });
 
 const comerciosDirectos = todosLosComercios.filter(
@@ -72,11 +76,14 @@ const comerciosDirectos = todosLosComercios.filter(
         !comercio.subcategoria,
 );
 
-const baseCategoriaUrl = lang === "es" ? "/es" : lang === "en" ? "/en" : "";
+const languagePrefix =
+    lang === "es" ? "/es" : lang === "en" ? "/en" : "";
+
+const homeUrl = languagePrefix || "/";
 
 const categoryName = categoriaActual
     ? getLocalizedName(categoriaActual, lang)
-    : "";
+    : t.pages.categoryTitle;
 
 const description =
     lang === "es"
@@ -84,81 +91,237 @@ const description =
         : lang === "en"
           ? `Discover businesses and services in the ${categoryName} category in Pineda de Mar.`
           : `Descobreix comerços i serveis de la categoria ${categoryName} a Pineda de Mar.`;
+
+const categoryIntro = t.pages.categoryIntro.replace(
+    "{category}",
+    categoryName,
+);
+
+const categoryStyles = [
+    {
+        icon: "border-orange-200 bg-orange-50 text-orange-800",
+        hover: "hover:border-orange-300 hover:bg-orange-50",
+        arrow: "text-orange-600",
+        focus: "focus-visible:outline-orange-600",
+    },
+    {
+        icon: "border-lime-200 bg-lime-50 text-lime-800",
+        hover: "hover:border-lime-300 hover:bg-lime-50",
+        arrow: "text-lime-700",
+        focus: "focus-visible:outline-lime-600",
+    },
+    {
+        icon: "border-cyan-200 bg-cyan-50 text-cyan-800",
+        hover: "hover:border-cyan-300 hover:bg-cyan-50",
+        arrow: "text-cyan-700",
+        focus: "focus-visible:outline-cyan-600",
+    },
+    {
+        icon: "border-purple-200 bg-purple-50 text-purple-800",
+        hover: "hover:border-purple-300 hover:bg-purple-50",
+        arrow: "text-purple-700",
+        focus: "focus-visible:outline-purple-600",
+    },
+    {
+        icon: "border-rose-200 bg-rose-50 text-rose-800",
+        hover: "hover:border-rose-300 hover:bg-rose-50",
+        arrow: "text-rose-700",
+        focus: "focus-visible:outline-rose-600",
+    },
+];
+
+const noContent =
+    subcategorias.length === 0 && comerciosDirectos.length === 0;
 ---
 
 <Layout
-    title={categoriaActual
-        ? `${getLocalizedName(categoriaActual, lang)} | GUIAPINEDA`
-        : t.pages.categoryTitle}
+    title={`${categoryName} | GUIAPINEDA`}
     description={description}
     lang={lang}
 >
-    <nav>
-        <a href={lang === "es" ? "/es" : lang === "en" ? "/en" : "/"}>
-            {t.common.home}
-        </a>
-        {" > "}
-        <span>
-            {categoriaActual ? getLocalizedName(categoriaActual, lang) : ""}
-        </span>
-    </nav>
+    <header class="border-b border-stone-200 bg-stone-100">
+        <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+            <Breadcrumbs
+                label={t.common.breadcrumbLabel}
+                back={{
+                    label: t.pages.backToGuide,
+                    href: homeUrl,
+                }}
+                items={[
+                    {
+                        label: t.common.home,
+                        href: homeUrl,
+                    },
+                    {
+                        label: categoryName,
+                    },
+                ]}
+            />
 
-    <h1>
+            <div class="mt-7 max-w-3xl">
+                <h1
+                    class="text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl"
+                >
+                    {categoryName}
+                </h1>
+
+                <p class="mt-4 text-lg leading-8 text-slate-600">
+                    {categoryIntro}
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <div
+        class="mx-auto max-w-7xl space-y-14 px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
+    >
         {
-            categoriaActual
-                ? getLocalizedName(categoriaActual, lang)
-                : t.pages.categoryTitle
+            subcategorias.length > 0 && (
+                <section aria-labelledby="subcategories-heading">
+                    <div class="max-w-2xl">
+                        <h2
+                            id="subcategories-heading"
+                            class="text-3xl font-black tracking-tight text-slate-950"
+                        >
+                            {t.pages.subcategoriesHeading}
+                        </h2>
+                    </div>
+
+                    <ul class="mt-7 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+                        {subcategorias.map(
+                            (subcategoria: Subcategoria, index: number) => {
+                                const style =
+                                    categoryStyles[
+                                        index % categoryStyles.length
+                                    ];
+
+                                return (
+                                    <li>
+                                        <a
+                                            href={`${languagePrefix}/${slug}/${subcategoria.slug}`}
+                                            class:list={[
+                                                "group flex h-full min-h-32 flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-sm outline-none transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 sm:min-h-36 sm:p-5",
+                                                style.hover,
+                                                style.focus,
+                                            ]}
+                                        >
+                                            <span
+                                                aria-hidden="true"
+                                                class:list={[
+                                                    "inline-flex size-10 items-center justify-center rounded-lg border text-xs font-black tracking-wider",
+                                                    style.icon,
+                                                ]}
+                                            >
+                                                IC
+                                            </span>
+
+                                            <span class="mt-6 flex items-end justify-between gap-4">
+                                                <span class="text-sm font-bold leading-snug text-slate-900 sm:text-base">
+                                                    {getLocalizedName(
+                                                        subcategoria,
+                                                        lang,
+                                                    )}
+                                                </span>
+
+                                                <svg
+                                                    aria-hidden="true"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    class:list={[
+                                                        "size-5 shrink-0 transition-transform duration-200 motion-safe:group-hover:translate-x-1",
+                                                        style.arrow,
+                                                    ]}
+                                                >
+                                                    <path d="M5 12h14" />
+                                                    <path d="m13 6 6 6-6 6" />
+                                                </svg>
+                                            </span>
+                                        </a>
+                                    </li>
+                                );
+                            },
+                        )}
+                    </ul>
+                </section>
+            )
         }
-    </h1>
 
-    <p>{t.comercios.missingInfo}</p>
-
-    <ul>
         {
-            subcategorias.map((subcategoria: Subcategoria) => (
-                <li>
-                    <a
-                        href={`${baseCategoriaUrl}/${slug}/${subcategoria.slug}`}
-                    >
-                        {getLocalizedName(subcategoria, lang)}
-                    </a>
-                </li>
-            ))
+            comerciosDirectos.length > 0 && (
+                <section aria-labelledby="category-businesses-heading">
+                    <div class="max-w-2xl">
+                        <h2
+                            id="category-businesses-heading"
+                            class="text-3xl font-black tracking-tight text-slate-950"
+                        >
+                            {t.pages.categoryBusinessesHeading}
+                        </h2>
+                    </div>
+
+                    <ul class="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                        {comerciosDirectos.map((comercio: Comercio) => (
+                            <ComercioCard
+                                nombre={comercio.nombre}
+                                nombre_es={comercio.nombre_es}
+                                nombre_en={comercio.nombre_en}
+                                slug={comercio.slug}
+                                categoriaSlug={slug}
+                                lang={lang}
+                                descripcion_corta={
+                                    comercio.descripcion_corta
+                                }
+                                descripcion_corta_en={
+                                    comercio.descripcion_corta_en
+                                }
+                                direccion={comercio.direccion}
+                                imagen_principal={
+                                    comercio.imagen_principal
+                                }
+                            />
+                        ))}
+                    </ul>
+                </section>
+            )
         }
-    </ul>
-    {
-        comerciosDirectos.length > 0 ? (
-            <ul>
-                {comerciosDirectos.map((comercio: Comercio) => (
-                    <ComercioCard
-                        nombre={comercio.nombre}
-                        nombre_es={comercio.nombre_es}
-                        nombre_en={comercio.nombre_en}
-                        slug={comercio.slug}
-                        categoriaSlug={slug}
-                        lang={lang}
-                        descripcion_corta={comercio.descripcion_corta}
-                        descripcion_corta_en={comercio.descripcion_corta_en}
-                        direccion={comercio.direccion}
-                        imagen_principal={comercio.imagen_principal}
-                    />
-                ))}
-            </ul>
-        ) : (
-            subcategorias.length === 0 && (
-                <section>
-                    <h2>{t.comercios.emptyTitle}</h2>
 
-                    <p>{t.comercios.emptyText}</p>
+        {
+            !noContent && (
+                <aside
+                    class="border-l-4 border-cyan-500 bg-cyan-50 px-5 py-4 text-sm leading-6 text-slate-700"
+                >
+                    <p>{t.comercios.missingInfo}</p>
+                </aside>
+            )
+        }
 
-                    <p>
-                        {t.comercios.contactText}
-                        <a href="mailto:info@guiapineda.com">
+        {
+            noContent && (
+                <section
+                    class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+                >
+                    <h2 class="text-2xl font-black text-slate-950">
+                        {t.comercios.emptyTitle}
+                    </h2>
+
+                    <p class="mt-4 max-w-2xl leading-7 text-slate-600">
+                        {t.comercios.emptyText}
+                    </p>
+
+                    <p class="mt-5 text-sm text-slate-600">
+                        {t.comercios.contactText}{" "}
+                        <a
+                            href="mailto:info@guiapineda.com"
+                            class="font-semibold text-cyan-700 underline underline-offset-4 outline-none hover:text-cyan-800 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                        >
                             info@guiapineda.com
                         </a>
                     </p>
                 </section>
             )
-        )
-    }
+        }
+    </div>
 </Layout>

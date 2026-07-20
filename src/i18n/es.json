@@ -11,7 +11,13 @@
     },
     "pages": {
         "categoryTitle": "Categorías",
-        "subcategoryTitle": "Subcategorías"
+        "subcategoryTitle": "Subcategorías",
+        "categoryIntro": "Explora las opciones de {category} y encuentra los comercios, servicios y recursos locales que necesitas.",
+        "subcategoryIntro": "Consulta los comercios y servicios de {subcategory}, dentro de la categoría {category}.",
+        "subcategoriesHeading": "Elige una subcategoría",
+        "categoryBusinessesHeading": "Comercios y servicios",
+        "backToGuide": "Volver a la guía",
+        "backToCategory": "Volver a {category}"
     },
     "home": {
         "heroSubtitleFallback": "La web del ciudadano",
@@ -33,7 +39,8 @@
         "noDescription": "Sin descripción",
         "notFound": "No encontrado",
         "viewMore": "Ver más",
-        "home": "Inicio"
+        "home": "Inicio",
+        "breadcrumbLabel": "Migas de pan"
     },
     "comercios": {
         "missingInfo": "GUIAPINEDA crece con la participación de los comercios locales. Si no encuentras un negocio, puede ser que todavía no nos haya enviado su información.",
@@ -48,7 +55,11 @@
         "paginationLabel": "Paginación",
         "previousPage": "← Anterior",
         "nextPage": "Siguiente →",
-        "pageLabel": "Página"
+        "pageLabel": "Página",
+        "resultsHeading": "Comercios y servicios",
+        "resultSingular": "{count} resultado",
+        "resultPlural": "{count} resultados",
+        "noImage": "Sin imagen"
     },
     "millores": {
         "title": "Mejoremos Pineda",

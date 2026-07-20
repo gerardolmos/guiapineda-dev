@@ -11,7 +11,13 @@
     },
     "pages": {
         "categoryTitle": "Categories",
-        "subcategoryTitle": "Subcategories"
+        "subcategoryTitle": "Subcategories",
+        "categoryIntro": "Explora les opcions de {category} i troba els comerços, serveis i recursos locals que necessites.",
+        "subcategoryIntro": "Consulta els comerços i serveis de {subcategory}, dins de la categoria {category}.",
+        "subcategoriesHeading": "Tria una subcategoria",
+        "categoryBusinessesHeading": "Comerços i serveis",
+        "backToGuide": "Tornar a la guia",
+        "backToCategory": "Tornar a {category}"
     },
     "home": {
         "heroSubtitleFallback": "La web del ciutadà",
@@ -33,7 +39,8 @@
         "noDescription": "Sense descripció",
         "notFound": "No trobat",
         "viewMore": "Veure més",
-        "home": "Inici"
+        "home": "Inici",
+        "breadcrumbLabel": "Fil d’Ariadna"
     },
     "comercios": {
         "missingInfo": "GUIAPINEDA creix amb la participació dels comerços locals. Si no trobes un negoci, pot ser que encara no ens hagi enviat la seva informació.",
@@ -48,7 +55,11 @@
         "paginationLabel": "Paginació",
         "previousPage": "← Anterior",
         "nextPage": "Següent →",
-        "pageLabel": "Pàgina"
+        "pageLabel": "Pàgina",
+        "resultsHeading": "Comerços i serveis",
+        "resultSingular": "{count} resultat",
+        "resultPlural": "{count} resultats",
+        "noImage": "Sense imatge"
     },
     "millores": {
         "title": "Millorem Pineda",

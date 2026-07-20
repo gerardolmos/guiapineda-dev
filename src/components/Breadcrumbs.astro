@@ -1,0 +1,84 @@
+---
+interface BreadcrumbItem {
+    label: string;
+    href?: string;
+}
+
+interface Props {
+    items: BreadcrumbItem[];
+    label: string;
+    back?: {
+        label: string;
+        href: string;
+    };
+}
+
+const { items, label, back } = Astro.props;
+---
+
+{
+    back && (
+        <nav aria-label={label} class="md:hidden">
+            <a
+                href={back.href}
+                class="inline-flex min-h-11 items-center gap-2 rounded-lg text-sm font-semibold text-slate-700 outline-none transition-colors duration-200 hover:text-cyan-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+            >
+                <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="size-4"
+                >
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+
+                {back.label}
+            </a>
+        </nav>
+    )
+}
+
+<nav aria-label={label} class="hidden md:block">
+    <ol class="flex flex-wrap items-center gap-y-2 text-sm text-slate-600">
+        {
+            items.map((item, index) => (
+                <li class="flex items-center">
+                    {index > 0 && (
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="mx-2 size-4 shrink-0 text-slate-400"
+                        >
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
+                    )}
+
+                    {item.href ? (
+                        <a
+                            href={item.href}
+                            class="inline-flex min-h-10 items-center rounded-lg font-medium outline-none transition-colors duration-200 hover:text-cyan-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                        >
+                            {item.label}
+                        </a>
+                    ) : (
+                        <span
+                            aria-current="page"
+                            class="font-semibold text-slate-900"
+                        >
+                            {item.label}
+                        </span>
+                    )}
+                </li>
+            ))
+        }
+    </ol>
+</nav>
