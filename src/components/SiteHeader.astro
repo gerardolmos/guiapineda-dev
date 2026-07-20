@@ -75,7 +75,7 @@ const mobileLinkClasses = (active: boolean) => [
 
 <header
     id="site-header"
-    class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm"
+    class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm transition-transform duration-300 ease-out motion-reduce:transition-none"
 >
     <div
         class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:min-h-20 lg:px-8"
@@ -241,6 +241,61 @@ const mobileLinkClasses = (active: boolean) => [
         closeIcon instanceof SVGElement
     ) {
         const menuLinks = panel.querySelectorAll("a[href]");
+        const desktopMediaQuery = window.matchMedia(
+            "(min-width: 1024px)",
+        );
+
+        let lastScrollY = Math.max(window.scrollY, 0);
+        let ticking = false;
+
+        const menuIsOpen = () =>
+            button.getAttribute("aria-expanded") === "true";
+
+        const showHeader = () => {
+            header.classList.remove("-translate-y-full");
+        };
+
+        const hideHeader = () => {
+            header.classList.add("-translate-y-full");
+        };
+
+        const updateHeader = () => {
+            const currentScrollY = Math.max(window.scrollY, 0);
+            const difference = currentScrollY - lastScrollY;
+
+            if (
+                desktopMediaQuery.matches ||
+                currentScrollY <= 16 ||
+                menuIsOpen()
+            ) {
+                showHeader();
+                lastScrollY = currentScrollY;
+                ticking = false;
+                return;
+            }
+
+            if (Math.abs(difference) >= 8) {
+                if (
+                    difference > 0 &&
+                    currentScrollY > header.offsetHeight
+                ) {
+                    hideHeader();
+                } else if (difference < 0) {
+                    showHeader();
+                }
+
+                lastScrollY = currentScrollY;
+            }
+
+            ticking = false;
+        };
+
+        const requestHeaderUpdate = () => {
+            if (ticking) return;
+
+            ticking = true;
+            requestAnimationFrame(updateHeader);
+        };
 
         const setMenuOpen = (open, restoreFocus = false) => {
             panel.hidden = !open;
@@ -254,6 +309,8 @@ const mobileLinkClasses = (active: boolean) => [
             );
 
             if (open) {
+                showHeader();
+
                 requestAnimationFrame(() => {
                     menuLinks[0]?.focus();
                 });
@@ -265,8 +322,7 @@ const mobileLinkClasses = (active: boolean) => [
         };
 
         button.addEventListener("click", () => {
-            const isOpen = button.getAttribute("aria-expanded") === "true";
-            setMenuOpen(!isOpen);
+            setMenuOpen(!menuIsOpen());
         });
 
         menuLinks.forEach((link) => {
@@ -276,10 +332,7 @@ const mobileLinkClasses = (active: boolean) => [
         });
 
         document.addEventListener("keydown", (event) => {
-            if (
-                event.key === "Escape" &&
-                button.getAttribute("aria-expanded") === "true"
-            ) {
+            if (event.key === "Escape" && menuIsOpen()) {
                 setMenuOpen(false, true);
             }
         });
@@ -289,16 +342,25 @@ const mobileLinkClasses = (active: boolean) => [
 
             if (
                 target instanceof Node &&
-                button.getAttribute("aria-expanded") === "true" &&
+                menuIsOpen() &&
                 !header.contains(target)
             ) {
                 setMenuOpen(false);
             }
         });
 
-        const desktopMediaQuery = window.matchMedia("(min-width: 1024px)");
+        header.addEventListener("focusin", showHeader);
+
+        window.addEventListener(
+            "scroll",
+            requestHeaderUpdate,
+            { passive: true },
+        );
 
         desktopMediaQuery.addEventListener("change", (event) => {
+            showHeader();
+            lastScrollY = Math.max(window.scrollY, 0);
+
             if (event.matches) {
                 setMenuOpen(false);
             }
