@@ -5,7 +5,7 @@ import { getTranslations } from "../i18n/getTranslations";
 import Layout from "../layouts/Layout.astro";
 import { endpoints, fetchAPI } from "../lib/api";
 import { getLocalizedName } from "../lib/getLocalizedName";
-import type { PrimaryMedia } from "../lib/primaryMedia";
+import type { Commerce as Comercio } from "../types/commerce";
 
 type Subcategoria = {
     nombre: string;
@@ -23,24 +23,6 @@ type Categoria = {
     nombre_es?: string | null;
     nombre_en?: string | null;
     slug: string;
-};
-
-type Comercio = {
-    nombre: string;
-    nombre_es?: string | null;
-    nombre_en?: string | null;
-    slug: string;
-    activo?: boolean;
-    categoria?: {
-        slug: string;
-    };
-    subcategoria?: {
-        slug: string;
-    } | null;
-    descripcion_corta?: string | null;
-    descripcion_corta_en?: string | null;
-    direccion?: string | null;
-    imagen_principal?: PrimaryMedia;
 };
 
 const { slug, lang = "ca" } = Astro.props;

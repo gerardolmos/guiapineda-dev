@@ -10,41 +10,8 @@ import {
     getTelephoneHref,
     getWebsiteHref,
 } from "../lib/contactLinks";
-import type { StrapiBlock } from "../lib/strapiBlocks";
-import {
-    getPrimaryMediaUrl,
-    type PrimaryMedia,
-} from "../lib/primaryMedia";
-
-type Comercio = {
-    nombre: string;
-    nombre_es?: string | null;
-    nombre_en?: string | null;
-    slug: string;
-    activo?: boolean;
-    descripcion_corta?: string | null;
-    descripcion_corta_en?: string | null;
-    descripcion_completa?: StrapiBlock[] | null;
-    descripcion_completa_en?: StrapiBlock[] | null;
-    direccion?: string | null;
-    telefono?: string | null;
-    email?: string | null;
-    web?: string | null;
-    horario?: StrapiBlock[] | null;
-    categoria?: {
-        nombre: string;
-        nombre_es?: string | null;
-        nombre_en?: string | null;
-        slug: string;
-    };
-    subcategoria?: {
-        nombre: string;
-        nombre_es?: string | null;
-        nombre_en?: string | null;
-        slug: string;
-    } | null;
-    imagen_principal?: PrimaryMedia;
-};
+import type { Commerce as Comercio } from "../types/commerce";
+import { getPrimaryMediaUrl } from "../lib/primaryMedia";
 
 const { slug, lang } = Astro.props;
 

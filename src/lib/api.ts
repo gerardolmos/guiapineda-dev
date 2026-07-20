@@ -1,10 +1,40 @@
 import { STRAPI_URL } from "./strapi";
 
+function buildPopulateEndpoint(
+    path: string,
+    fields: string[],
+): string {
+    const query = fields
+        .map(
+            (field, index) =>
+                `populate[${index}]=${encodeURIComponent(field)}`,
+        )
+        .join("&");
+
+    return `${path}?${query}`;
+}
+
+const comerciosEndpoint = buildPopulateEndpoint(
+    "/api/comercios",
+    [
+        "categoria",
+        "subcategoria",
+        "imagen_principal",
+        "logo",
+        "galeria",
+        "redes_sociales",
+        "servicios",
+        "acciones_comerciales",
+        "datos_destacados",
+        "horario_semanal",
+    ],
+);
+
 export const endpoints = {
     home: "/api/home?populate=*",
     categorias: "/api/categoria-comercios?populate=*",
     subcategorias: "/api/subcategorias?populate=*",
-    comercios: "/api/comercios?populate=*",
+    comercios: comerciosEndpoint,
     comunicats: "/api/comunicats?populate=*",
     millores: "/api/millores?populate=*",
 };

@@ -5,26 +5,7 @@ import { getTranslations } from "../i18n/getTranslations";
 import Layout from "../layouts/Layout.astro";
 import { endpoints, fetchAPI } from "../lib/api";
 import { getLocalizedName } from "../lib/getLocalizedName";
-import type { PrimaryMedia } from "../lib/primaryMedia";
-
-type Comercio = {
-    nombre: string;
-    nombre_es?: string | null;
-    nombre_en?: string | null;
-    slug: string;
-    descripcion_corta?: string | null;
-    descripcion_corta_en?: string | null;
-    direccion?: string | null;
-    activo?: boolean;
-    fecha_publicacion?: string | null;
-    imagen_principal?: PrimaryMedia;
-    categoria?: {
-        slug: string;
-    };
-    subcategoria?: {
-        slug: string;
-    };
-};
+import type { Commerce as Comercio } from "../types/commerce";
 
 type Subcategoria = {
     nombre: string;
