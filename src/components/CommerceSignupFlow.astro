@@ -73,6 +73,35 @@ const text =
               descriptionDoneTitle: "Molt bé. Ara ja us coneixem una mica més.",
               descriptionDoneText:
                   "El següent serà molt fàcil: on sou i com pot contactar la gent amb vosaltres.",
+              contactNext: "Seguim",
+              contactSection: "On trobar-vos",
+              contactProgress: "Posem-vos al mapa",
+              contactTitle: "On us trobem?",
+              contactIntro:
+                  "Adreça i contacte, tot en un sol lloc. No cal omplir-ho tot: només el que realment utilitzeu.",
+              addressLabel: "Quina és la vostra adreça?",
+              addressPlaceholder: "Carrer, número, local...",
+              contactWaysTitle: "Com pot contactar la gent amb vosaltres?",
+              contactWaysHelp:
+                  "Necessitem com a mínim una forma de contacte.",
+              phoneLabel: "Telèfon",
+              phonePlaceholder: "93 000 00 00",
+              whatsappSame: "Aquest número també té WhatsApp",
+              whatsappLabel: "WhatsApp",
+              whatsappPlaceholder: "600 000 000",
+              emailLabel: "Correu electrònic",
+              emailPlaceholder: "hola@elteunegoci.cat",
+              webLabel: "Web",
+              webPlaceholder: "www.elteunegoci.cat",
+              optional: "Opcional",
+              contactContinue: "Ja ho tenim",
+              contactPreview: "Cada vegada sembla més una fitxa real",
+              previewAddress: "Aquí apareixerà la vostra adreça",
+              previewContactEmpty:
+                  "Quan afegiu una forma de contacte, la veureu aquí.",
+              contactDoneTitle: "Perfecte. Ja sabem com trobar-vos.",
+              contactDoneText:
+                  "Ara arriba una de les parts més útils: explicar quan obriu i com ateneu els vostres clients.",
           }
         : {
               eyebrow: "Forma parte de GUIAPINEDA",
@@ -127,6 +156,35 @@ const text =
               descriptionDoneTitle: "Muy bien. Ahora ya os conocemos un poco más.",
               descriptionDoneText:
                   "Lo siguiente será muy fácil: dónde estáis y cómo puede contactar la gente con vosotros.",
+              contactNext: "Seguimos",
+              contactSection: "Dónde encontraros",
+              contactProgress: "Vamos a poneros en el mapa",
+              contactTitle: "¿Dónde os encontramos?",
+              contactIntro:
+                  "Dirección y contacto, todo en un mismo sitio. No hace falta rellenarlo todo: solo lo que realmente utilizáis.",
+              addressLabel: "¿Cuál es vuestra dirección?",
+              addressPlaceholder: "Calle, número, local...",
+              contactWaysTitle: "¿Cómo puede contactar la gente con vosotros?",
+              contactWaysHelp:
+                  "Necesitamos al menos una forma de contacto.",
+              phoneLabel: "Teléfono",
+              phonePlaceholder: "93 000 00 00",
+              whatsappSame: "Este número también tiene WhatsApp",
+              whatsappLabel: "WhatsApp",
+              whatsappPlaceholder: "600 000 000",
+              emailLabel: "Correo electrónico",
+              emailPlaceholder: "hola@tunegocio.es",
+              webLabel: "Web",
+              webPlaceholder: "www.tunegocio.es",
+              optional: "Opcional",
+              contactContinue: "Ya lo tenemos",
+              contactPreview: "Cada vez se parece más a una ficha real",
+              previewAddress: "Aquí aparecerá vuestra dirección",
+              previewContactEmpty:
+                  "Cuando añadas una forma de contacto, la verás aquí.",
+              contactDoneTitle: "Perfecto. Ya sabemos cómo encontraros.",
+              contactDoneText:
+                  "Ahora llega una de las partes más útiles: explicar cuándo abrís y cómo atendéis a vuestros clientes.",
           };
 
 const caHref = "/alta-comerc";
@@ -720,8 +778,339 @@ const esHref = "/es/alta-comercio";
                 {text.descriptionDoneText}
             </p>
 
+            <div
+                class="mt-8 flex flex-wrap items-center justify-center gap-3"
+            >
+                <button
+                    id="description-checkpoint-back"
+                    type="button"
+                    class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                >
+                    ← {text.back}
+                </button>
+
+                <button
+                    id="description-checkpoint-next"
+                    type="button"
+                    class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700"
+                >
+                    {text.contactNext}
+                    <span aria-hidden="true" class="ml-3">→</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="signup-contact"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8">
+                <div class="mb-4 flex items-center justify-between gap-4">
+                    <p class="font-bold text-slate-950">
+                        {text.contactSection}
+                    </p>
+
+                    <div class="flex items-center gap-1.5" aria-hidden="true">
+                        <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-fuchsia-500"></span>
+                        <span class="h-2 w-10 rounded-full bg-amber-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                    </div>
+                </div>
+
+                <p class="text-sm font-semibold text-amber-700">
+                    {text.contactProgress}
+                </p>
+            </div>
+
+            <div
+                class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]"
+            >
+                <div
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+                >
+                    <h2
+                        class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {text.contactTitle}
+                    </h2>
+
+                    <p class="mt-3 max-w-2xl text-slate-600">
+                        {text.contactIntro}
+                    </p>
+
+                    <div class="mt-9">
+                        <label
+                            for="business-address"
+                            class="block text-lg font-bold text-slate-950"
+                        >
+                            {text.addressLabel}
+                        </label>
+
+                        <input
+                            id="business-address"
+                            name="direccion"
+                            type="text"
+                            autocomplete="street-address"
+                            maxlength="180"
+                            placeholder={text.addressPlaceholder}
+                            class="mt-3 w-full rounded-2xl border border-slate-300 bg-white px-5 py-4 text-base font-semibold text-slate-950 outline-none transition placeholder:font-normal placeholder:text-slate-400 focus:border-amber-500 focus:ring-4 focus:ring-amber-100"
+                        />
+                    </div>
+
+                    <div
+                        class="my-9 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"
+                    >
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-950">
+                            {text.contactWaysTitle}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            {text.contactWaysHelp}
+                        </p>
+
+                        <div class="mt-6 grid gap-5 sm:grid-cols-2">
+                            <div>
+                                <label
+                                    for="business-phone"
+                                    class="flex items-center justify-between gap-3 font-bold text-slate-950"
+                                >
+                                    <span>{text.phoneLabel}</span>
+                                    <span
+                                        class="text-xs font-semibold text-slate-400"
+                                    >
+                                        {text.optional}
+                                    </span>
+                                </label>
+
+                                <input
+                                    id="business-phone"
+                                    name="telefono"
+                                    type="tel"
+                                    autocomplete="tel"
+                                    maxlength="30"
+                                    placeholder={text.phonePlaceholder}
+                                    class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3.5 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                                />
+
+                                <label
+                                    class="mt-3 flex cursor-pointer items-start gap-3 rounded-xl bg-emerald-50 px-3.5 py-3 text-sm font-semibold text-emerald-950"
+                                >
+                                    <input
+                                        id="whatsapp-same-phone"
+                                        type="checkbox"
+                                        class="mt-0.5 size-4 accent-emerald-600"
+                                    />
+                                    <span>{text.whatsappSame}</span>
+                                </label>
+                            </div>
+
+                            <div>
+                                <label
+                                    for="business-whatsapp"
+                                    class="flex items-center justify-between gap-3 font-bold text-slate-950"
+                                >
+                                    <span>{text.whatsappLabel}</span>
+                                    <span
+                                        class="text-xs font-semibold text-slate-400"
+                                    >
+                                        {text.optional}
+                                    </span>
+                                </label>
+
+                                <input
+                                    id="business-whatsapp"
+                                    name="whatsapp"
+                                    type="tel"
+                                    autocomplete="tel"
+                                    maxlength="30"
+                                    placeholder={text.whatsappPlaceholder}
+                                    class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3.5 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-100 disabled:text-slate-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label
+                                    for="business-email"
+                                    class="flex items-center justify-between gap-3 font-bold text-slate-950"
+                                >
+                                    <span>{text.emailLabel}</span>
+                                    <span
+                                        class="text-xs font-semibold text-slate-400"
+                                    >
+                                        {text.optional}
+                                    </span>
+                                </label>
+
+                                <input
+                                    id="business-email"
+                                    name="email"
+                                    type="email"
+                                    autocomplete="email"
+                                    maxlength="180"
+                                    placeholder={text.emailPlaceholder}
+                                    class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3.5 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                                />
+                            </div>
+
+                            <div>
+                                <label
+                                    for="business-web"
+                                    class="flex items-center justify-between gap-3 font-bold text-slate-950"
+                                >
+                                    <span>{text.webLabel}</span>
+                                    <span
+                                        class="text-xs font-semibold text-slate-400"
+                                    >
+                                        {text.optional}
+                                    </span>
+                                </label>
+
+                                <input
+                                    id="business-web"
+                                    name="web"
+                                    type="url"
+                                    inputmode="url"
+                                    autocomplete="url"
+                                    maxlength="250"
+                                    placeholder={text.webPlaceholder}
+                                    class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3.5 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="mt-10 flex items-center justify-between gap-4 border-t border-slate-100 pt-6"
+                    >
+                        <button
+                            id="contact-back"
+                            type="button"
+                            class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                        >
+                            ← {text.back}
+                        </button>
+
+                        <button
+                            id="contact-continue"
+                            type="button"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                        >
+                            {text.contactContinue}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside
+                    class="lg:sticky lg:top-28"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
+                    <p
+                        class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-500"
+                    >
+                        {text.contactPreview}
+                    </p>
+
+                    <div
+                        class="overflow-hidden rounded-[1.7rem] border border-slate-200 bg-white shadow-sm"
+                    >
+                        <div class="relative aspect-[4/3] bg-slate-200">
+                            <div
+                                class="absolute bottom-4 left-4 flex size-16 items-center justify-center rounded-2xl border-4 border-white bg-amber-300 text-xl font-black text-slate-950 shadow"
+                            >
+                                GP
+                            </div>
+                        </div>
+
+                        <div class="p-5">
+                            <p
+                                id="contact-preview-category"
+                                class="text-sm font-bold text-sky-700"
+                            >
+                                {text.previewCategory}
+                            </p>
+
+                            <h3
+                                id="contact-preview-name"
+                                class="mt-2 text-2xl font-black tracking-tight text-slate-950"
+                            >
+                                {text.previewName}
+                            </h3>
+
+                            <p
+                                id="contact-preview-short"
+                                class="mt-3 text-sm leading-relaxed text-slate-600"
+                            >
+                                {text.previewShort}
+                            </p>
+
+                            <div
+                                class="mt-5 rounded-2xl border-l-4 border-amber-400 bg-amber-50 px-4 py-3"
+                            >
+                                <p
+                                    id="contact-preview-address"
+                                    class="text-sm font-semibold text-slate-800"
+                                >
+                                    {text.previewAddress}
+                                </p>
+                            </div>
+
+                            <div
+                                id="contact-preview-methods"
+                                class="mt-4 flex flex-wrap gap-2"
+                            >
+                                <p
+                                    id="contact-preview-empty"
+                                    class="text-sm text-slate-400"
+                                >
+                                    {text.previewContactEmpty}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="signup-contact-checkpoint"
+        hidden
+        class="flex min-h-[65vh] items-center px-5 py-16 sm:px-8"
+    >
+        <div
+            class="mx-auto w-full max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-12"
+        >
+            <div
+                class="mx-auto flex size-14 items-center justify-center rounded-full bg-amber-100 text-2xl font-black text-amber-700"
+                aria-hidden="true"
+            >
+                ✓
+            </div>
+
+            <h2
+                class="mt-6 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+            >
+                {text.contactDoneTitle}
+            </h2>
+
+            <p class="mx-auto mt-4 max-w-xl text-lg text-slate-600">
+                {text.contactDoneText}
+            </p>
+
             <button
-                id="description-checkpoint-back"
+                id="contact-checkpoint-back"
                 type="button"
                 class="mt-8 rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
             >
@@ -739,6 +1128,10 @@ const esHref = "/es/alta-comercio";
     const descriptionCheckpoint = document.getElementById(
         "signup-description-checkpoint",
     );
+    const contact = document.getElementById("signup-contact");
+    const contactCheckpoint = document.getElementById(
+        "signup-contact-checkpoint",
+    );
 
     const startButton = document.getElementById("signup-start");
     const backButton = document.getElementById("checkpoint-back");
@@ -751,6 +1144,52 @@ const esHref = "/es/alta-comercio";
         document.getElementById("description-continue");
     const descriptionCheckpointBackButton =
         document.getElementById("description-checkpoint-back");
+    const descriptionCheckpointNextButton =
+        document.getElementById("description-checkpoint-next");
+
+    const contactBackButton =
+        document.getElementById("contact-back");
+    const contactContinueButton =
+        document.getElementById("contact-continue");
+    const contactCheckpointBackButton =
+        document.getElementById("contact-checkpoint-back");
+
+    const addressInput = document.getElementById(
+        "business-address",
+    ) as HTMLInputElement | null;
+
+    const phoneInput = document.getElementById(
+        "business-phone",
+    ) as HTMLInputElement | null;
+
+    const whatsappInput = document.getElementById(
+        "business-whatsapp",
+    ) as HTMLInputElement | null;
+
+    const emailInput = document.getElementById(
+        "business-email",
+    ) as HTMLInputElement | null;
+
+    const webInput = document.getElementById(
+        "business-web",
+    ) as HTMLInputElement | null;
+
+    const whatsappSamePhone = document.getElementById(
+        "whatsapp-same-phone",
+    ) as HTMLInputElement | null;
+
+    const contactPreviewName =
+        document.getElementById("contact-preview-name");
+    const contactPreviewCategory =
+        document.getElementById("contact-preview-category");
+    const contactPreviewShort =
+        document.getElementById("contact-preview-short");
+    const contactPreviewAddress =
+        document.getElementById("contact-preview-address");
+    const contactPreviewMethods =
+        document.getElementById("contact-preview-methods");
+    const contactPreviewEmpty =
+        document.getElementById("contact-preview-empty");
 
     const shortDescription = document.getElementById(
         "business-short-description",
@@ -864,6 +1303,112 @@ const esHref = "/es/alta-comercio";
         }
 
         updateContinueState();
+    }
+
+    function updateContactPreview() {
+        if (contactPreviewName && nameInput) {
+            contactPreviewName.textContent =
+                nameInput.value.trim() ||
+                nameInput.placeholder ||
+                "";
+        }
+
+        const categoryText =
+            categoryLabel && subcategoryLabel
+                ? `${categoryLabel} · ${subcategoryLabel}`
+                : categoryLabel;
+
+        if (contactPreviewCategory && categoryText) {
+            contactPreviewCategory.textContent = categoryText;
+        }
+
+        if (contactPreviewShort && shortDescription) {
+            contactPreviewShort.textContent =
+                shortDescription.value.trim() ||
+                shortDescription.placeholder ||
+                "";
+        }
+
+        if (contactPreviewAddress && addressInput) {
+            contactPreviewAddress.textContent =
+                addressInput.value.trim() ||
+                addressInput.placeholder ||
+                "";
+        }
+
+        if (contactPreviewMethods && contactPreviewEmpty) {
+            contactPreviewMethods
+                .querySelectorAll("[data-contact-chip]")
+                .forEach((item) => item.remove());
+
+            const methods = [
+                {
+                    label: "☎",
+                    value: phoneInput?.value.trim() || "",
+                    className:
+                        "bg-sky-50 text-sky-900 border-sky-200",
+                },
+                {
+                    label: "WhatsApp",
+                    value: whatsappInput?.value.trim() || "",
+                    className:
+                        "bg-emerald-50 text-emerald-900 border-emerald-200",
+                },
+                {
+                    label: "@",
+                    value: emailInput?.value.trim() || "",
+                    className:
+                        "bg-violet-50 text-violet-900 border-violet-200",
+                },
+                {
+                    label: "Web",
+                    value: webInput?.value.trim() || "",
+                    className:
+                        "bg-fuchsia-50 text-fuchsia-900 border-fuchsia-200",
+                },
+            ].filter((item) => item.value);
+
+            contactPreviewEmpty.hidden = methods.length > 0;
+
+            methods.forEach((method) => {
+                const chip = document.createElement("span");
+
+                chip.dataset.contactChip = "true";
+                chip.className =
+                    `inline-flex max-w-full items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold ${method.className}`;
+
+                const label = document.createElement("span");
+                label.textContent = method.label;
+
+                const value = document.createElement("span");
+                value.className = "truncate";
+                value.textContent = method.value;
+
+                chip.append(label, value);
+                contactPreviewMethods.appendChild(chip);
+            });
+        }
+
+        const hasContact = Boolean(
+            phoneInput?.value.trim() ||
+            whatsappInput?.value.trim() ||
+            emailInput?.value.trim() ||
+            webInput?.value.trim(),
+        );
+
+        const emailValid =
+            !emailInput?.value.trim() || emailInput.checkValidity();
+
+        if (contactContinueButton) {
+            contactContinueButton.toggleAttribute(
+                "disabled",
+                !(
+                    addressInput?.value.trim() &&
+                    hasContact &&
+                    emailValid
+                ),
+            );
+        }
     }
 
     function updateDescriptionPreview() {
@@ -1057,6 +1602,110 @@ const esHref = "/es/alta-comercio";
                 business,
                 checkpoint,
                 descriptionCheckpoint,
+                contact,
+                contactCheckpoint,
+            );
+        },
+    );
+
+    descriptionCheckpointNextButton?.addEventListener(
+        "click",
+        () => {
+            updatePreview();
+            updateDescriptionPreview();
+            updateContactPreview();
+
+            showScreen(
+                contact,
+                welcome,
+                business,
+                checkpoint,
+                description,
+                descriptionCheckpoint,
+                contactCheckpoint,
+            );
+
+            window.setTimeout(() => {
+                addressInput?.focus();
+            }, 250);
+        },
+    );
+
+    [
+        addressInput,
+        phoneInput,
+        whatsappInput,
+        emailInput,
+        webInput,
+    ].forEach((input) => {
+        input?.addEventListener("input", updateContactPreview);
+    });
+
+    whatsappSamePhone?.addEventListener("change", () => {
+        if (!whatsappInput || !phoneInput) return;
+
+        if (whatsappSamePhone.checked) {
+            whatsappInput.value = phoneInput.value;
+            whatsappInput.disabled = true;
+        } else {
+            whatsappInput.disabled = false;
+        }
+
+        updateContactPreview();
+    });
+
+    phoneInput?.addEventListener("input", () => {
+        if (
+            whatsappSamePhone?.checked &&
+            whatsappInput
+        ) {
+            whatsappInput.value = phoneInput.value;
+        }
+
+        updateContactPreview();
+    });
+
+    contactBackButton?.addEventListener("click", () => {
+        showScreen(
+            descriptionCheckpoint,
+            welcome,
+            business,
+            checkpoint,
+            description,
+            contact,
+            contactCheckpoint,
+        );
+    });
+
+    contactContinueButton?.addEventListener("click", () => {
+        if (
+            contactContinueButton.hasAttribute("disabled")
+        ) {
+            return;
+        }
+
+        showScreen(
+            contactCheckpoint,
+            welcome,
+            business,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+            contact,
+        );
+    });
+
+    contactCheckpointBackButton?.addEventListener(
+        "click",
+        () => {
+            showScreen(
+                contact,
+                welcome,
+                business,
+                checkpoint,
+                description,
+                descriptionCheckpoint,
+                contactCheckpoint,
             );
         },
     );
