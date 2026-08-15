@@ -1,24 +1,113 @@
 ---
+import type { ImageMetadata } from "astro";
 import Layout from "../layouts/Layout.astro";
 import StrapiBlocks from "../components/StrapiBlocks.astro";
 import { fetchAPI, endpoints } from "../lib/api";
 import { getTranslations } from "../i18n/getTranslations";
 import { getLocalizedName } from "../lib/getLocalizedName";
 import { getStrapiMediaUrl } from "../lib/strapi";
+import { getPrimaryMediaUrl } from "../lib/primaryMedia";
+import {
+    formatCommerceScheduleDetails,
+    getCommerceAttentionModes,
+} from "../lib/commercePresentation";
 import {
     getEmailHref,
     getTelephoneHref,
     getWebsiteHref,
 } from "../lib/contactLinks";
-import type { Commerce as Comercio } from "../types/commerce";
-import { getPrimaryMediaUrl } from "../lib/primaryMedia";
+import { sanitizeStrapiUrl } from "../lib/strapiBlocks";
 
-const { slug, lang } = Astro.props;
+import arribarIcon from "../assets/icons/arribar.svg";
+import trucarIcon from "../assets/icons/trucar.svg";
+import whatsappIcon from "../assets/icons/whatsapp.svg";
+import mailIcon from "../assets/icons/mail.svg";
+import webIcon from "../assets/icons/web.svg";
+
+import instagramIcon from "../assets/icons/insta.svg";
+import facebookIcon from "../assets/icons/FB.svg";
+import linkedinIcon from "../assets/icons/linkedin.svg";
+import tiktokIcon from "../assets/icons/tiktok.svg";
+import xIcon from "../assets/icons/X.svg";
+import youtubeIcon from "../assets/icons/youtube.svg";
+
+import type { Commerce } from "../types/commerce";
+
+type Locale = "ca" | "es" | "en";
+
+type ContactItem = {
+    label: string;
+    text: string;
+    href: string | null;
+    icon: ImageMetadata;
+    external: boolean;
+};
+
+const { slug, lang } = Astro.props as {
+    slug: string;
+    lang: Locale;
+};
 
 const t = getTranslations(lang);
 
+const copy = {
+    ca: {
+        breadcrumbLabel: "Ruta de navegació",
+        aboutTitle: "Sobre el comerç",
+        servicesTitle: "Què ofereix",
+        scheduleTitle: "Horari",
+        socialTitle: "Xarxes socials",
+        additionalTitle: "Informació addicional",
+        attentionTitle: "Modalitats d’atenció",
+        serviceAreaLabel: "Àmbit de servei",
+        directionsLabel: "Indicacions",
+        addressLabel: "Adreça",
+        phoneLabel: "Telèfon",
+        whatsappLabel: "WhatsApp",
+        emailLabel: "Correu electrònic",
+        websiteLabel: "Web",
+        noImage: "Imatge no disponible",
+    },
+    es: {
+        breadcrumbLabel: "Ruta de navegación",
+        aboutTitle: "Sobre el comercio",
+        servicesTitle: "Qué ofrece",
+        scheduleTitle: "Horario",
+        socialTitle: "Redes sociales",
+        additionalTitle: "Información adicional",
+        attentionTitle: "Modalidades de atención",
+        serviceAreaLabel: "Ámbito de servicio",
+        directionsLabel: "Indicaciones",
+        addressLabel: "Dirección",
+        phoneLabel: "Teléfono",
+        whatsappLabel: "WhatsApp",
+        emailLabel: "Correo electrónico",
+        websiteLabel: "Web",
+        noImage: "Imagen no disponible",
+    },
+    en: {
+        breadcrumbLabel: "Breadcrumb",
+        aboutTitle: "About the business",
+        servicesTitle: "What it offers",
+        scheduleTitle: "Opening hours",
+        socialTitle: "Social media",
+        additionalTitle: "Additional information",
+        attentionTitle: "Available services",
+        serviceAreaLabel: "Service area",
+        directionsLabel: "Directions",
+        addressLabel: "Address",
+        phoneLabel: "Phone",
+        whatsappLabel: "WhatsApp",
+        emailLabel: "Email",
+        websiteLabel: "Website",
+        noImage: "Image unavailable",
+    },
+} as const;
+
+const labels = copy[lang];
+
 const data = await fetchAPI(endpoints.comercios);
-const todos: Comercio[] = data.data;
+const todos: Commerce[] = data.data;
 
 const comercio = todos.find(
     (item) => item.slug === slug && item.activo === true,
@@ -30,26 +119,48 @@ if (!comercio) {
     );
 }
 
-const descripcionCorta =
-    lang === "en"
-        ? comercio.descripcion_corta_en ||
-          comercio.descripcion_corta
-        : comercio.descripcion_corta;
+function localizedText(
+    base?: string | null,
+    english?: string | null,
+): string {
+    if (lang === "en") {
+        return english?.trim() || base?.trim() || "";
+    }
+
+    return base?.trim() || "";
+}
+
+function getWhatsAppHref(
+    value?: string | null,
+): string | null {
+    if (!value) {
+        return null;
+    }
+
+    const digits = value.replace(/\D/g, "");
+
+    if (digits.length < 8 || digits.length > 15) {
+        return null;
+    }
+
+    const internationalNumber =
+        digits.length === 9 ? `34${digits}` : digits;
+
+    return `https://wa.me/${internationalNumber}`;
+}
+
+const comercioNombre = getLocalizedName(comercio, lang);
+
+const descripcionCorta = localizedText(
+    comercio.descripcion_corta,
+    comercio.descripcion_corta_en,
+);
 
 const descripcionCompleta =
     lang === "en"
         ? comercio.descripcion_completa_en ||
           comercio.descripcion_completa
         : comercio.descripcion_completa;
-
-const telephoneHref = getTelephoneHref(comercio.telefono);
-const emailHref = getEmailHref(comercio.email);
-const websiteHref = getWebsiteHref(comercio.web);
-
-const imagePath = getPrimaryMediaUrl(comercio.imagen_principal);
-const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
-
-const comercioNombre = getLocalizedName(comercio, lang);
 
 const categoriaNombre = comercio.categoria
     ? getLocalizedName(comercio.categoria, lang)
@@ -62,28 +173,237 @@ const subcategoriaNombre = comercio.subcategoria
 const homeUrl =
     lang === "es" ? "/es" : lang === "en" ? "/en" : "/";
 
-const categoriaUrl =
-    lang === "es"
-        ? `/es/${comercio.categoria?.slug}`
-        : lang === "en"
-          ? `/en/${comercio.categoria?.slug}`
-          : `/${comercio.categoria?.slug}`;
+const languagePrefix =
+    lang === "ca" ? "" : `/${lang}`;
+
+const categoriaUrl = comercio.categoria
+    ? `${languagePrefix}/${comercio.categoria.slug}`
+    : homeUrl;
 
 const subcategoriaUrl =
-    comercio.subcategoria && comercio.categoria
-        ? lang === "es"
-            ? `/es/${comercio.categoria.slug}/${comercio.subcategoria.slug}`
-            : lang === "en"
-              ? `/en/${comercio.categoria.slug}/${comercio.subcategoria.slug}`
-              : `/${comercio.categoria.slug}/${comercio.subcategoria.slug}`
+    comercio.categoria && comercio.subcategoria
+        ? `${languagePrefix}/${comercio.categoria.slug}/${comercio.subcategoria.slug}`
         : "";
 
+const primaryMedia = Array.isArray(
+    comercio.imagen_principal,
+)
+    ? comercio.imagen_principal[0]
+    : comercio.imagen_principal;
+
+const primaryImagePath = getPrimaryMediaUrl(
+    comercio.imagen_principal,
+);
+
+const primaryImageUrl = primaryImagePath
+    ? getStrapiMediaUrl(primaryImagePath)
+    : null;
+
+const primaryImageAlt =
+    primaryMedia?.alternativeText?.trim() ||
+    comercioNombre;
+
+const logoUrl = comercio.logo?.url
+    ? getStrapiMediaUrl(comercio.logo.url)
+    : null;
+
+const telephoneHref = getTelephoneHref(
+    comercio.telefono,
+);
+
+const emailHref = getEmailHref(comercio.email);
+const websiteHref = getWebsiteHref(comercio.web);
+const whatsappHref = getWhatsAppHref(
+    comercio.whatsapp,
+);
+const mapHref = sanitizeStrapiUrl(comercio.mapa_url);
+
+const addressText = [
+    comercio.zona?.trim(),
+    comercio.direccion?.trim(),
+]
+    .filter(Boolean)
+    .join(" · ");
+
+const addressItem: ContactItem | null = addressText
+    ? {
+          label: labels.addressLabel,
+          text: addressText,
+          href: mapHref,
+          icon: arribarIcon,
+          external: Boolean(mapHref),
+      }
+    : null;
+
+const phoneItem: ContactItem | null = comercio.telefono?.trim()
+    ? {
+          label: labels.phoneLabel,
+          text: comercio.telefono.trim(),
+          href: telephoneHref,
+          icon: trucarIcon,
+          external: false,
+      }
+    : null;
+
+const whatsappItem: ContactItem | null = comercio.whatsapp?.trim()
+    ? {
+          label: labels.whatsappLabel,
+          text: "WhatsApp",
+          href: whatsappHref,
+          icon: whatsappIcon,
+          external: true,
+      }
+    : null;
+
+const emailItem: ContactItem | null = comercio.email?.trim()
+    ? {
+          label: labels.emailLabel,
+          text: comercio.email.trim(),
+          href: emailHref,
+          icon: mailIcon,
+          external: false,
+      }
+    : null;
+
+const websiteItem: ContactItem | null = comercio.web?.trim()
+    ? {
+          label: labels.websiteLabel,
+          text: comercio.web.trim(),
+          href: websiteHref,
+          icon: webIcon,
+          external: true,
+      }
+    : null;
+
+const primaryContactActions = [phoneItem, whatsappItem].filter(
+    (item): item is ContactItem => Boolean(item),
+);
+
+const secondaryContactItems = [emailItem, websiteItem].filter(
+    (item): item is ContactItem => Boolean(item),
+);
+
+const hasContactBlock =
+    Boolean(addressItem) ||
+    primaryContactActions.length > 0 ||
+    secondaryContactItems.length > 0;
+
+const highlights = [
+    ...(comercio.datos_destacados || []),
+]
+    .sort(
+        (first, second) =>
+            (first.orden ?? Number.MAX_SAFE_INTEGER) -
+            (second.orden ?? Number.MAX_SAFE_INTEGER),
+    )
+    .map((item) => ({
+        label: localizedText(
+            item.etiqueta,
+            item.etiqueta_en,
+        ),
+        value: localizedText(
+            item.valor,
+            item.valor_en,
+        ),
+    }))
+    .filter((item) => item.label && item.value);
+
+const services = [
+    ...(comercio.servicios || []),
+]
+    .sort(
+        (first, second) =>
+            (first.orden ?? Number.MAX_SAFE_INTEGER) -
+            (second.orden ?? Number.MAX_SAFE_INTEGER),
+    )
+    .map((service) => ({
+        name: localizedText(
+            service.nombre,
+            service.nombre_en,
+        ),
+        description: localizedText(
+            service.descripcion,
+            service.descripcion_en,
+        ),
+        highlighted: service.destacado === true,
+    }))
+    .filter((service) => service.name);
+
+const scheduleLines =
+    formatCommerceScheduleDetails(
+        comercio.horario_semanal,
+        lang,
+    );
+
+const attentionModes =
+    getCommerceAttentionModes(comercio, lang);
+
+const socialNetworks = [
+    ...(comercio.redes_sociales || []),
+]
+    .sort(
+        (first, second) =>
+            (first.orden ?? Number.MAX_SAFE_INTEGER) -
+            (second.orden ?? Number.MAX_SAFE_INTEGER),
+    )
+    .flatMap((network) => {
+        const href = sanitizeStrapiUrl(network.url);
+
+        if (!href) {
+            return [];
+        }
+
+        return [
+            {
+                ...network,
+                href,
+                label:
+                    network.usuario?.trim() ||
+                    network.plataforma,
+            },
+        ];
+    });
+
+const socialIcons: Record<string, ImageMetadata> = {
+    instagram: instagramIcon,
+    facebook: facebookIcon,
+    linkedin: linkedinIcon,
+    tiktok: tiktokIcon,
+    x: xIcon,
+    youtube: youtubeIcon,
+};
+
+const gallery = (comercio.galeria || [])
+    .filter((media) => Boolean(media?.url))
+    .slice(0, 4);
+
+const indicaciones = localizedText(
+    comercio.indicaciones,
+    comercio.indicaciones_en,
+);
+
+const ambitoServicio = localizedText(
+    comercio.ambito_servicio,
+    comercio.ambito_servicio_en,
+);
+
+const hasFullDescription =
+    Array.isArray(descripcionCompleta) &&
+    descripcionCompleta.length > 0;
+
+const hasAdditionalInformation =
+    highlights.length > 0 ||
+    attentionModes.length > 0 ||
+    Boolean(indicaciones) ||
+    Boolean(ambitoServicio);
+
 const description =
-    lang === "es"
-        ? `Descubre ${comercioNombre} en Pineda de Mar: dirección, contacto y más información.`
+    descripcionCorta ||
+    (lang === "es"
+        ? `Descubre ${comercioNombre} en Pineda de Mar.`
         : lang === "en"
-          ? `Discover ${comercioNombre} in Pineda de Mar: address, contact and more information.`
-          : `Descobreix ${comercioNombre} a Pineda de Mar: adreça, contacte i més informació.`;
+          ? `Discover ${comercioNombre} in Pineda de Mar.`
+          : `Descobreix ${comercioNombre} a Pineda de Mar.`);
 ---
 
 <Layout
@@ -91,94 +411,591 @@ const description =
     description={description}
     lang={lang}
 >
-    <nav>
-        <a href={homeUrl}>{t.common.home}</a>
-        {" > "}
-
-        {
-            comercio.categoria && (
-                <a href={categoriaUrl}>{categoriaNombre}</a>
-            )
-        }
-
-        {
-            comercio.subcategoria && (
-                <>
-                    {" > "}
-                    <a href={subcategoriaUrl}>
-                        {subcategoriaNombre}
-                    </a>
-                </>
-            )
-        }
-
-        {" > "}
-        <span>{comercioNombre}</span>
-    </nav>
-
-    <h1>{comercioNombre}</h1>
-
-    {imageUrl && <img src={imageUrl} alt={comercioNombre} />}
-
-    {descripcionCorta && <p>{descripcionCorta}</p>}
-
-    {
-        Array.isArray(descripcionCompleta) &&
-            descripcionCompleta.length > 0 && (
-                <StrapiBlocks blocks={descripcionCompleta} />
-            )
-    }
-
-    {comercio.direccion && <p>{comercio.direccion}</p>}
-
-    {
-        comercio.telefono && (
-            <p>
-                {
-                    telephoneHref ? (
-                        <a href={telephoneHref}>
-                            {comercio.telefono}
+    <main class="bg-white pb-20">
+        <div class="mx-auto max-w-7xl px-5 py-6 sm:px-8 lg:px-10">
+            <nav
+                aria-label={labels.breadcrumbLabel}
+                class="overflow-x-auto"
+            >
+                <ol class="flex min-w-max items-center gap-2 text-sm font-semibold text-slate-600">
+                    <li>
+                        <a
+                            href={homeUrl}
+                            class="rounded-sm outline-none hover:text-cyan-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+                        >
+                            {t.common.home}
                         </a>
-                    ) : (
-                        comercio.telefono
-                    )
-                }
-            </p>
-        )
-    }
+                    </li>
 
-    {
-        comercio.email && (
-            <p>
+                    {
+                        comercio.categoria && (
+                            <>
+                                <li
+                                    aria-hidden="true"
+                                    class="text-slate-400"
+                                >
+                                    /
+                                </li>
+
+                                <li>
+                                    <a
+                                        href={categoriaUrl}
+                                        class="rounded-sm outline-none hover:text-cyan-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+                                    >
+                                        {categoriaNombre}
+                                    </a>
+                                </li>
+                            </>
+                        )
+                    }
+
+                    {
+                        comercio.subcategoria && (
+                            <>
+                                <li
+                                    aria-hidden="true"
+                                    class="text-slate-400"
+                                >
+                                    /
+                                </li>
+
+                                <li>
+                                    <a
+                                        href={subcategoriaUrl}
+                                        class="rounded-sm outline-none hover:text-cyan-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+                                    >
+                                        {subcategoriaNombre}
+                                    </a>
+                                </li>
+                            </>
+                        )
+                    }
+
+                    <li
+                        aria-hidden="true"
+                        class="text-slate-400"
+                    >
+                        /
+                    </li>
+
+                    <li
+                        aria-current="page"
+                        class="max-w-64 truncate text-slate-950"
+                    >
+                        {comercioNombre}
+                    </li>
+                </ol>
+            </nav>
+
+            <section class="mt-6 flex flex-col overflow-hidden rounded-3xl border border-cyan-200 bg-white shadow-sm lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:bg-cyan-50">
+                <div class="order-2 flex flex-col px-5 pb-5 pt-0 sm:px-8 sm:pb-8 lg:order-1 lg:p-10">
+                    {
+                        logoUrl && (
+                            <div class="relative z-10 -mt-12 mb-5 flex size-24 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-2.5 shadow-md sm:-mt-14 sm:size-28 lg:mt-0 lg:mb-7 lg:size-36 lg:p-3 lg:shadow-sm">
+                                <img
+                                    src={logoUrl}
+                                    alt=""
+                                    width="144"
+                                    height="144"
+                                    class="size-full object-contain"
+                                />
+                            </div>
+                        )
+                    }
+
+                    {
+                        (categoriaNombre ||
+                            subcategoriaNombre) && (
+                            <p class="text-sm font-black uppercase tracking-wider text-cyan-800">
+                                {[
+                                    categoriaNombre,
+                                    subcategoriaNombre,
+                                ]
+                                    .filter(Boolean)
+                                    .join(" · ")}
+                            </p>
+                        )
+                    }
+
+                    <h1 class="mt-3 text-4xl font-black leading-none tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                        {comercioNombre}
+                    </h1>
+
+                    {
+                        descripcionCorta && (
+                            <p class="mt-4 max-w-2xl text-base leading-7 text-slate-700 sm:text-lg sm:leading-8 lg:mt-5">
+                                {descripcionCorta}
+                            </p>
+                        )
+                    }
+
+                    {
+                        hasContactBlock && (
+                            <div class="mt-6 lg:mt-7">
+                                {
+                                    addressItem && (
+                                        addressItem.href ? (
+                                            <a
+                                                href={addressItem.href}
+                                                target={
+                                                    addressItem.external
+                                                        ? "_blank"
+                                                        : undefined
+                                                }
+                                                rel={
+                                                    addressItem.external
+                                                        ? "noopener noreferrer"
+                                                        : undefined
+                                                }
+                                                class="group flex w-fit max-w-full items-start gap-2.5 rounded-md border-l-4 border-amber-400 bg-amber-50/60 px-3 py-2 text-slate-800 outline-none transition-colors hover:bg-amber-50 hover:text-amber-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-500"
+                                            >
+                                                <img
+                                                    src={addressItem.icon.src}
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                    class="mt-0.5 size-5 shrink-0 object-contain"
+                                                />
+
+                                                <span class="min-w-0 text-sm font-semibold leading-6 sm:text-base">
+                                                    {addressItem.text}
+                                                </span>
+                                            </a>
+                                        ) : (
+                                            <div class="flex w-fit max-w-full items-start gap-2.5 rounded-md border-l-4 border-amber-400 bg-amber-50/60 px-3 py-2 text-slate-800">
+                                                <img
+                                                    src={addressItem.icon.src}
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                    class="mt-0.5 size-5 shrink-0 object-contain"
+                                                />
+
+                                                <span class="min-w-0 text-sm font-semibold leading-6 sm:text-base">
+                                                    {addressItem.text}
+                                                </span>
+                                            </div>
+                                        )
+                                    )
+                                }
+
+                                {
+                                    primaryContactActions.length > 0 && (
+                                        <div class="mt-3 flex flex-wrap gap-2.5">
+                                            {primaryContactActions.map(
+                                                (item) => {
+                                                    const content = (
+                                                        <>
+                                                            <img
+                                                                src={item.icon.src}
+                                                                alt=""
+                                                                aria-hidden="true"
+                                                                class="size-5 shrink-0 object-contain"
+                                                            />
+
+                                                            <span class="min-w-0 truncate">
+                                                                {item.text}
+                                                            </span>
+                                                        </>
+                                                    );
+
+                                                    return item.href ? (
+                                                        <a
+                                                            href={item.href}
+                                                            target={
+                                                                item.external
+                                                                    ? "_blank"
+                                                                    : undefined
+                                                            }
+                                                            rel={
+                                                                item.external
+                                                                    ? "noopener noreferrer"
+                                                                    : undefined
+                                                            }
+                                                            class:list={[
+                                                                "inline-flex min-h-11 min-w-0 items-center gap-2 rounded-xl border px-3.5 py-2 text-sm font-semibold text-slate-900 outline-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 sm:text-base",
+                                                                item.label === labels.whatsappLabel
+                                                                    ? "border-emerald-400 bg-emerald-100 hover:bg-emerald-200 focus-visible:outline-emerald-600"
+                                                                    : "border-cyan-400 bg-cyan-100 hover:bg-cyan-200 focus-visible:outline-cyan-600",
+                                                            ]}
+                                                        >
+                                                            {content}
+                                                        </a>
+                                                    ) : (
+                                                        <div class:list={[
+                                                                "inline-flex min-h-11 min-w-0 items-center gap-2 rounded-xl border px-3.5 py-2 text-sm font-semibold text-slate-800 sm:text-base",
+                                                                item.label === labels.whatsappLabel
+                                                                    ? "border-emerald-400 bg-emerald-100"
+                                                                    : "border-cyan-400 bg-cyan-100",
+                                                            ]}>
+                                                            {content}
+                                                        </div>
+                                                    );
+                                                },
+                                            )}
+                                        </div>
+                                    )
+                                }
+
+                                {
+                                    secondaryContactItems.length > 0 && (
+                                        <div class="mt-4 space-y-1.5 border-t border-slate-200 pt-3">
+                                            {secondaryContactItems.map(
+                                                (item) => {
+                                                    const content = (
+                                                        <>
+                                                            <img
+                                                                src={item.icon.src}
+                                                                alt=""
+                                                                aria-hidden="true"
+                                                                class="size-4.5 shrink-0 object-contain"
+                                                            />
+
+                                                            <span class="min-w-0 break-words">
+                                                                {item.text}
+                                                            </span>
+                                                        </>
+                                                    );
+
+                                                    return item.href ? (
+                                                        <a
+                                                            href={item.href}
+                                                            target={
+                                                                item.external
+                                                                    ? "_blank"
+                                                                    : undefined
+                                                            }
+                                                            rel={
+                                                                item.external
+                                                                    ? "noopener noreferrer"
+                                                                    : undefined
+                                                            }
+                                                            class:list={[
+                                                            "flex w-fit max-w-full items-center gap-2.5 border-l-4 px-3 py-1 text-sm font-medium leading-6 text-slate-700 outline-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 sm:text-base",
+                                                            item.label === labels.emailLabel
+                                                                ? "border-violet-400 hover:text-violet-800 focus-visible:outline-violet-500"
+                                                                : "border-rose-400 hover:text-rose-800 focus-visible:outline-rose-500",
+                                                        ]}
+                                                        >
+                                                            {content}
+                                                        </a>
+                                                    ) : (
+                                                        <div class:list={[
+                                                            "flex w-fit max-w-full items-center gap-2.5 border-l-4 px-3 py-1 text-sm font-medium leading-6 text-slate-700 sm:text-base",
+                                                            item.label === labels.emailLabel
+                                                                ? "border-violet-400"
+                                                                : "border-rose-400",
+                                                        ]}>
+                                                            {content}
+                                                        </div>
+                                                    );
+                                                },
+                                            )}
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        )
+                    }
+                </div>
+
+                <div class="order-1 aspect-[16/10] overflow-hidden border-b-4 border-amber-400 bg-stone-100 lg:order-2 lg:aspect-auto lg:min-h-[34rem] lg:border-b-0 lg:border-l-4">
+                    {
+                        primaryImageUrl ? (
+                            <img
+                                src={primaryImageUrl}
+                                alt={primaryImageAlt}
+                                width={
+                                    primaryMedia?.width ||
+                                    1200
+                                }
+                                height={
+                                    primaryMedia?.height ||
+                                    800
+                                }
+                                loading="eager"
+                                class="size-full object-cover"
+                            />
+                        ) : (
+                            <div class="flex size-full items-center justify-center p-8 text-center">
+                                <p class="font-bold text-slate-500">
+                                    {labels.noImage}
+                                </p>
+                            </div>
+                        )
+                    }
+                </div>
+            </section>
+
+            {
+                gallery.length > 0 && (
+                    <div
+                        class="mt-3 grid grid-cols-2 gap-3 md:mt-4 md:grid-cols-4"
+                        aria-label={lang === "ca"
+                            ? "Imatges del comerç"
+                            : lang === "es"
+                              ? "Imágenes del comercio"
+                              : "Business images"}
+                    >
+                        {gallery.map((media, index) => {
+                            const imageUrl =
+                                getStrapiMediaUrl(media.url);
+
+                            const imageAlt =
+                                media.alternativeText?.trim() ||
+                                `${comercioNombre} ${index + 1}`;
+
+                            return (
+                                <div class="aspect-[4/3] overflow-hidden rounded-2xl bg-stone-100">
+                                    <img
+                                        src={imageUrl}
+                                        alt={imageAlt}
+                                        width={
+                                            media.width || 800
+                                        }
+                                        height={
+                                            media.height || 600
+                                        }
+                                        loading="lazy"
+                                        class="size-full object-cover"
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                )
+            }
+
+            <div class="mx-auto mt-10 max-w-6xl space-y-9 sm:mt-12 sm:space-y-10">
                 {
-                    emailHref ? (
-                        <a href={emailHref}>{comercio.email}</a>
-                    ) : (
-                        comercio.email
+                    hasFullDescription && (
+                        <section
+                            aria-labelledby="about-title"
+                            class="border-l-4 border-rose-400 pl-5 sm:pl-7"
+                        >
+                            <h2
+                                id="about-title"
+                                class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                            >
+                                {labels.aboutTitle}
+                            </h2>
+
+                            <div class="mt-3 max-w-4xl space-y-4 text-base leading-7 text-slate-700 [&_a]:font-semibold [&_a]:text-cyan-700 [&_a]:underline [&_a]:underline-offset-4 [&_blockquote]:border-l-4 [&_blockquote]:border-rose-300 [&_blockquote]:pl-5 [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-black [&_h2]:text-slate-950 [&_h3]:mt-7 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-slate-950 [&_li]:my-2 [&_ol]:ml-6 [&_ol]:list-decimal [&_p]:my-4 [&_strong]:font-bold [&_strong]:text-slate-950 [&_ul]:ml-6 [&_ul]:list-disc">
+                                <StrapiBlocks
+                                    blocks={descripcionCompleta}
+                                />
+                            </div>
+                        </section>
                     )
                 }
-            </p>
-        )
-    }
 
-    {
-        comercio.web && (
-            <p>
                 {
-                    websiteHref ? (
-                        <a href={websiteHref}>{comercio.web}</a>
-                    ) : (
-                        comercio.web
+                    services.length > 0 && (
+                        <section
+                            aria-labelledby="services-title"
+                            class="border-l-4 border-amber-400 pl-5 sm:pl-7"
+                        >
+                            <h2
+                                id="services-title"
+                                class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                            >
+                                {labels.servicesTitle}
+                            </h2>
+
+                            <ul class="mt-5 divide-y divide-amber-200 border-y border-amber-200">
+                                {services.map((service) => (
+                                    <li class="py-3 sm:grid sm:grid-cols-[minmax(12rem,0.35fr)_minmax(0,0.65fr)] sm:gap-8 sm:py-3.5">
+                                        <h3
+                                            class:list={[
+                                                "text-lg font-black leading-7",
+                                                service.highlighted
+                                                    ? "text-amber-900"
+                                                    : "text-slate-950",
+                                            ]}
+                                        >
+                                            {service.name}
+                                        </h3>
+
+                                        {service.description && (
+                                            <p class="mt-1 leading-7 text-slate-600 sm:mt-0">
+                                                {service.description}
+                                            </p>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
                     )
                 }
-            </p>
-        )
-    }
 
-    {
-        Array.isArray(comercio.horario) &&
-            comercio.horario.length > 0 && (
-                <StrapiBlocks blocks={comercio.horario} />
-            )
-    }
+                <div class="grid gap-7 lg:grid-cols-[minmax(0,1.7fr)_minmax(18rem,0.8fr)] lg:items-start">
+                {
+                    scheduleLines.length > 0 && (
+                        <section
+                            aria-labelledby="schedule-title"
+                            class="rounded-2xl border border-cyan-200 bg-cyan-50 px-5 py-4 sm:px-6 sm:py-5"
+                        >
+                            <h2
+                                id="schedule-title"
+                                class="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl"
+                            >
+                                {labels.scheduleTitle}
+                            </h2>
+
+                            <div class="mt-3 divide-y divide-cyan-200">
+                                {scheduleLines.map((line) => (
+                                    <div class="py-2.5 first:pt-0 last:pb-0">
+                                        <p
+                                            class:list={[
+                                                "text-base leading-7",
+                                                line.closed
+                                                    ? "text-slate-500"
+                                                    : "text-slate-800",
+                                            ]}
+                                        >
+                                            <span class="font-black">
+                                                {line.label}
+                                            </span>{" "}
+                                            <span class="font-semibold">
+                                                {line.hours}
+                                            </span>
+                                        </p>
+
+                                        {line.observation && (
+                                            <p class="mt-0.5 text-sm leading-5 text-slate-600">
+                                                {line.observation}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )
+                }
+
+                {
+                    socialNetworks.length > 0 && (
+                        <section
+                            aria-labelledby="social-title"
+                            class="border-l-4 border-violet-400 pl-5 lg:py-1"
+                        >
+                            <h2
+                                id="social-title"
+                                class="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl"
+                            >
+                                {labels.socialTitle}
+                            </h2>
+
+                            <ul class="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:flex-col lg:items-start">
+                                {socialNetworks.map((network) => {
+                                    const icon =
+                                        socialIcons[
+                                            network.plataforma
+                                        ];
+
+                                    return (
+                                        <li>
+                                            <a
+                                                href={network.href}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="inline-flex min-h-11 items-center gap-3 font-bold text-slate-800 outline-none transition-colors hover:text-violet-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-600"
+                                            >
+                                                {icon && (
+                                                    <img
+                                                        src={icon.src}
+                                                        alt=""
+                                                        aria-hidden="true"
+                                                        class="size-8 object-contain"
+                                                    />
+                                                )}
+
+                                                <span class="break-all">
+                                                    {network.label}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </section>
+                    )
+                }
+
+                </div>
+
+                {
+                    hasAdditionalInformation && (
+                        <section
+                            aria-labelledby="additional-title"
+                            class="border-t border-slate-200 pt-8"
+                        >
+                            <h2
+                                id="additional-title"
+                                class="text-xl font-black text-slate-950"
+                            >
+                                {labels.additionalTitle}
+                            </h2>
+
+                            <div class="mt-5 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+                                {highlights.map((item) => (
+                                    <div>
+                                        <p class="text-xs font-black uppercase tracking-wider text-amber-800">
+                                            {item.label}
+                                        </p>
+
+                                        <p class="mt-1 text-sm font-semibold leading-6 text-slate-700">
+                                            {item.value}
+                                        </p>
+                                    </div>
+                                ))}
+
+                                {
+                                    attentionModes.length > 0 && (
+                                        <div>
+                                            <p class="text-xs font-black uppercase tracking-wider text-cyan-800">
+                                                {labels.attentionTitle}
+                                            </p>
+
+                                            <p class="mt-1 text-sm font-semibold leading-6 text-slate-700">
+                                                {attentionModes.join(
+                                                    " · ",
+                                                )}
+                                            </p>
+                                        </div>
+                                    )
+                                }
+
+                                {
+                                    indicaciones && (
+                                        <div>
+                                            <p class="text-xs font-black uppercase tracking-wider text-rose-800">
+                                                {labels.directionsLabel}
+                                            </p>
+
+                                            <p class="mt-1 text-sm font-semibold leading-6 text-slate-700">
+                                                {indicaciones}
+                                            </p>
+                                        </div>
+                                    )
+                                }
+
+                                {
+                                    ambitoServicio && (
+                                        <div>
+                                            <p class="text-xs font-black uppercase tracking-wider text-emerald-800">
+                                                {labels.serviceAreaLabel}
+                                            </p>
+
+                                            <p class="mt-1 text-sm font-semibold leading-6 text-slate-700">
+                                                {ambitoServicio}
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </section>
+                    )
+                }
+            </div>
+        </div>
+    </main>
 </Layout>
