@@ -124,7 +124,6 @@ export type Commerce = {
     recogida_local?: boolean;
     reparto?: boolean;
 
-    horario?: StrapiBlock[] | null;
     horario_semanal?: CommerceScheduleDay[] | null;
 
     imagen_principal?:

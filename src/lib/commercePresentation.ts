@@ -18,31 +18,31 @@ const DAY_ORDER: DayKey[] = [
 
 const DAY_LABELS: Record<Locale, Record<DayKey, string>> = {
     ca: {
-        lunes: "dl.",
-        martes: "dt.",
-        miercoles: "dc.",
-        jueves: "dj.",
-        viernes: "dv.",
-        sabado: "ds.",
-        domingo: "dg.",
+        lunes: "dilluns",
+        martes: "dimarts",
+        miercoles: "dimecres",
+        jueves: "dijous",
+        viernes: "divendres",
+        sabado: "dissabte",
+        domingo: "diumenge",
     },
     es: {
-        lunes: "lun.",
-        martes: "mar.",
-        miercoles: "mié.",
-        jueves: "jue.",
-        viernes: "vie.",
-        sabado: "sáb.",
-        domingo: "dom.",
+        lunes: "lunes",
+        martes: "martes",
+        miercoles: "miércoles",
+        jueves: "jueves",
+        viernes: "viernes",
+        sabado: "sábado",
+        domingo: "domingo",
     },
     en: {
-        lunes: "Mon",
-        martes: "Tue",
-        miercoles: "Wed",
-        jueves: "Thu",
-        viernes: "Fri",
-        sabado: "Sat",
-        domingo: "Sun",
+        lunes: "Monday",
+        martes: "Tuesday",
+        miercoles: "Wednesday",
+        jueves: "Thursday",
+        viernes: "Friday",
+        sabado: "Saturday",
+        domingo: "Sunday",
     },
 };
 
@@ -79,37 +79,78 @@ const ATTENTION_LABELS: Record<
     },
 };
 
-function formatTime(value?: string | null): string | null {
+function formatTime(
+    value?: string | null,
+): string | null {
     if (!value) {
         return null;
     }
 
     const match = value.match(/^(\d{2}):(\d{2})/);
 
-    return match ? `${match[1]}:${match[2]}` : value;
+    if (!match) {
+        return value;
+    }
+
+    const [, hours, minutes] = match;
+
+    return minutes === "00"
+        ? hours
+        : `${hours}:${minutes}`;
 }
 
-function formatHours(day: CommerceScheduleDay): string | null {
+function formatTimeRange(
+    opening?: string | null,
+    closing?: string | null,
+    lang: Locale = "ca",
+): string | null {
+    const start = formatTime(opening);
+    const end = formatTime(closing);
+
+    if (!start || !end) {
+        return null;
+    }
+
+    if (lang === "en") {
+        return `${start}–${end}h`;
+    }
+
+    return `de ${start} a ${end}h`;
+}
+
+function formatHours(
+    day: CommerceScheduleDay,
+    lang: Locale,
+): string | null {
     if (day.cerrado) {
         return null;
     }
 
-    const opening1 = formatTime(day.apertura_1);
-    const closing1 = formatTime(day.cierre_1);
-    const opening2 = formatTime(day.apertura_2);
-    const closing2 = formatTime(day.cierre_2);
+    const ranges = [
+        formatTimeRange(
+            day.apertura_1,
+            day.cierre_1,
+            lang,
+        ),
+        formatTimeRange(
+            day.apertura_2,
+            day.cierre_2,
+            lang,
+        ),
+    ].filter((range): range is string => Boolean(range));
 
-    const ranges: string[] = [];
-
-    if (opening1 && closing1) {
-        ranges.push(`${opening1}–${closing1}`);
+    if (ranges.length === 0) {
+        return null;
     }
 
-    if (opening2 && closing2) {
-        ranges.push(`${opening2}–${closing2}`);
-    }
+    const separator =
+        lang === "ca"
+            ? " i "
+            : lang === "es"
+              ? " y "
+              : " and ";
 
-    return ranges.length > 0 ? ranges.join(" / ") : null;
+    return ranges.join(separator);
 }
 
 function formatDayRange(
@@ -121,10 +162,22 @@ function formatDayRange(
     const endDay = DAY_ORDER[end];
 
     if (start === end) {
-        return DAY_LABELS[lang][startDay];
+        const label = DAY_LABELS[lang][startDay];
+
+        return lang === "en"
+            ? label
+            : label.charAt(0).toUpperCase() + label.slice(1);
     }
 
-    return `${DAY_LABELS[lang][startDay]}–${DAY_LABELS[lang][endDay]}`;
+    if (lang === "ca") {
+        return `De ${DAY_LABELS.ca[startDay]} a ${DAY_LABELS.ca[endDay]}`;
+    }
+
+    if (lang === "es") {
+        return `De ${DAY_LABELS.es[startDay]} a ${DAY_LABELS.es[endDay]}`;
+    }
+
+    return `${DAY_LABELS.en[startDay]} to ${DAY_LABELS.en[endDay]}`;
 }
 
 export function formatCommerceScheduleSummary(
@@ -152,7 +205,7 @@ export function formatCommerceScheduleSummary(
 
     DAY_ORDER.forEach((dayKey, index) => {
         const day = uniqueDays.get(dayKey);
-        const hours = day ? formatHours(day) : null;
+        const hours = day ? formatHours(day, lang) : null;
 
         if (!hours) {
             return;
@@ -218,4 +271,103 @@ export function getCommerceAttentionModes(
     }
 
     return modes;
+}
+
+
+export type CommerceScheduleDetailLine = {
+    label: string;
+    hours: string;
+    observation: string;
+    closed: boolean;
+};
+
+export function formatCommerceScheduleDetails(
+    days: CommerceScheduleDay[] | null | undefined,
+    lang: Locale,
+): CommerceScheduleDetailLine[] {
+    if (!Array.isArray(days) || days.length === 0) {
+        return [];
+    }
+
+    const closedLabels: Record<Locale, string> = {
+        ca: "tancat",
+        es: "cerrado",
+        en: "closed",
+    };
+
+    const noHoursLabels: Record<Locale, string> = {
+        ca: "horari no disponible",
+        es: "horario no disponible",
+        en: "opening hours unavailable",
+    };
+
+    const uniqueDays = new Map<DayKey, CommerceScheduleDay>();
+
+    for (const day of days) {
+        if (!uniqueDays.has(day.dia)) {
+            uniqueDays.set(day.dia, day);
+        }
+    }
+
+    const groups: {
+        start: number;
+        end: number;
+        hours: string;
+        observation: string;
+        closed: boolean;
+    }[] = [];
+
+    DAY_ORDER.forEach((dayKey, index) => {
+        const day = uniqueDays.get(dayKey);
+
+        if (!day) {
+            return;
+        }
+
+        const closed = day.cerrado === true;
+
+        const observation =
+            lang === "en"
+                ? day.observacion_en?.trim() ||
+                  day.observacion?.trim() ||
+                  ""
+                : day.observacion?.trim() || "";
+
+        const hours = closed
+            ? closedLabels[lang]
+            : formatHours(day, lang) ||
+              noHoursLabels[lang];
+
+        const previous = groups.at(-1);
+
+        if (
+            previous &&
+            previous.end + 1 === index &&
+            previous.hours === hours &&
+            previous.observation === observation &&
+            previous.closed === closed
+        ) {
+            previous.end = index;
+            return;
+        }
+
+        groups.push({
+            start: index,
+            end: index,
+            hours,
+            observation,
+            closed,
+        });
+    });
+
+    return groups.map((group) => ({
+        label: formatDayRange(
+            group.start,
+            group.end,
+            lang,
+        ),
+        hours: group.hours,
+        observation: group.observation,
+        closed: group.closed,
+    }));
 }
