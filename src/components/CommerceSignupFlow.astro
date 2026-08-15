@@ -131,6 +131,34 @@ const text =
               hoursDoneTitle: "Horari resolt.",
               hoursDoneText:
                   "Ja tenim una de les parts que acostuma a donar més feina. Ara veurem què oferiu.",
+              offerNext: "Seguim",
+              offerSection: "Què oferiu",
+              offerProgress: "Ara expliquem el millor del vostre negoci",
+              offerTitle: "Què hi trobarà la gent?",
+              offerIntro:
+                  "Afegeix els serveis, productes o especialitats que millor us representen. No cal posar-ho tot.",
+              serviceName: "Servei o especialitat",
+              serviceNamePlaceholder: "Per exemple: Pa artesà",
+              serviceDescription: "Una mica més, si vols",
+              serviceDescriptionPlaceholder:
+                  "Per exemple: Elaborat cada dia al nostre obrador.",
+              addService: "+ Afegir un altre",
+              removeService: "Eliminar",
+              maxServices: "Pots afegir fins a 6 serveis principals.",
+              socialTitle: "I si us volen seguir?",
+              socialHelp:
+                  "Afegeix només les xarxes que realment utilitzeu.",
+              additionalTitle: "Alguna cosa més que hauríem de saber?",
+              additionalHelp:
+                  "Opcional. Encàrrecs, accessibilitat, formes de pagament o qualsevol detall útil.",
+              additionalPlaceholder:
+                  "Escriu aquí qualsevol informació que pugui ser útil...",
+              offerContinue: "Ja ho tenim",
+              offerPreview: "Això és el que començarà a veure la gent",
+              previewServicesEmpty: "Els vostres serveis apareixeran aquí.",
+              offerDoneTitle: "Genial. Ja sabem què us fa especials.",
+              offerDoneText:
+                  "Ara només falta posar cara al vostre negoci amb les fotografies.",
           }
         : {
               eyebrow: "Forma parte de GUIAPINEDA",
@@ -243,6 +271,34 @@ const text =
               hoursDoneTitle: "Horario resuelto.",
               hoursDoneText:
                   "Ya tenemos una de las partes que suele dar más trabajo. Ahora veremos qué ofrecéis.",
+              offerNext: "Seguimos",
+              offerSection: "Qué ofrecéis",
+              offerProgress: "Ahora contamos lo mejor de vuestro negocio",
+              offerTitle: "¿Qué encontrará la gente?",
+              offerIntro:
+                  "Añade los servicios, productos o especialidades que mejor os representan. No hace falta ponerlo todo.",
+              serviceName: "Servicio o especialidad",
+              serviceNamePlaceholder: "Por ejemplo: Pan artesano",
+              serviceDescription: "Un poco más, si quieres",
+              serviceDescriptionPlaceholder:
+                  "Por ejemplo: Elaborado cada día en nuestro obrador.",
+              addService: "+ Añadir otro",
+              removeService: "Eliminar",
+              maxServices: "Puedes añadir hasta 6 servicios principales.",
+              socialTitle: "¿Y si quieren seguiros?",
+              socialHelp:
+                  "Añade solo las redes que realmente utilizáis.",
+              additionalTitle: "¿Algo más que deberíamos saber?",
+              additionalHelp:
+                  "Opcional. Encargos, accesibilidad, formas de pago o cualquier detalle útil.",
+              additionalPlaceholder:
+                  "Escribe aquí cualquier información que pueda ser útil...",
+              offerContinue: "Ya lo tenemos",
+              offerPreview: "Esto es lo que empezará a ver la gente",
+              previewServicesEmpty: "Vuestros servicios aparecerán aquí.",
+              offerDoneTitle: "Genial. Ya sabemos qué os hace especiales.",
+              offerDoneText:
+                  "Ahora solo falta poner cara a vuestro negocio con las fotografías.",
           };
 
 const days =
@@ -1502,8 +1558,360 @@ const esHref = "/es/alta-comercio";
                 {text.hoursDoneText}
             </p>
 
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <button
+                    id="hours-checkpoint-back"
+                    type="button"
+                    class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                >
+                    ← {text.back}
+                </button>
+
+                <button
+                    id="hours-checkpoint-next"
+                    type="button"
+                    class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700"
+                >
+                    {text.offerNext}
+                    <span aria-hidden="true" class="ml-3">→</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="signup-offer"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8">
+                <div class="mb-4 flex items-center justify-between gap-4">
+                    <p class="font-bold text-slate-950">
+                        {text.offerSection}
+                    </p>
+
+                    <div class="flex items-center gap-1.5" aria-hidden="true">
+                        <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-fuchsia-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-amber-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-emerald-500"></span>
+                        <span class="h-2 w-10 rounded-full bg-violet-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                    </div>
+                </div>
+
+                <p class="text-sm font-semibold text-violet-700">
+                    {text.offerProgress}
+                </p>
+            </div>
+
+            <div
+                class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]"
+            >
+                <div
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+                >
+                    <h2
+                        class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {text.offerTitle}
+                    </h2>
+
+                    <p class="mt-3 max-w-2xl text-slate-600">
+                        {text.offerIntro}
+                    </p>
+
+                    <div id="services-list" class="mt-8 space-y-4">
+                        <div
+                            class="service-row rounded-2xl border border-slate-200 bg-stone-50 p-4"
+                        >
+                            <div class="flex items-center justify-between gap-4">
+                                <span
+                                    class="service-number flex size-8 items-center justify-center rounded-full bg-violet-100 text-sm font-black text-violet-800"
+                                >
+                                    1
+                                </span>
+
+                                <button
+                                    type="button"
+                                    class="service-remove hidden text-sm font-bold text-rose-600 hover:text-rose-800"
+                                >
+                                    {text.removeService}
+                                </button>
+                            </div>
+
+                            <label class="mt-4 block">
+                                <span class="text-sm font-bold text-slate-950">
+                                    {text.serviceName}
+                                </span>
+
+                                <input
+                                    type="text"
+                                    maxlength="100"
+                                    class="service-name mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                                    placeholder={text.serviceNamePlaceholder}
+                                />
+                            </label>
+
+                            <label class="mt-4 block">
+                                <span class="text-sm font-bold text-slate-950">
+                                    {text.serviceDescription}
+                                </span>
+
+                                <textarea
+                                    rows="2"
+                                    maxlength="300"
+                                    class="service-description mt-2 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                                    placeholder={text.serviceDescriptionPlaceholder}
+                                ></textarea>
+                            </label>
+                        </div>
+                    </div>
+
+                    <template id="service-template">
+                        <div
+                            class="service-row rounded-2xl border border-slate-200 bg-stone-50 p-4"
+                        >
+                            <div class="flex items-center justify-between gap-4">
+                                <span
+                                    class="service-number flex size-8 items-center justify-center rounded-full bg-violet-100 text-sm font-black text-violet-800"
+                                >
+                                </span>
+
+                                <button
+                                    type="button"
+                                    class="service-remove text-sm font-bold text-rose-600 hover:text-rose-800"
+                                >
+                                    {text.removeService}
+                                </button>
+                            </div>
+
+                            <label class="mt-4 block">
+                                <span class="text-sm font-bold text-slate-950">
+                                    {text.serviceName}
+                                </span>
+
+                                <input
+                                    type="text"
+                                    maxlength="100"
+                                    class="service-name mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                                    placeholder={text.serviceNamePlaceholder}
+                                />
+                            </label>
+
+                            <label class="mt-4 block">
+                                <span class="text-sm font-bold text-slate-950">
+                                    {text.serviceDescription}
+                                </span>
+
+                                <textarea
+                                    rows="2"
+                                    maxlength="300"
+                                    class="service-description mt-2 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                                    placeholder={text.serviceDescriptionPlaceholder}
+                                ></textarea>
+                            </label>
+                        </div>
+                    </template>
+
+                    <div class="mt-4">
+                        <button
+                            id="add-service"
+                            type="button"
+                            class="rounded-full border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-800 transition hover:bg-violet-100"
+                        >
+                            {text.addService}
+                        </button>
+
+                        <p class="mt-2 text-xs text-slate-400">
+                            {text.maxServices}
+                        </p>
+                    </div>
+
+                    <div
+                        class="my-9 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"
+                    >
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-black text-slate-950">
+                            {text.socialTitle}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            {text.socialHelp}
+                        </p>
+
+                        <div class="mt-5 space-y-3">
+                            {
+                                [
+                                    ["instagram", "Instagram"],
+                                    ["facebook", "Facebook"],
+                                    ["tiktok", "TikTok"],
+                                    ["youtube", "YouTube"],
+                                    ["linkedin", "LinkedIn"],
+                                    ["x", "X"],
+                                ].map(([value, label]) => (
+                                    <div
+                                        class="social-row rounded-2xl border border-slate-200 bg-white p-3"
+                                        data-social={value}
+                                    >
+                                        <div class="flex items-center gap-3">
+                                            <button
+                                                type="button"
+                                                class="social-toggle rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-violet-400 hover:bg-violet-50"
+                                                aria-pressed="false"
+                                            >
+                                                {label}
+                                            </button>
+
+                                            <input
+                                                type="text"
+                                                inputmode="url"
+                                                class="social-url hidden min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-950 outline-none placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                                                placeholder={`${value}.com/...`}
+                                            />
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+
+                    <div
+                        class="my-9 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"
+                    >
+                    </div>
+
+                    <div>
+                        <label
+                            for="business-additional-info"
+                            class="block text-xl font-black text-slate-950"
+                        >
+                            {text.additionalTitle}
+                        </label>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            {text.additionalHelp}
+                        </p>
+
+                        <textarea
+                            id="business-additional-info"
+                            rows="4"
+                            maxlength="800"
+                            class="mt-3 w-full resize-y rounded-2xl border border-slate-300 bg-white px-5 py-4 text-base leading-relaxed text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                            placeholder={text.additionalPlaceholder}
+                        ></textarea>
+                    </div>
+
+                    <div
+                        class="mt-10 flex items-center justify-between gap-4 border-t border-slate-100 pt-6"
+                    >
+                        <button
+                            id="offer-back"
+                            type="button"
+                            class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                        >
+                            ← {text.back}
+                        </button>
+
+                        <button
+                            id="offer-continue"
+                            type="button"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                        >
+                            {text.offerContinue}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside class="lg:sticky lg:top-28">
+                    <p
+                        class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-500"
+                    >
+                        {text.offerPreview}
+                    </p>
+
+                    <div
+                        class="rounded-[1.7rem] border border-slate-200 bg-white p-5 shadow-sm"
+                    >
+                        <p
+                            id="offer-preview-category"
+                            class="text-sm font-bold text-sky-700"
+                        >
+                            {text.previewCategory}
+                        </p>
+
+                        <h3
+                            id="offer-preview-name"
+                            class="mt-2 text-2xl font-black tracking-tight text-slate-950"
+                        >
+                            {text.previewName}
+                        </h3>
+
+                        <div
+                            class="mt-5 border-l-4 border-amber-400 pl-4"
+                        >
+                            <p
+                                class="text-xs font-black uppercase tracking-[0.14em] text-slate-400"
+                            >
+                                {text.offerSection}
+                            </p>
+
+                            <div
+                                id="services-preview"
+                                class="mt-3 space-y-3"
+                            >
+                                <p
+                                    id="services-preview-empty"
+                                    class="text-sm text-slate-400"
+                                >
+                                    {text.previewServicesEmpty}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            id="social-preview"
+                            class="mt-5 flex flex-wrap gap-2"
+                        >
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="signup-offer-checkpoint"
+        hidden
+        class="flex min-h-[65vh] items-center px-5 py-16 sm:px-8"
+    >
+        <div
+            class="mx-auto w-full max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-12"
+        >
+            <div
+                class="mx-auto flex size-14 items-center justify-center rounded-full bg-violet-100 text-2xl font-black text-violet-700"
+                aria-hidden="true"
+            >
+                ✓
+            </div>
+
+            <h2
+                class="mt-6 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+            >
+                {text.offerDoneTitle}
+            </h2>
+
+            <p class="mx-auto mt-4 max-w-xl text-lg text-slate-600">
+                {text.offerDoneText}
+            </p>
+
             <button
-                id="hours-checkpoint-back"
+                id="offer-checkpoint-back"
                 type="button"
                 class="mt-8 rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
             >
@@ -1528,6 +1936,10 @@ const esHref = "/es/alta-comercio";
     const hours = document.getElementById("signup-hours");
     const hoursCheckpoint = document.getElementById(
         "signup-hours-checkpoint",
+    );
+    const offer = document.getElementById("signup-offer");
+    const offerCheckpoint = document.getElementById(
+        "signup-offer-checkpoint",
     );
 
     const startButton = document.getElementById("signup-start");
@@ -1559,6 +1971,35 @@ const esHref = "/es/alta-comercio";
         document.getElementById("hours-continue");
     const hoursCheckpointBackButton =
         document.getElementById("hours-checkpoint-back");
+    const hoursCheckpointNextButton =
+        document.getElementById("hours-checkpoint-next");
+
+    const offerBackButton =
+        document.getElementById("offer-back");
+    const offerContinueButton =
+        document.getElementById("offer-continue");
+    const offerCheckpointBackButton =
+        document.getElementById("offer-checkpoint-back");
+
+    const servicesList =
+        document.getElementById("services-list");
+    const serviceTemplate = document.getElementById(
+        "service-template",
+    ) as HTMLTemplateElement | null;
+    const addServiceButton =
+        document.getElementById("add-service");
+
+    const servicesPreview =
+        document.getElementById("services-preview");
+    const servicesPreviewEmpty =
+        document.getElementById("services-preview-empty");
+    const socialPreview =
+        document.getElementById("social-preview");
+
+    const offerPreviewName =
+        document.getElementById("offer-preview-name");
+    const offerPreviewCategory =
+        document.getElementById("offer-preview-category");
 
     const copyMondayWeekdays =
         document.getElementById("copy-monday-weekdays");
@@ -1724,6 +2165,173 @@ const esHref = "/es/alta-comercio";
         }
 
         updateContinueState();
+    }
+
+    function getServiceRows() {
+        return Array.from(
+            document.querySelectorAll<HTMLElement>(".service-row"),
+        );
+    }
+
+    function updateServiceNumbers() {
+        const rows = getServiceRows();
+
+        rows.forEach((row, index) => {
+            const number =
+                row.querySelector<HTMLElement>(".service-number");
+            const remove =
+                row.querySelector<HTMLButtonElement>(
+                    ".service-remove",
+                );
+
+            if (number) {
+                number.textContent = String(index + 1);
+            }
+
+            if (remove) {
+                remove.classList.toggle(
+                    "hidden",
+                    rows.length === 1,
+                );
+            }
+        });
+
+        if (addServiceButton) {
+            addServiceButton.toggleAttribute(
+                "disabled",
+                rows.length >= 6,
+            );
+
+            addServiceButton.classList.toggle(
+                "opacity-40",
+                rows.length >= 6,
+            );
+        }
+    }
+
+    function updateOfferPreview() {
+        const rows = getServiceRows();
+
+        const services = rows
+            .map((row) => ({
+                name:
+                    row.querySelector<HTMLInputElement>(
+                        ".service-name",
+                    )?.value.trim() ?? "",
+                description:
+                    row.querySelector<HTMLTextAreaElement>(
+                        ".service-description",
+                    )?.value.trim() ?? "",
+            }))
+            .filter((service) => service.name);
+
+        if (offerPreviewName && nameInput) {
+            offerPreviewName.textContent =
+                nameInput.value.trim() ||
+                nameInput.placeholder ||
+                "";
+        }
+
+        const categoryText =
+            categoryLabel && subcategoryLabel
+                ? `${categoryLabel} · ${subcategoryLabel}`
+                : categoryLabel;
+
+        if (offerPreviewCategory && categoryText) {
+            offerPreviewCategory.textContent = categoryText;
+        }
+
+        if (servicesPreview && servicesPreviewEmpty) {
+            servicesPreview
+                .querySelectorAll("[data-service-preview]")
+                .forEach((item) => item.remove());
+
+            servicesPreviewEmpty.hidden = services.length > 0;
+
+            services.forEach((service) => {
+                const item = document.createElement("div");
+                item.dataset.servicePreview = "true";
+
+                const title = document.createElement("p");
+                title.className =
+                    "text-sm font-black text-slate-950";
+                title.textContent = service.name;
+
+                item.appendChild(title);
+
+                if (service.description) {
+                    const description =
+                        document.createElement("p");
+                    description.className =
+                        "mt-0.5 text-sm leading-relaxed text-slate-500";
+                    description.textContent =
+                        service.description;
+                    item.appendChild(description);
+                }
+
+                servicesPreview.appendChild(item);
+            });
+        }
+
+        if (socialPreview) {
+            socialPreview.replaceChildren();
+
+            document
+                .querySelectorAll<HTMLElement>(".social-row")
+                .forEach((row) => {
+                    const toggle =
+                        row.querySelector<HTMLButtonElement>(
+                            ".social-toggle",
+                        );
+
+                    const url =
+                        row.querySelector<HTMLInputElement>(
+                            ".social-url",
+                        );
+
+                    if (
+                        toggle?.getAttribute("aria-pressed") !==
+                            "true" ||
+                        !url?.value.trim()
+                    ) {
+                        return;
+                    }
+
+                    const chip =
+                        document.createElement("span");
+
+                    chip.className =
+                        "rounded-full bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-800";
+                    chip.textContent =
+                        toggle.textContent?.trim() ?? "";
+
+                    socialPreview.appendChild(chip);
+                });
+        }
+
+        offerContinueButton?.toggleAttribute(
+            "disabled",
+            services.length === 0,
+        );
+    }
+
+    function bindServiceRow(row: HTMLElement) {
+        row.querySelectorAll<
+            HTMLInputElement | HTMLTextAreaElement
+        >("input, textarea").forEach((input) => {
+            input.addEventListener(
+                "input",
+                updateOfferPreview,
+            );
+        });
+
+        row.querySelector<HTMLButtonElement>(
+            ".service-remove",
+        )?.addEventListener("click", () => {
+            row.remove();
+            updateServiceNumbers();
+            updateOfferPreview();
+        });
     }
 
     function formatScheduleTime(value: string) {
@@ -2504,9 +3112,185 @@ const esHref = "/es/alta-comercio";
                 contact,
                 contactCheckpoint,
                 hoursCheckpoint,
+                offer,
+                offerCheckpoint,
+            );
+        },
+    );
+
+    hoursCheckpointNextButton?.addEventListener(
+        "click",
+        () => {
+            updateServiceNumbers();
+            updateOfferPreview();
+
+            showScreen(
+                offer,
+                welcome,
+                business,
+                checkpoint,
+                description,
+                descriptionCheckpoint,
+                contact,
+                contactCheckpoint,
+                hours,
+                hoursCheckpoint,
+                offerCheckpoint,
+            );
+        },
+    );
+
+    getServiceRows().forEach(bindServiceRow);
+
+    addServiceButton?.addEventListener("click", () => {
+        if (
+            !servicesList ||
+            !serviceTemplate ||
+            getServiceRows().length >= 6
+        ) {
+            return;
+        }
+
+        const fragment =
+            serviceTemplate.content.cloneNode(
+                true,
+            ) as DocumentFragment;
+
+        const row =
+            fragment.querySelector<HTMLElement>(
+                ".service-row",
+            );
+
+        servicesList.appendChild(fragment);
+
+        if (row) {
+            bindServiceRow(row);
+
+            window.setTimeout(() => {
+                row.querySelector<HTMLInputElement>(
+                    ".service-name",
+                )?.focus();
+            }, 50);
+        }
+
+        updateServiceNumbers();
+        updateOfferPreview();
+    });
+
+    document
+        .querySelectorAll<HTMLElement>(".social-row")
+        .forEach((row) => {
+            const toggle =
+                row.querySelector<HTMLButtonElement>(
+                    ".social-toggle",
+                );
+
+            const url =
+                row.querySelector<HTMLInputElement>(
+                    ".social-url",
+                );
+
+            toggle?.addEventListener("click", () => {
+                const selected =
+                    toggle.getAttribute("aria-pressed") ===
+                    "true";
+
+                toggle.setAttribute(
+                    "aria-pressed",
+                    String(!selected),
+                );
+
+                toggle.classList.toggle(
+                    "border-violet-500",
+                    !selected,
+                );
+                toggle.classList.toggle(
+                    "bg-violet-100",
+                    !selected,
+                );
+                toggle.classList.toggle(
+                    "text-violet-950",
+                    !selected,
+                );
+
+                if (url) {
+                    url.classList.toggle("hidden", selected);
+
+                    if (!selected) {
+                        window.setTimeout(
+                            () => url.focus(),
+                            50,
+                        );
+                    }
+                }
+
+                updateOfferPreview();
+            });
+
+            url?.addEventListener(
+                "input",
+                updateOfferPreview,
+            );
+        });
+
+    offerBackButton?.addEventListener("click", () => {
+        showScreen(
+            hoursCheckpoint,
+            welcome,
+            business,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+            contact,
+            contactCheckpoint,
+            hours,
+            offer,
+            offerCheckpoint,
+        );
+    });
+
+    offerContinueButton?.addEventListener("click", () => {
+        if (
+            offerContinueButton.hasAttribute("disabled")
+        ) {
+            return;
+        }
+
+        showScreen(
+            offerCheckpoint,
+            welcome,
+            business,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+            contact,
+            contactCheckpoint,
+            hours,
+            hoursCheckpoint,
+            offer,
+        );
+    });
+
+    offerCheckpointBackButton?.addEventListener(
+        "click",
+        () => {
+            showScreen(
+                offer,
+                welcome,
+                business,
+                checkpoint,
+                description,
+                descriptionCheckpoint,
+                contact,
+                contactCheckpoint,
+                hours,
+                hoursCheckpoint,
+                offerCheckpoint,
             );
         },
     );
 
     updateHours();
+    updateServiceNumbers();
+    updateOfferPreview();
 </script>
