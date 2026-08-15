@@ -1,0 +1,72 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CommerceSignupFlow from "../components/CommerceSignupFlow.astro";
+import { endpoints, fetchAPI } from "../lib/api";
+
+interface Props {
+    lang: "ca" | "es";
+}
+
+const { lang } = Astro.props;
+
+const [categoriasData, subcategoriasData] = await Promise.all([
+    fetchAPI(endpoints.categorias),
+    fetchAPI(endpoints.subcategorias),
+]);
+
+const getId = (item: any) =>
+    String(item?.documentId ?? item?.id ?? "");
+
+const categorias = (categoriasData.data ?? [])
+    .filter((item: any) => item.activa !== false)
+    .sort(
+        (a: any, b: any) =>
+            Number(a.orden ?? 999) - Number(b.orden ?? 999),
+    )
+    .map((item: any) => ({
+        id: getId(item),
+        label:
+            lang === "es"
+                ? item.nombre_es || item.nombre
+                : item.nombre,
+    }));
+
+const subcategorias = (subcategoriasData.data ?? [])
+    .filter((item: any) => item.activa !== false)
+    .sort(
+        (a: any, b: any) =>
+            Number(a.orden ?? 999) - Number(b.orden ?? 999),
+    )
+    .map((item: any) => ({
+        id: getId(item),
+        categoriaId: getId(item.categoria),
+        label:
+            lang === "es"
+                ? item.nombre_es || item.nombre
+                : item.nombre,
+    }))
+    .filter((item: any) => item.id && item.categoriaId);
+
+const title =
+    lang === "ca"
+        ? "Afegeix el teu comerç | GUIAPINEDA"
+        : "Añade tu comercio | GUIAPINEDA";
+
+const description =
+    lang === "ca"
+        ? "Prepara la fitxa del teu comerç a GUIAPINEDA de manera fàcil i guiada."
+        : "Prepara la ficha de tu comercio en GUIAPINEDA de forma fácil y guiada.";
+---
+
+<Layout
+    lang={lang}
+    title={title}
+    description={description}
+    showLanguageSwitcher={false}
+>
+    <CommerceSignupFlow
+        lang={lang}
+        categorias={categorias}
+        subcategorias={subcategorias}
+    />
+</Layout>
