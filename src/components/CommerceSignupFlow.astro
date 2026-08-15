@@ -48,6 +48,31 @@ const text =
               doneText:
                   "El següent serà explicar, de manera molt senzilla, què feu i què us fa especials.",
               back: "Tornar",
+              next: "Seguim",
+              descriptionSection: "Què feu",
+              descriptionProgress: "Ara expliquem què us fa especials",
+              descriptionTitle: "Explica'ns què feu",
+              descriptionIntro:
+                  "No cal escriure com una empresa. Explica-ho tal com ho explicaries a algú que entra per primera vegada al teu negoci.",
+              shortLabel: "En una frase, què hi trobarà la gent?",
+              shortHelp:
+                  "Aquesta serà la presentació ràpida del teu comerç.",
+              shortPlaceholder:
+                  "Per exemple: Pa artesà, brioixeria i pastissos fets cada dia al nostre obrador.",
+              longLabel: "I si volen saber-ne una mica més?",
+              longHelp:
+                  "Explica què feu, què us diferencia, especialitats o qualsevol cosa que ajudi a conèixer-vos millor.",
+              longPlaceholder:
+                  "Parla'ns del vostre negoci amb les teves paraules...",
+              descriptionContinue: "Ja ho tenim",
+              descriptionPreview: "La teva fitxa va prenent forma",
+              previewShort:
+                  "Aquí apareixerà la presentació curta del teu negoci.",
+              previewLong:
+                  "I aquí, una mica més sobre tot el que oferiu.",
+              descriptionDoneTitle: "Molt bé. Ara ja us coneixem una mica més.",
+              descriptionDoneText:
+                  "El següent serà molt fàcil: on sou i com pot contactar la gent amb vosaltres.",
           }
         : {
               eyebrow: "Forma parte de GUIAPINEDA",
@@ -77,6 +102,31 @@ const text =
               doneText:
                   "Lo siguiente será explicar, de forma muy sencilla, qué hacéis y qué os hace especiales.",
               back: "Volver",
+              next: "Seguimos",
+              descriptionSection: "Qué hacéis",
+              descriptionProgress: "Ahora contamos qué os hace especiales",
+              descriptionTitle: "Cuéntanos qué hacéis",
+              descriptionIntro:
+                  "No hace falta escribir como una empresa. Cuéntalo como se lo explicarías a alguien que entra por primera vez en tu negocio.",
+              shortLabel: "En una frase, ¿qué encontrará la gente?",
+              shortHelp:
+                  "Esta será la presentación rápida de tu comercio.",
+              shortPlaceholder:
+                  "Por ejemplo: Pan artesano, bollería y pasteles hechos cada día en nuestro obrador.",
+              longLabel: "¿Y si quieren conoceros un poco mejor?",
+              longHelp:
+                  "Cuenta qué hacéis, qué os diferencia, especialidades o cualquier cosa que ayude a conoceros mejor.",
+              longPlaceholder:
+                  "Háblanos de vuestro negocio con tus propias palabras...",
+              descriptionContinue: "Ya lo tenemos",
+              descriptionPreview: "Tu ficha va tomando forma",
+              previewShort:
+                  "Aquí aparecerá la presentación corta de tu negocio.",
+              previewLong:
+                  "Y aquí, un poco más sobre todo lo que ofrecéis.",
+              descriptionDoneTitle: "Muy bien. Ahora ya os conocemos un poco más.",
+              descriptionDoneText:
+                  "Lo siguiente será muy fácil: dónde estáis y cómo puede contactar la gente con vosotros.",
           };
 
 const caHref = "/alta-comerc";
@@ -419,8 +469,259 @@ const esHref = "/es/alta-comercio";
                 {text.doneText}
             </p>
 
+            <div
+                class="mt-8 flex flex-wrap items-center justify-center gap-3"
+            >
+                <button
+                    id="checkpoint-back"
+                    type="button"
+                    class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                >
+                    ← {text.back}
+                </button>
+
+                <button
+                    id="checkpoint-next"
+                    type="button"
+                    class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700"
+                >
+                    {text.next}
+                    <span aria-hidden="true" class="ml-3">→</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="signup-description"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8">
+                <div class="mb-4 flex items-center justify-between gap-4">
+                    <p class="font-bold text-slate-950">
+                        {text.descriptionSection}
+                    </p>
+
+                    <div class="flex items-center gap-1.5" aria-hidden="true">
+                        <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                        <span class="h-2 w-10 rounded-full bg-fuchsia-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                        <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                    </div>
+                </div>
+
+                <p class="text-sm font-semibold text-fuchsia-700">
+                    {text.descriptionProgress}
+                </p>
+            </div>
+
+            <div
+                class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]"
+            >
+                <div
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+                >
+                    <h2
+                        class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {text.descriptionTitle}
+                    </h2>
+
+                    <p class="mt-3 max-w-2xl text-slate-600">
+                        {text.descriptionIntro}
+                    </p>
+
+                    <div class="mt-9">
+                        <div
+                            class="flex items-end justify-between gap-4"
+                        >
+                            <div>
+                                <label
+                                    for="business-short-description"
+                                    class="block text-lg font-bold text-slate-950"
+                                >
+                                    {text.shortLabel}
+                                </label>
+
+                                <p class="mt-1 text-sm text-slate-500">
+                                    {text.shortHelp}
+                                </p>
+                            </div>
+
+                            <span
+                                id="short-description-count"
+                                class="shrink-0 text-xs font-semibold text-slate-400"
+                            >
+                                0 / 160
+                            </span>
+                        </div>
+
+                        <textarea
+                            id="business-short-description"
+                            name="descripcion_corta"
+                            rows="3"
+                            maxlength="160"
+                            placeholder={text.shortPlaceholder}
+                            class="mt-3 w-full resize-none rounded-2xl border border-slate-300 bg-white px-5 py-4 text-base leading-relaxed text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                        ></textarea>
+                    </div>
+
+                    <div
+                        class="my-8 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"
+                    >
+                    </div>
+
+                    <div>
+                        <div
+                            class="flex items-end justify-between gap-4"
+                        >
+                            <div>
+                                <label
+                                    for="business-long-description"
+                                    class="block text-lg font-bold text-slate-950"
+                                >
+                                    {text.longLabel}
+                                </label>
+
+                                <p class="mt-1 max-w-2xl text-sm text-slate-500">
+                                    {text.longHelp}
+                                </p>
+                            </div>
+
+                            <span
+                                id="long-description-count"
+                                class="shrink-0 text-xs font-semibold text-slate-400"
+                            >
+                                0 / 900
+                            </span>
+                        </div>
+
+                        <textarea
+                            id="business-long-description"
+                            name="descripcion_completa"
+                            rows="7"
+                            maxlength="900"
+                            placeholder={text.longPlaceholder}
+                            class="mt-3 w-full resize-y rounded-2xl border border-slate-300 bg-white px-5 py-4 text-base leading-relaxed text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                        ></textarea>
+                    </div>
+
+                    <div
+                        class="mt-10 flex items-center justify-between gap-4 border-t border-slate-100 pt-6"
+                    >
+                        <button
+                            id="description-back"
+                            type="button"
+                            class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                        >
+                            ← {text.back}
+                        </button>
+
+                        <button
+                            id="description-continue"
+                            type="button"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-fuchsia-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                        >
+                            {text.descriptionContinue}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside
+                    class="lg:sticky lg:top-28"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
+                    <p
+                        class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-500"
+                    >
+                        {text.descriptionPreview}
+                    </p>
+
+                    <div
+                        class="overflow-hidden rounded-[1.7rem] border border-slate-200 bg-white shadow-sm"
+                    >
+                        <div class="relative aspect-[4/3] bg-slate-200">
+                            <div
+                                class="absolute bottom-4 left-4 flex size-16 items-center justify-center rounded-2xl border-4 border-white bg-amber-300 text-xl font-black text-slate-950 shadow"
+                            >
+                                GP
+                            </div>
+                        </div>
+
+                        <div class="p-5">
+                            <p
+                                id="description-preview-category"
+                                class="text-sm font-bold text-sky-700"
+                            >
+                                {text.previewCategory}
+                            </p>
+
+                            <h3
+                                id="description-preview-name"
+                                class="mt-2 text-2xl font-black tracking-tight text-slate-950"
+                            >
+                                {text.previewName}
+                            </h3>
+
+                            <p
+                                id="description-preview-short"
+                                class="mt-4 text-sm font-semibold leading-relaxed text-slate-700"
+                            >
+                                {text.previewShort}
+                            </p>
+
+                            <div
+                                class="my-4 h-px bg-slate-100"
+                            >
+                            </div>
+
+                            <p
+                                id="description-preview-long"
+                                class="text-sm leading-relaxed text-slate-500"
+                            >
+                                {text.previewLong}
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="signup-description-checkpoint"
+        hidden
+        class="flex min-h-[65vh] items-center px-5 py-16 sm:px-8"
+    >
+        <div
+            class="mx-auto w-full max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-12"
+        >
+            <div
+                class="mx-auto flex size-14 items-center justify-center rounded-full bg-fuchsia-100 text-2xl font-black text-fuchsia-700"
+                aria-hidden="true"
+            >
+                ✓
+            </div>
+
+            <h2
+                class="mt-6 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+            >
+                {text.descriptionDoneTitle}
+            </h2>
+
+            <p class="mx-auto mt-4 max-w-xl text-lg text-slate-600">
+                {text.descriptionDoneText}
+            </p>
+
             <button
-                id="checkpoint-back"
+                id="description-checkpoint-back"
                 type="button"
                 class="mt-8 rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
             >
@@ -434,10 +735,44 @@ const esHref = "/es/alta-comercio";
     const welcome = document.getElementById("signup-welcome");
     const business = document.getElementById("signup-business");
     const checkpoint = document.getElementById("signup-checkpoint");
+    const description = document.getElementById("signup-description");
+    const descriptionCheckpoint = document.getElementById(
+        "signup-description-checkpoint",
+    );
 
     const startButton = document.getElementById("signup-start");
     const backButton = document.getElementById("checkpoint-back");
+    const checkpointNextButton =
+        document.getElementById("checkpoint-next");
     const continueButton = document.getElementById("business-continue");
+    const descriptionBackButton =
+        document.getElementById("description-back");
+    const descriptionContinueButton =
+        document.getElementById("description-continue");
+    const descriptionCheckpointBackButton =
+        document.getElementById("description-checkpoint-back");
+
+    const shortDescription = document.getElementById(
+        "business-short-description",
+    ) as HTMLTextAreaElement | null;
+
+    const longDescription = document.getElementById(
+        "business-long-description",
+    ) as HTMLTextAreaElement | null;
+
+    const shortDescriptionCount =
+        document.getElementById("short-description-count");
+    const longDescriptionCount =
+        document.getElementById("long-description-count");
+
+    const descriptionPreviewName =
+        document.getElementById("description-preview-name");
+    const descriptionPreviewCategory =
+        document.getElementById("description-preview-category");
+    const descriptionPreviewShort =
+        document.getElementById("description-preview-short");
+    const descriptionPreviewLong =
+        document.getElementById("description-preview-long");
 
     const nameInput = document.getElementById(
         "business-name",
@@ -508,20 +843,73 @@ const esHref = "/es/alta-comercio";
                 "";
         }
 
-        if (previewCategory) {
-            if (categoryLabel && subcategoryLabel) {
-                previewCategory.textContent =
-                    `${categoryLabel} · ${subcategoryLabel}`;
-            } else if (categoryLabel) {
-                previewCategory.textContent = categoryLabel;
-            }
+        const categoryText =
+            categoryLabel && subcategoryLabel
+                ? `${categoryLabel} · ${subcategoryLabel}`
+                : categoryLabel;
+
+        if (previewCategory && categoryText) {
+            previewCategory.textContent = categoryText;
+        }
+
+        if (descriptionPreviewName && nameInput) {
+            descriptionPreviewName.textContent =
+                nameInput.value.trim() ||
+                nameInput.placeholder ||
+                "";
+        }
+
+        if (descriptionPreviewCategory && categoryText) {
+            descriptionPreviewCategory.textContent = categoryText;
         }
 
         updateContinueState();
     }
 
+    function updateDescriptionPreview() {
+        if (shortDescriptionCount && shortDescription) {
+            shortDescriptionCount.textContent =
+                `${shortDescription.value.length} / 160`;
+        }
+
+        if (longDescriptionCount && longDescription) {
+            longDescriptionCount.textContent =
+                `${longDescription.value.length} / 900`;
+        }
+
+        if (descriptionPreviewShort && shortDescription) {
+            descriptionPreviewShort.textContent =
+                shortDescription.value.trim() ||
+                shortDescription.placeholder ||
+                "";
+        }
+
+        if (descriptionPreviewLong && longDescription) {
+            descriptionPreviewLong.textContent =
+                longDescription.value.trim() ||
+                longDescription.placeholder ||
+                "";
+        }
+
+        if (descriptionContinueButton) {
+            descriptionContinueButton.toggleAttribute(
+                "disabled",
+                !(
+                    shortDescription?.value.trim() &&
+                    longDescription?.value.trim()
+                ),
+            );
+        }
+    }
+
     startButton?.addEventListener("click", () => {
-        showScreen(business, welcome, checkpoint);
+        showScreen(
+            business,
+            welcome,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+        );
 
         window.setTimeout(() => {
             nameInput?.focus();
@@ -587,10 +975,89 @@ const esHref = "/es/alta-comercio";
 
     continueButton?.addEventListener("click", () => {
         if (continueButton.hasAttribute("disabled")) return;
-        showScreen(checkpoint, welcome, business);
+
+        showScreen(
+            checkpoint,
+            welcome,
+            business,
+            description,
+            descriptionCheckpoint,
+        );
     });
 
     backButton?.addEventListener("click", () => {
-        showScreen(business, welcome, checkpoint);
+        showScreen(
+            business,
+            welcome,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+        );
     });
+
+    checkpointNextButton?.addEventListener("click", () => {
+        updatePreview();
+        updateDescriptionPreview();
+
+        showScreen(
+            description,
+            welcome,
+            business,
+            checkpoint,
+            descriptionCheckpoint,
+        );
+
+        window.setTimeout(() => {
+            shortDescription?.focus();
+        }, 250);
+    });
+
+    shortDescription?.addEventListener(
+        "input",
+        updateDescriptionPreview,
+    );
+
+    longDescription?.addEventListener(
+        "input",
+        updateDescriptionPreview,
+    );
+
+    descriptionBackButton?.addEventListener("click", () => {
+        showScreen(
+            checkpoint,
+            welcome,
+            business,
+            description,
+            descriptionCheckpoint,
+        );
+    });
+
+    descriptionContinueButton?.addEventListener("click", () => {
+        if (
+            descriptionContinueButton.hasAttribute("disabled")
+        ) {
+            return;
+        }
+
+        showScreen(
+            descriptionCheckpoint,
+            welcome,
+            business,
+            checkpoint,
+            description,
+        );
+    });
+
+    descriptionCheckpointBackButton?.addEventListener(
+        "click",
+        () => {
+            showScreen(
+                description,
+                welcome,
+                business,
+                checkpoint,
+                descriptionCheckpoint,
+            );
+        },
+    );
 </script>
