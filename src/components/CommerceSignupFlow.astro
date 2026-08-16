@@ -187,6 +187,33 @@ const text =
               photosDoneTitle: "Ja tenim el vostre comerç.",
               photosDoneText:
                   "Nom, informació, contacte, horaris, serveis i imatges. Ara només queda veure-ho tot junt.",
+              reviewNext: "Veure el meu comerç",
+              reviewSection: "Tot a punt",
+              reviewProgress: "Mira què acabes de crear",
+              reviewTitle: "El teu comerç està llest.",
+              reviewIntro:
+                  "Això és el que hem construït junts. Revisa-ho amb calma i, si vols canviar alguna cosa, ho tens a un clic.",
+              edit: "Editar",
+              reviewAbout: "Sobre el comerç",
+              reviewContact: "On trobar-vos",
+              reviewHours: "Horari",
+              reviewServices: "Què oferiu",
+              reviewGallery: "Galeria",
+              reviewNoGallery: "No heu afegit fotos de galeria.",
+              applicantTitle: "Qui ens envia aquesta sol·licitud?",
+              applicantIntro:
+                  "Aquestes dades són només per poder contactar amb vosaltres durant la revisió. No apareixeran a la fitxa pública.",
+              applicantName: "Nom i cognoms",
+              applicantNamePlaceholder: "La persona responsable",
+              applicantEmail: "Correu electrònic",
+              applicantEmailPlaceholder: "tu@correu.cat",
+              applicantPhone: "Telèfon",
+              applicantPhonePlaceholder: "Opcional",
+              applicantPrivacy:
+                  "He llegit i accepto el tractament de les meves dades per gestionar aquesta sol·licitud.",
+              send: "Enviar a GUIAPINEDA",
+              prototypeNote:
+                  "Perfecte. Tot està preparat. Encara no s'ha enviat res: connectarem aquest botó amb Strapi en la següent fase.",
           }
         : {
               eyebrow: "Forma parte de GUIAPINEDA",
@@ -355,6 +382,33 @@ const text =
               photosDoneTitle: "Ya tenemos vuestro comercio.",
               photosDoneText:
                   "Nombre, información, contacto, horarios, servicios e imágenes. Ahora solo queda verlo todo junto.",
+              reviewNext: "Ver mi comercio",
+              reviewSection: "Todo listo",
+              reviewProgress: "Mira lo que acabas de crear",
+              reviewTitle: "Tu comercio está listo.",
+              reviewIntro:
+                  "Esto es lo que hemos construido juntos. Revísalo con calma y, si quieres cambiar algo, lo tienes a un clic.",
+              edit: "Editar",
+              reviewAbout: "Sobre el comercio",
+              reviewContact: "Dónde encontraros",
+              reviewHours: "Horario",
+              reviewServices: "Qué ofrecéis",
+              reviewGallery: "Galería",
+              reviewNoGallery: "No habéis añadido fotos de galería.",
+              applicantTitle: "¿Quién nos envía esta solicitud?",
+              applicantIntro:
+                  "Estos datos son solo para poder contactar con vosotros durante la revisión. No aparecerán en la ficha pública.",
+              applicantName: "Nombre y apellidos",
+              applicantNamePlaceholder: "La persona responsable",
+              applicantEmail: "Correo electrónico",
+              applicantEmailPlaceholder: "tu@correo.es",
+              applicantPhone: "Teléfono",
+              applicantPhonePlaceholder: "Opcional",
+              applicantPrivacy:
+                  "He leído y acepto el tratamiento de mis datos para gestionar esta solicitud.",
+              send: "Enviar a GUIAPINEDA",
+              prototypeNote:
+                  "Perfecto. Todo está preparado. Todavía no se ha enviado nada: conectaremos este botón con Strapi en la siguiente fase.",
           };
 
 const days =
@@ -2341,13 +2395,431 @@ const esHref = "/es/alta-comercio";
                 {text.photosDoneText}
             </p>
 
-            <button
-                id="photos-checkpoint-back"
-                type="button"
-                class="mt-8 rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <button
+                    id="photos-checkpoint-back"
+                    type="button"
+                    class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                >
+                    ← {text.back}
+                </button>
+
+                <button
+                    id="photos-checkpoint-next"
+                    type="button"
+                    class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700"
+                >
+                    {text.reviewNext}
+                    <span aria-hidden="true" class="ml-3">→</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="signup-review"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8">
+                <div class="mb-4 flex items-center justify-between gap-4">
+                    <p class="font-bold text-slate-950">
+                        {text.reviewSection}
+                    </p>
+
+                    <div class="flex items-center gap-1.5" aria-hidden="true">
+                        <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-fuchsia-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-amber-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-emerald-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-violet-500"></span>
+                        <span class="h-2 w-5 rounded-full bg-rose-500"></span>
+                        <span class="h-2 w-10 rounded-full bg-slate-950"></span>
+                    </div>
+                </div>
+
+                <p class="text-sm font-semibold text-slate-600">
+                    {text.reviewProgress}
+                </p>
+            </div>
+
+            <div
+                class="rounded-[2rem] bg-slate-950 px-6 py-8 text-white sm:px-10 sm:py-10"
             >
-                ← {text.back}
-            </button>
+                <h1
+                    class="text-4xl font-black tracking-tight sm:text-5xl"
+                >
+                    {text.reviewTitle}
+                </h1>
+
+                <p
+                    class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-300"
+                >
+                    {text.reviewIntro}
+                </p>
+            </div>
+
+            <!-- HERO / IDENTIDAD -->
+            <section
+                class="mt-7 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm"
+            >
+                <div class="grid lg:grid-cols-[0.9fr_1.1fr]">
+                    <div
+                        id="review-main-photo-wrap"
+                        class="relative min-h-80 overflow-hidden bg-slate-200"
+                    >
+                        <img
+                            id="review-main-photo"
+                            alt=""
+                            class="absolute inset-0 h-full w-full object-cover"
+                        />
+
+                        <img
+                            id="review-logo"
+                            alt=""
+                            hidden
+                            class="absolute bottom-5 left-5 size-24 rounded-3xl border-4 border-white bg-white object-contain p-2 shadow-xl"
+                        />
+
+                        <div
+                            id="review-logo-placeholder"
+                            class="absolute bottom-5 left-5 flex size-24 items-center justify-center rounded-3xl border-4 border-white bg-amber-300 text-2xl font-black text-slate-950 shadow-xl"
+                        >
+                            GP
+                        </div>
+
+                        <button
+                            type="button"
+                            data-edit-target="photos"
+                            class="absolute right-4 top-4 rounded-full bg-white/95 px-4 py-2 text-sm font-bold text-slate-950 shadow"
+                        >
+                            {text.edit}
+                        </button>
+                    </div>
+
+                    <div class="p-7 sm:p-9">
+                        <div
+                            class="flex items-start justify-between gap-4"
+                        >
+                            <div>
+                                <p
+                                    id="review-category"
+                                    class="text-sm font-bold text-sky-700"
+                                >
+                                </p>
+
+                                <h2
+                                    id="review-name"
+                                    class="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                                >
+                                </h2>
+                            </div>
+
+                            <button
+                                type="button"
+                                data-edit-target="business"
+                                class="shrink-0 rounded-full border border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 transition hover:border-slate-950 hover:text-slate-950"
+                            >
+                                {text.edit}
+                            </button>
+                        </div>
+
+                        <p
+                            id="review-short-description"
+                            class="mt-5 text-base font-semibold leading-relaxed text-slate-700"
+                        >
+                        </p>
+
+                        <div
+                            class="mt-6 rounded-2xl border-l-4 border-amber-400 bg-amber-50 px-4 py-4"
+                        >
+                            <p
+                                id="review-address"
+                                class="font-semibold text-slate-900"
+                            >
+                            </p>
+                        </div>
+
+                        <div
+                            id="review-contact-methods"
+                            class="mt-4 flex flex-wrap gap-2"
+                        >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="mt-7 grid gap-7 lg:grid-cols-2">
+                <!-- SOBRE -->
+                <section
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-7"
+                >
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 class="text-xl font-black text-slate-950">
+                            {text.reviewAbout}
+                        </h2>
+
+                        <button
+                            type="button"
+                            data-edit-target="description"
+                            class="rounded-full border border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 hover:border-fuchsia-400 hover:text-fuchsia-700"
+                        >
+                            {text.edit}
+                        </button>
+                    </div>
+
+                    <p
+                        id="review-long-description"
+                        class="mt-5 whitespace-pre-line leading-relaxed text-slate-600"
+                    >
+                    </p>
+                </section>
+
+                <!-- CONTACTO -->
+                <section
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-7"
+                >
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 class="text-xl font-black text-slate-950">
+                            {text.reviewContact}
+                        </h2>
+
+                        <button
+                            type="button"
+                            data-edit-target="contact"
+                            class="rounded-full border border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 hover:border-amber-400 hover:text-amber-700"
+                        >
+                            {text.edit}
+                        </button>
+                    </div>
+
+                    <p
+                        id="review-contact-address"
+                        class="mt-5 font-semibold text-slate-900"
+                    >
+                    </p>
+
+                    <div
+                        id="review-contact-list"
+                        class="mt-4 space-y-2 text-sm text-slate-600"
+                    >
+                    </div>
+                </section>
+
+                <!-- HORARIOS -->
+                <section
+                    class="rounded-[2rem] border border-cyan-100 bg-cyan-50 p-6 shadow-sm sm:p-7"
+                >
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 class="text-xl font-black text-slate-950">
+                            {text.reviewHours}
+                        </h2>
+
+                        <button
+                            type="button"
+                            data-edit-target="hours"
+                            class="rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-600 shadow-sm hover:text-emerald-700"
+                        >
+                            {text.edit}
+                        </button>
+                    </div>
+
+                    <div
+                        id="review-hours-list"
+                        class="mt-5 space-y-2"
+                    >
+                    </div>
+
+                    <div
+                        id="review-attention-list"
+                        class="mt-5 flex flex-wrap gap-2 border-t border-cyan-100 pt-5"
+                    >
+                    </div>
+                </section>
+
+                <!-- SERVICIOS -->
+                <section
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-7"
+                >
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 class="text-xl font-black text-slate-950">
+                            {text.reviewServices}
+                        </h2>
+
+                        <button
+                            type="button"
+                            data-edit-target="offer"
+                            class="rounded-full border border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 hover:border-violet-400 hover:text-violet-700"
+                        >
+                            {text.edit}
+                        </button>
+                    </div>
+
+                    <div
+                        id="review-services-list"
+                        class="mt-5 space-y-4"
+                    >
+                    </div>
+
+                    <div
+                        id="review-social-list"
+                        class="mt-5 flex flex-wrap gap-2"
+                    >
+                    </div>
+
+                    <p
+                        id="review-additional-info"
+                        class="mt-5 whitespace-pre-line border-l-4 border-violet-200 pl-4 text-sm leading-relaxed text-slate-500"
+                    >
+                    </p>
+                </section>
+            </div>
+
+            <!-- GALERÍA -->
+            <section
+                class="mt-7 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-7"
+            >
+                <div class="flex items-center justify-between gap-4">
+                    <h2 class="text-xl font-black text-slate-950">
+                        {text.reviewGallery}
+                    </h2>
+
+                    <button
+                        type="button"
+                        data-edit-target="photos"
+                        class="rounded-full border border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 hover:border-rose-400 hover:text-rose-700"
+                    >
+                        {text.edit}
+                    </button>
+                </div>
+
+                <div
+                    id="review-gallery"
+                    class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4"
+                >
+                </div>
+
+                <p
+                    id="review-gallery-empty"
+                    class="mt-5 text-sm text-slate-400"
+                    hidden
+                >
+                    {text.reviewNoGallery}
+                </p>
+            </section>
+
+            <!-- RESPONSABLE -->
+            <section
+                class="mt-7 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+            >
+                <div class="max-w-3xl">
+                    <p
+                        class="text-sm font-bold uppercase tracking-[0.16em] text-sky-700"
+                    >
+                        GUIAPINEDA
+                    </p>
+
+                    <h2
+                        class="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl"
+                    >
+                        {text.applicantTitle}
+                    </h2>
+
+                    <p class="mt-3 text-slate-600">
+                        {text.applicantIntro}
+                    </p>
+                </div>
+
+                <div class="mt-7 grid gap-5 sm:grid-cols-2">
+                    <label class="block">
+                        <span class="font-bold text-slate-950">
+                            {text.applicantName}
+                        </span>
+
+                        <input
+                            id="applicant-name"
+                            type="text"
+                            autocomplete="name"
+                            maxlength="120"
+                            placeholder={text.applicantNamePlaceholder}
+                            class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        />
+                    </label>
+
+                    <label class="block">
+                        <span class="font-bold text-slate-950">
+                            {text.applicantEmail}
+                        </span>
+
+                        <input
+                            id="applicant-email"
+                            type="email"
+                            autocomplete="email"
+                            maxlength="180"
+                            placeholder={text.applicantEmailPlaceholder}
+                            class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        />
+                    </label>
+
+                    <label class="block sm:col-span-2 sm:max-w-[calc(50%-0.625rem)]">
+                        <span class="font-bold text-slate-950">
+                            {text.applicantPhone}
+                        </span>
+
+                        <input
+                            id="applicant-phone"
+                            type="tel"
+                            autocomplete="tel"
+                            maxlength="30"
+                            placeholder={text.applicantPhonePlaceholder}
+                            class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        />
+                    </label>
+                </div>
+
+                <label
+                    class="mt-7 flex cursor-pointer items-start gap-3 rounded-2xl bg-slate-50 p-4 text-sm font-semibold leading-relaxed text-slate-700"
+                >
+                    <input
+                        id="applicant-privacy"
+                        type="checkbox"
+                        class="mt-0.5 size-4 shrink-0 accent-slate-950"
+                    />
+
+                    <span>{text.applicantPrivacy}</span>
+                </label>
+
+                <div
+                    class="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-6"
+                >
+                    <button
+                        id="review-back"
+                        type="button"
+                        class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                    >
+                        ← {text.back}
+                    </button>
+
+                    <button
+                        id="review-send"
+                        type="button"
+                        disabled
+                        class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-8 py-3 font-bold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                    >
+                        {text.send}
+                        <span aria-hidden="true" class="ml-3">→</span>
+                    </button>
+                </div>
+
+                <div
+                    id="review-prototype-note"
+                    hidden
+                    class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-relaxed text-emerald-950"
+                >
+                    {text.prototypeNote}
+                </div>
+            </section>
         </div>
     </section>
 </div>
@@ -2376,6 +2848,7 @@ const esHref = "/es/alta-comercio";
     const photosCheckpoint = document.getElementById(
         "signup-photos-checkpoint",
     );
+    const review = document.getElementById("signup-review");
 
     const startButton = document.getElementById("signup-start");
     const backButton = document.getElementById("checkpoint-back");
@@ -2424,6 +2897,62 @@ const esHref = "/es/alta-comercio";
         document.getElementById("photos-continue");
     const photosCheckpointBackButton =
         document.getElementById("photos-checkpoint-back");
+    const photosCheckpointNextButton =
+        document.getElementById("photos-checkpoint-next");
+
+    const reviewBackButton =
+        document.getElementById("review-back");
+    const reviewSendButton =
+        document.getElementById("review-send");
+    const reviewPrototypeNote =
+        document.getElementById("review-prototype-note");
+
+    const applicantName = document.getElementById(
+        "applicant-name",
+    ) as HTMLInputElement | null;
+    const applicantEmail = document.getElementById(
+        "applicant-email",
+    ) as HTMLInputElement | null;
+    const applicantPrivacy = document.getElementById(
+        "applicant-privacy",
+    ) as HTMLInputElement | null;
+
+    const reviewMainPhoto =
+        document.getElementById("review-main-photo") as HTMLImageElement | null;
+    const reviewLogo =
+        document.getElementById("review-logo") as HTMLImageElement | null;
+    const reviewLogoPlaceholder =
+        document.getElementById("review-logo-placeholder");
+    const reviewCategory =
+        document.getElementById("review-category");
+    const reviewName =
+        document.getElementById("review-name");
+    const reviewShortDescription =
+        document.getElementById("review-short-description");
+    const reviewLongDescription =
+        document.getElementById("review-long-description");
+    const reviewAddress =
+        document.getElementById("review-address");
+    const reviewContactAddress =
+        document.getElementById("review-contact-address");
+    const reviewContactMethods =
+        document.getElementById("review-contact-methods");
+    const reviewContactList =
+        document.getElementById("review-contact-list");
+    const reviewHoursList =
+        document.getElementById("review-hours-list");
+    const reviewAttentionList =
+        document.getElementById("review-attention-list");
+    const reviewServicesList =
+        document.getElementById("review-services-list");
+    const reviewSocialList =
+        document.getElementById("review-social-list");
+    const reviewAdditionalInfo =
+        document.getElementById("review-additional-info");
+    const reviewGallery =
+        document.getElementById("review-gallery");
+    const reviewGalleryEmpty =
+        document.getElementById("review-gallery-empty");
 
     const mainPhotoInput = document.getElementById(
         "main-photo-input",
@@ -2609,6 +3138,7 @@ const esHref = "/es/alta-comercio";
 
     let categoryLabel = "";
     let subcategoryLabel = "";
+    let categoryHasSubcategories = false;
 
     function showScreen(
         target: HTMLElement | null,
@@ -2627,13 +3157,18 @@ const esHref = "/es/alta-comercio";
     function updateContinueState() {
         if (!continueButton || !nameInput) return;
 
-        continueButton.toggleAttribute(
-            "disabled",
-            !(
-                nameInput.value.trim() &&
-                categoryInput?.value &&
+        const ready = Boolean(
+            nameInput.value.trim() &&
+            categoryInput?.value &&
+            (
+                !categoryHasSubcategories ||
                 subcategoryInput?.value
             ),
+        );
+
+        continueButton.toggleAttribute(
+            "disabled",
+            !ready,
         );
     }
 
@@ -2846,6 +3381,375 @@ const esHref = "/es/alta-comercio";
                 full,
             );
         }
+    }
+
+    let editingFromReview = false;
+
+    function addReviewChip(
+        container: HTMLElement | null,
+        label: string,
+        className = "bg-slate-100 text-slate-700",
+    ) {
+        if (!container || !label) return;
+
+        const chip = document.createElement("span");
+        chip.className =
+            `rounded-full px-3 py-1.5 text-xs font-bold ${className}`;
+        chip.textContent = label;
+        container.appendChild(chip);
+    }
+
+    function renderReview() {
+        const categoryText =
+            categoryLabel && subcategoryLabel
+                ? `${categoryLabel} · ${subcategoryLabel}`
+                : categoryLabel;
+
+        if (reviewMainPhoto && mainPhotoUrl) {
+            reviewMainPhoto.src = mainPhotoUrl;
+        }
+
+        if (reviewLogo && logoUrl) {
+            reviewLogo.src = logoUrl;
+            reviewLogo.hidden = false;
+            if (reviewLogoPlaceholder) {
+                reviewLogoPlaceholder.hidden = true;
+            }
+        } else {
+            if (reviewLogo) reviewLogo.hidden = true;
+            if (reviewLogoPlaceholder) {
+                reviewLogoPlaceholder.hidden = false;
+            }
+        }
+
+        if (reviewCategory) {
+            reviewCategory.textContent = categoryText;
+        }
+
+        if (reviewName && nameInput) {
+            reviewName.textContent = nameInput.value.trim();
+        }
+
+        if (reviewShortDescription && shortDescription) {
+            reviewShortDescription.textContent =
+                shortDescription.value.trim();
+        }
+
+        if (reviewLongDescription && longDescription) {
+            reviewLongDescription.textContent =
+                longDescription.value.trim();
+        }
+
+        const address = addressInput?.value.trim() ?? "";
+
+        if (reviewAddress) {
+            reviewAddress.textContent = address;
+        }
+
+        if (reviewContactAddress) {
+            reviewContactAddress.textContent = address;
+        }
+
+        if (reviewContactMethods) {
+            reviewContactMethods.replaceChildren();
+
+            if (phoneInput?.value.trim()) {
+                addReviewChip(
+                    reviewContactMethods,
+                    `☎ ${phoneInput.value.trim()}`,
+                    "bg-sky-50 text-sky-900",
+                );
+            }
+
+            if (whatsappInput?.value.trim()) {
+                addReviewChip(
+                    reviewContactMethods,
+                    `WhatsApp ${whatsappInput.value.trim()}`,
+                    "bg-emerald-50 text-emerald-900",
+                );
+            }
+
+            if (emailInput?.value.trim()) {
+                addReviewChip(
+                    reviewContactMethods,
+                    emailInput.value.trim(),
+                    "bg-violet-50 text-violet-900",
+                );
+            }
+
+            if (webInput?.value.trim()) {
+                addReviewChip(
+                    reviewContactMethods,
+                    webInput.value.trim(),
+                    "bg-fuchsia-50 text-fuchsia-900",
+                );
+            }
+        }
+
+        if (reviewContactList) {
+            reviewContactList.replaceChildren();
+
+            [
+                phoneInput?.value.trim()
+                    ? `Tel: ${phoneInput.value.trim()}`
+                    : "",
+                whatsappInput?.value.trim()
+                    ? `WhatsApp: ${whatsappInput.value.trim()}`
+                    : "",
+                emailInput?.value.trim()
+                    ? `Email: ${emailInput.value.trim()}`
+                    : "",
+                webInput?.value.trim()
+                    ? `Web: ${webInput.value.trim()}`
+                    : "",
+            ]
+                .filter(Boolean)
+                .forEach((value) => {
+                    const item = document.createElement("p");
+                    item.textContent = value;
+                    reviewContactList.appendChild(item);
+                });
+        }
+
+        if (reviewHoursList) {
+            reviewHoursList.replaceChildren();
+
+            scheduleRows.forEach((row) => {
+                const dayLabel = row.dataset.dayLabel ?? "";
+
+                const closed =
+                    row.querySelector<HTMLInputElement>(
+                        ".schedule-closed",
+                    )?.checked ?? false;
+
+                const open1 =
+                    row.querySelector<HTMLInputElement>(
+                        ".schedule-open-1",
+                    )?.value ?? "";
+
+                const close1 =
+                    row.querySelector<HTMLInputElement>(
+                        ".schedule-close-1",
+                    )?.value ?? "";
+
+                const second =
+                    row.querySelector<HTMLElement>(
+                        ".schedule-second",
+                    );
+
+                const open2 =
+                    row.querySelector<HTMLInputElement>(
+                        ".schedule-open-2",
+                    )?.value ?? "";
+
+                const close2 =
+                    row.querySelector<HTMLInputElement>(
+                        ".schedule-close-2",
+                    )?.value ?? "";
+
+                const item = document.createElement("div");
+                item.className =
+                    "flex items-start justify-between gap-4 text-sm";
+
+                const day = document.createElement("span");
+                day.className = "font-bold text-slate-950";
+                day.textContent = dayLabel;
+
+                const value = document.createElement("span");
+                value.className =
+                    "text-right text-slate-600";
+
+                if (closed) {
+                    value.textContent =
+                        document.documentElement.lang === "ca"
+                            ? "Tancat"
+                            : "Cerrado";
+                } else {
+                    const first =
+                        `${formatScheduleTime(open1)}–${formatScheduleTime(close1)}`;
+
+                    const hasSecond =
+                        second && !second.hidden && open2 && close2;
+
+                    value.textContent = hasSecond
+                        ? `${first} · ${formatScheduleTime(open2)}–${formatScheduleTime(close2)}`
+                        : first;
+                }
+
+                item.append(day, value);
+                reviewHoursList.appendChild(item);
+            });
+        }
+
+        if (reviewAttentionList) {
+            reviewAttentionList.replaceChildren();
+
+            attentionButtons
+                .filter(
+                    (button) =>
+                        button.getAttribute("aria-pressed") ===
+                        "true",
+                )
+                .forEach((button) => {
+                    addReviewChip(
+                        reviewAttentionList,
+                        button.textContent?.trim() ?? "",
+                        "bg-white text-emerald-800",
+                    );
+                });
+        }
+
+        const services = getServiceRows()
+            .map((row) => ({
+                name:
+                    row.querySelector<HTMLInputElement>(
+                        ".service-name",
+                    )?.value.trim() ?? "",
+                description:
+                    row.querySelector<HTMLTextAreaElement>(
+                        ".service-description",
+                    )?.value.trim() ?? "",
+            }))
+            .filter((service) => service.name);
+
+        if (reviewServicesList) {
+            reviewServicesList.replaceChildren();
+
+            services.forEach((service) => {
+                const item = document.createElement("div");
+
+                const title = document.createElement("p");
+                title.className =
+                    "font-black text-slate-950";
+                title.textContent = service.name;
+                item.appendChild(title);
+
+                if (service.description) {
+                    const description =
+                        document.createElement("p");
+                    description.className =
+                        "mt-1 text-sm leading-relaxed text-slate-500";
+                    description.textContent =
+                        service.description;
+                    item.appendChild(description);
+                }
+
+                reviewServicesList.appendChild(item);
+            });
+        }
+
+        if (reviewSocialList) {
+            reviewSocialList.replaceChildren();
+
+            document
+                .querySelectorAll<HTMLElement>(".social-row")
+                .forEach((row) => {
+                    const toggle =
+                        row.querySelector<HTMLButtonElement>(
+                            ".social-toggle",
+                        );
+
+                    const url =
+                        row.querySelector<HTMLInputElement>(
+                            ".social-url",
+                        );
+
+                    if (
+                        toggle?.getAttribute("aria-pressed") ===
+                            "true" &&
+                        url?.value.trim()
+                    ) {
+                        addReviewChip(
+                            reviewSocialList,
+                            toggle.textContent?.trim() ?? "",
+                            "bg-violet-50 text-violet-800",
+                        );
+                    }
+                });
+        }
+
+        const additionalInfo = document.getElementById(
+            "business-additional-info",
+        ) as HTMLTextAreaElement | null;
+
+        if (reviewAdditionalInfo) {
+            const value = additionalInfo?.value.trim() ?? "";
+            reviewAdditionalInfo.textContent = value;
+            reviewAdditionalInfo.hidden = !value;
+        }
+
+        if (reviewGallery && reviewGalleryEmpty) {
+            reviewGallery.replaceChildren();
+
+            reviewGalleryEmpty.hidden =
+                galleryUrls.length > 0;
+
+            galleryUrls.forEach((url) => {
+                const image = document.createElement("img");
+                image.src = url;
+                image.alt = "";
+                image.className =
+                    "aspect-square w-full rounded-2xl object-cover";
+                reviewGallery.appendChild(image);
+            });
+        }
+    }
+
+    function updateReviewSendState() {
+        if (!reviewSendButton) return;
+
+        const ready = Boolean(
+            applicantName?.value.trim() &&
+            applicantEmail?.value.trim() &&
+            applicantEmail.checkValidity() &&
+            applicantPrivacy?.checked
+        );
+
+        reviewSendButton.toggleAttribute(
+            "disabled",
+            !ready,
+        );
+
+        if (reviewPrototypeNote) {
+            reviewPrototypeNote.hidden = true;
+        }
+    }
+
+    function openReviewEdit(target: string) {
+        const screens: Record<string, HTMLElement | null> = {
+            business,
+            description,
+            contact,
+            hours,
+            offer,
+            photos,
+        };
+
+        const targetScreen = screens[target];
+
+        if (!targetScreen) return;
+
+        editingFromReview = true;
+
+        showScreen(
+            targetScreen,
+            welcome,
+            business,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+            contact,
+            contactCheckpoint,
+            hours,
+            hoursCheckpoint,
+            offer,
+            offerCheckpoint,
+            photos,
+            photosCheckpoint,
+            review,
+        );
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function getServiceRows() {
@@ -3420,6 +4324,15 @@ const esHref = "/es/alta-comercio";
 
             subcategoryLabel = "";
 
+            const matchingSubcategories =
+                subcategoryButtons.filter(
+                    (item) =>
+                        item.dataset.parentId === categoryId,
+                );
+
+            categoryHasSubcategories =
+                matchingSubcategories.length > 0;
+
             subcategoryButtons.forEach((item) => {
                 item.setAttribute("aria-pressed", "false");
                 item.hidden =
@@ -3427,7 +4340,8 @@ const esHref = "/es/alta-comercio";
             });
 
             if (subcategoryBlock) {
-                subcategoryBlock.hidden = false;
+                subcategoryBlock.hidden =
+                    !categoryHasSubcategories;
             }
 
             updatePreview();
@@ -4111,9 +5025,170 @@ const esHref = "/es/alta-comercio";
                 offer,
                 offerCheckpoint,
                 photosCheckpoint,
+                review,
             );
         },
     );
+
+    photosCheckpointNextButton?.addEventListener(
+        "click",
+        () => {
+            renderReview();
+
+            showScreen(
+                review,
+                welcome,
+                business,
+                checkpoint,
+                description,
+                descriptionCheckpoint,
+                contact,
+                contactCheckpoint,
+                hours,
+                hoursCheckpoint,
+                offer,
+                offerCheckpoint,
+                photos,
+                photosCheckpoint,
+            );
+        },
+    );
+
+    document
+        .querySelectorAll<HTMLButtonElement>(
+            "[data-edit-target]",
+        )
+        .forEach((button) => {
+            button.addEventListener("click", () => {
+                openReviewEdit(
+                    button.dataset.editTarget ?? "",
+                );
+            });
+        });
+
+    document.addEventListener(
+        "click",
+        (event) => {
+            if (!editingFromReview) return;
+
+            const target = event.target as HTMLElement | null;
+            const button = target?.closest<HTMLButtonElement>(
+                "#business-continue, #description-continue, #contact-continue, #hours-continue, #offer-continue, #photos-continue",
+            );
+
+            if (!button) return;
+            if (button.hasAttribute("disabled")) return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            editingFromReview = false;
+            renderReview();
+
+            showScreen(
+                review,
+                welcome,
+                business,
+                checkpoint,
+                description,
+                descriptionCheckpoint,
+                contact,
+                contactCheckpoint,
+                hours,
+                hoursCheckpoint,
+                offer,
+                offerCheckpoint,
+                photos,
+                photosCheckpoint,
+            );
+        },
+        true,
+    );
+
+    document.addEventListener(
+        "click",
+        (event) => {
+            if (!editingFromReview) return;
+
+            const target = event.target as HTMLElement | null;
+            const button = target?.closest<HTMLButtonElement>(
+                "#checkpoint-back, #description-back, #contact-back, #hours-back, #offer-back, #photos-back",
+            );
+
+            if (!button) return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            editingFromReview = false;
+            renderReview();
+
+            showScreen(
+                review,
+                welcome,
+                business,
+                checkpoint,
+                description,
+                descriptionCheckpoint,
+                contact,
+                contactCheckpoint,
+                hours,
+                hoursCheckpoint,
+                offer,
+                offerCheckpoint,
+                photos,
+                photosCheckpoint,
+            );
+        },
+        true,
+    );
+
+    [applicantName, applicantEmail].forEach((input) => {
+        input?.addEventListener(
+            "input",
+            updateReviewSendState,
+        );
+    });
+
+    applicantPrivacy?.addEventListener(
+        "change",
+        updateReviewSendState,
+    );
+
+    reviewBackButton?.addEventListener("click", () => {
+        showScreen(
+            photos,
+            welcome,
+            business,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+            contact,
+            contactCheckpoint,
+            hours,
+            hoursCheckpoint,
+            offer,
+            offerCheckpoint,
+            photosCheckpoint,
+            review,
+        );
+    });
+
+    reviewSendButton?.addEventListener("click", () => {
+        if (
+            reviewSendButton.hasAttribute("disabled")
+        ) {
+            return;
+        }
+
+        if (reviewPrototypeNote) {
+            reviewPrototypeNote.hidden = false;
+            reviewPrototypeNote.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+            });
+        }
+    });
 
     updateHours();
     updateServiceNumbers();
