@@ -165,6 +165,19 @@ const text =
               photosTitle: "Ensenya'ns el teu negoci",
               photosIntro:
                   "Una bona imatge explica molt. Tria una foto principal, el vostre logo si en teniu i fins a quatre fotos més.",
+              photosGuideTitle: "Abans de pujar les fotos",
+              photosGuideIntro:
+                  "Amb unes imatges ben triades, la vostra fitxa quedarà molt millor.",
+              photosGuideMain:
+                  "Foto principal: millor horitzontal, clara i que mostri bé el negoci, el local o l'espai.",
+              photosGuideLogo:
+                  "Logo: si en teniu, utilitzeu una versió neta, llegible i amb bona qualitat.",
+              photosGuideGallery:
+                  "Galeria: fins a 4 fotos diferents de l'espai, productes, equip o detalls que us representin.",
+              photosGuideFormat:
+                  "Formats admesos: JPG, PNG o WebP. Eviteu captures de pantalla, imatges borroses o molt petites.",
+              photosGuideFinal:
+                  "No cal que les prepareu per a web: nosaltres ens encarregarem del tractament final.",
               mainPhotoTitle: "La foto principal",
               mainPhotoHelp:
                   "Serà la imatge protagonista de la vostra fitxa. Millor si mostra bé el local, l'espai o el negoci.",
@@ -360,6 +373,19 @@ const text =
               photosTitle: "Enséñanos tu negocio",
               photosIntro:
                   "Una buena imagen cuenta mucho. Elige una foto principal, vuestro logo si tenéis y hasta cuatro fotos más.",
+              photosGuideTitle: "Antes de subir las fotos",
+              photosGuideIntro:
+                  "Con unas imágenes bien elegidas, vuestra ficha quedará mucho mejor.",
+              photosGuideMain:
+                  "Foto principal: mejor horizontal, clara y que muestre bien el negocio, el local o el espacio.",
+              photosGuideLogo:
+                  "Logo: si tenéis, utilizad una versión limpia, legible y con buena calidad.",
+              photosGuideGallery:
+                  "Galería: hasta 4 fotos diferentes del espacio, productos, equipo o detalles que os representen.",
+              photosGuideFormat:
+                  "Formatos admitidos: JPG, PNG o WebP. Evitad capturas de pantalla, imágenes borrosas o muy pequeñas.",
+              photosGuideFinal:
+                  "No hace falta que las preparéis para web: nosotros nos encargaremos del tratamiento final.",
               mainPhotoTitle: "La foto principal",
               mainPhotoHelp:
                   "Será la imagen protagonista de vuestra ficha. Mejor si muestra bien el local, el espacio o el negocio.",
@@ -2083,6 +2109,48 @@ const esHref = "/es/alta-comercio";
                     <p class="mt-3 max-w-2xl text-slate-600">
                         {text.photosIntro}
                     </p>
+
+                    <aside
+                        class="mt-6 rounded-3xl border border-rose-200 bg-rose-50/70 p-5 sm:p-6"
+                        aria-labelledby="photos-guide-title"
+                    >
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white font-black text-rose-700 shadow-sm"
+                                aria-hidden="true"
+                            >
+                                i
+                            </div>
+
+                            <div>
+                                <h3
+                                    id="photos-guide-title"
+                                    class="font-black text-slate-950"
+                                >
+                                    {text.photosGuideTitle}
+                                </h3>
+
+                                <p class="mt-1 text-sm leading-relaxed text-slate-600">
+                                    {text.photosGuideIntro}
+                                </p>
+
+                                <ul
+                                    class="mt-4 space-y-2 text-sm leading-relaxed text-slate-700"
+                                >
+                                    <li>{text.photosGuideMain}</li>
+                                    <li>{text.photosGuideLogo}</li>
+                                    <li>{text.photosGuideGallery}</li>
+                                    <li>{text.photosGuideFormat}</li>
+                                </ul>
+
+                                <p
+                                    class="mt-4 text-sm font-bold leading-relaxed text-rose-800"
+                                >
+                                    {text.photosGuideFinal}
+                                </p>
+                            </div>
+                        </div>
+                    </aside>
 
                     <!-- FOTO PRINCIPAL -->
                     <section class="mt-9">
