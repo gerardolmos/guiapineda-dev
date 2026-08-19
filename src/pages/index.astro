@@ -60,10 +60,21 @@ const fotoMesActiva = home?.foto_mes_activa;
 const mostrarFotoMes = fotoMesActiva && fotoMesImagen?.url;
 
 const data = await fetchAPI(endpoints.categorias);
-const categorias: Categoria[] = (data.data || []).filter(
-    (categoria: Categoria) =>
-        categoria.activa === true && Boolean(categoria.slug),
-);
+const categoryCollator = new Intl.Collator(lang, {
+    sensitivity: "base",
+});
+
+const categorias: Categoria[] = (data.data || [])
+    .filter(
+        (categoria: Categoria) =>
+            categoria.activa === true && Boolean(categoria.slug),
+    )
+    .sort((a: Categoria, b: Categoria) =>
+        categoryCollator.compare(
+            getLocalizedName(a, lang),
+            getLocalizedName(b, lang),
+        ),
+    );
 
 const categoriaBasePath =
     lang === "es" ? "/es" : lang === "en" ? "/en" : "";
@@ -224,7 +235,7 @@ const categoryStyles = [
             </div>
 
             <ul
-                class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-6"
+                class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5"
             >
                 {
                     categorias.map(
@@ -258,7 +269,7 @@ const categoryStyles = [
                                             class="mt-8 flex items-end justify-between gap-3"
                                         >
                                             <span
-                                                class="text-sm font-black leading-snug text-slate-950 sm:text-base"
+                                                class="text-sm font-black leading-snug text-slate-950 sm:text-lg"
                                             >
                                                 {categoryName}
                                             </span>

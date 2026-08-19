@@ -42,13 +42,24 @@ const categoriaActual = todasLasCategorias.find(
     (categoria) => categoria.slug === slug,
 );
 
-const subcategorias = todasLasSubcategorias.filter((subcategoria) => {
-    const categoriaSlug =
-        subcategoria.categoria?.slug ||
-        (subcategoria.categoria as any)?.data?.attributes?.slug;
-
-    return subcategoria.activa === true && categoriaSlug === slug;
+const subcategoryCollator = new Intl.Collator(lang, {
+    sensitivity: "base",
 });
+
+const subcategorias = todasLasSubcategorias
+    .filter((subcategoria) => {
+        const categoriaSlug =
+            subcategoria.categoria?.slug ||
+            (subcategoria.categoria as any)?.data?.attributes?.slug;
+
+        return subcategoria.activa === true && categoriaSlug === slug;
+    })
+    .sort((a, b) =>
+        subcategoryCollator.compare(
+            getLocalizedName(a, lang),
+            getLocalizedName(b, lang),
+        ),
+    );
 
 const comerciosDirectos = todosLosComercios.filter(
     (comercio) =>
