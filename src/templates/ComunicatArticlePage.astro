@@ -1,58 +1,370 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import StrapiBlocks from "../components/StrapiBlocks.astro";
+import CommunicatCard from "../components/CommunicatCard.astro";
+import { getLocalizedName } from "../lib/getLocalizedName";
 import { getReadingTime } from "../lib/readingTime";
 import { getTranslations } from "../i18n/getTranslations";
 import { formatDate } from "../lib/formatDate";
 import { getStrapiMediaUrl } from "../lib/strapi";
 
-const { lang = "ca", comunicat } = Astro.props as {
-    lang: string;
+const {
+    lang = "ca",
+    comunicat,
+    relatedComunicats = [],
+} = Astro.props as {
+    lang: "ca" | "es" | "en";
     comunicat: any;
+    relatedComunicats?: any[];
 };
 
-const t = getTranslations(lang as "ca" | "es" | "en");
+const t = getTranslations(lang);
 
-const backUrl = lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
+const backUrl =
+    lang === "ca"
+        ? "/comunicats/"
+        : `/${lang}/comunicats/`;
+
 const sectionTitle = t.comunicats.title;
+
+const imageAlt =
+    comunicat.imatge?.alternativeText ||
+    comunicat.titol ||
+    "";
+
+const readingTime = getReadingTime(
+    comunicat.contingut,
+);
+
+const relatedCommerceName = comunicat.comercio
+    ? getLocalizedName(comunicat.comercio, lang)
+    : comunicat.autor;
+
+const relatedTitle =
+    t.comunicats.relatedTitle.replace(
+        "{name}",
+        relatedCommerceName,
+    );
 ---
 
 <Layout
     lang={lang}
     title={`${comunicat.titol} | ${sectionTitle} | GUIAPINEDA`}
+    description={comunicat.resum}
 >
-    <main>
-        <a href={backUrl}>{t.comunicats.backToList}</a>
+    <article class="bg-white">
+        <!-- Navegación contextual persistente -->
+        <nav
+            aria-label={t.comunicats.backToList.replace(/^←\s*/, "")}
+            class="sticky top-16 z-40 border-b border-slate-200 bg-white/95 px-5 backdrop-blur sm:px-8 lg:top-20"
+        >
+            <div class="mx-auto flex min-h-12 max-w-5xl items-center">
+                <a
+                    href={backUrl}
+                    class="inline-flex items-center gap-2 text-sm font-black text-sky-800 transition hover:text-sky-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+                >
+                    <span aria-hidden="true">←</span>
+                    <span>{t.comunicats.backToList.replace(/^←\s*/, "")}</span>
+                </a>
+            </div>
+        </nav>
 
-        <article>
-            {
-                comunicat.imatge?.url && (
-                    <img
-                        src={getStrapiMediaUrl(comunicat.imatge.url)}
-                        alt={comunicat.titol}
-                        width="800"
-                    />
-                )
-            }
+        <!-- Cabecera editorial -->
+        <header
+            class="bg-white px-5 pb-10 pt-8 sm:px-8 sm:pb-14 sm:pt-10"
+        >
+            <div class="mx-auto max-w-5xl">
+                <div class="max-w-4xl">
+                    <div
+                        class="flex flex-wrap items-center gap-x-3 gap-y-2 bg-sky-950 px-5 py-3 text-sm font-bold shadow-sm sm:px-6"
+                    >
+                        <span class="text-amber-300 uppercase tracking-[0.08em]">
+                            {comunicat.autor}
+                        </span>
 
-            <h1>{comunicat.titol}</h1>
+                        <span
+                            class="text-sky-200/60"
+                            aria-hidden="true"
+                        >
+                            ·
+                        </span>
 
-            <p>
-                {comunicat.autor} —{" "}
-                {
-                    formatDate(
-                        comunicat.data_publicacio,
-                        lang as "ca" | "es" | "en",
-                    )
-                }
-            </p>
+                        <span class="text-emerald-300">
+                            {
+                                formatDate(
+                                    comunicat.data_publicacio,
+                                    lang,
+                                )
+                            }
+                        </span>
 
-            <p>
-                {getReadingTime(comunicat.contingut)}{" "}
-                {t.comunicats.readingSuffix}
-            </p>
+                        <span
+                            class="text-sky-200/60"
+                            aria-hidden="true"
+                        >
+                            ·
+                        </span>
 
-            <StrapiBlocks blocks={comunicat.contingut} />
-        </article>
-    </main>
+                        <span class="text-white">
+                            {readingTime}{" "}
+                            {t.comunicats.readingSuffix}
+                        </span>
+                    </div>
+
+                    <h1
+                        class="mt-5 text-4xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-[3.5rem]"
+                    >
+                        {comunicat.titol}
+                    </h1>
+
+                    {
+                        comunicat.resum && (
+                            <p
+                                class="mt-6 max-w-3xl text-xl font-medium leading-8 text-slate-600 sm:text-[1.35rem] sm:leading-9"
+                            >
+                                {comunicat.resum}
+                            </p>
+                        )
+                    }
+                </div>
+            </div>
+        </header>
+
+        <!-- Divisor gráfico GUIAPINEDA -->
+        <div class="px-5 sm:px-8">
+            <div
+                aria-hidden="true"
+                class="mx-auto grid h-2 max-w-5xl grid-cols-6"
+            >
+                <span class="bg-sky-500"></span>
+                <span class="bg-fuchsia-500"></span>
+                <span class="bg-amber-400"></span>
+                <span class="bg-emerald-500"></span>
+                <span class="bg-violet-500"></span>
+                <span class="bg-cyan-500"></span>
+            </div>
+        </div>
+
+        <!-- Imagen principal -->
+        {
+            comunicat.imatge?.url && (
+                <div class="bg-slate-100 px-5 pt-8 sm:px-8 sm:pt-10">
+                    <div class="mx-auto max-w-5xl">
+                        <figure
+                            class="overflow-hidden rounded-[1.5rem] bg-slate-100 sm:rounded-[2rem]"
+                        >
+                            <img
+                                src={getStrapiMediaUrl(
+                                    comunicat.imatge.url,
+                                )}
+                                alt={imageAlt}
+                                width={
+                                    comunicat.imatge.width ||
+                                    1200
+                                }
+                                height={
+                                    comunicat.imatge.height ||
+                                    750
+                                }
+                                class="max-h-[38rem] w-full object-cover"
+                            />
+                        </figure>
+                    </div>
+                </div>
+            )
+        }
+
+        <!-- Cuerpo -->
+        <div class="bg-slate-100 px-5 pt-0 sm:px-8">
+            <div class="mx-auto max-w-5xl bg-white px-6 py-10 sm:px-10 sm:py-14 lg:px-16">
+                <StrapiBlocks
+                    blocks={comunicat.contingut}
+                    class="comunicat-body"
+                />
+
+
+            </div>
+        </div>
+        {
+            relatedComunicats.length > 0 && (
+                <section
+                    aria-labelledby="related-comunicats-title"
+                    class="bg-slate-100 px-5 py-10 sm:px-8 sm:py-12"
+                >
+                    <div class="mx-auto max-w-5xl">
+                        <p
+                            class="text-xs font-black uppercase tracking-[0.18em] text-sky-700"
+                        >
+                            GUIAPINEDA
+                        </p>
+
+                        <h2
+                            id="related-comunicats-title"
+                            class="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl"
+                        >
+                            {relatedTitle}
+                        </h2>
+
+                        <div
+                            class="mt-6 grid gap-5 md:grid-cols-2"
+                        >
+                            {
+                                relatedComunicats.map(
+                                    (related: any) => (
+                                        <CommunicatCard
+                                            item={related}
+                                            href={
+                                                lang === "ca"
+                                                    ? `/comunicats/${related.slug}`
+                                                    : `/${lang}/comunicats/${related.slug}`
+                                            }
+                                            lang={lang}
+                                            readingSuffix={
+                                                t.comunicats
+                                                    .readingSuffix
+                                            }
+                                        />
+                                    ),
+                                )
+                            }
+                        </div>
+                    </div>
+                </section>
+            )
+        }
+    </article>
 </Layout>
+
+<style is:global>
+    .comunicat-body {
+        color: rgb(30 41 59);
+        font-size: 1.125rem;
+        line-height: 1.82;
+    }
+
+    .comunicat-body > * + * {
+        margin-top: 1.5rem;
+    }
+
+    .comunicat-body p {
+        margin-top: 1.5rem;
+    }
+
+    .comunicat-body h2,
+    .comunicat-body h3,
+    .comunicat-body h4,
+    .comunicat-body h5,
+    .comunicat-body h6 {
+        color: rgb(15 23 42);
+        font-weight: 900;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+    }
+
+    .comunicat-body h2 {
+        margin-top: 3.25rem;
+        font-size: 1.75rem;
+    }
+
+    .comunicat-body h3 {
+        margin-top: 2.75rem;
+        font-size: 1.4rem;
+    }
+
+    .comunicat-body h4,
+    .comunicat-body h5,
+    .comunicat-body h6 {
+        margin-top: 2.25rem;
+        font-size: 1.15rem;
+    }
+
+    .comunicat-body strong {
+        color: rgb(15 23 42);
+        font-weight: 800;
+    }
+
+    .comunicat-body a {
+        color: rgb(3 105 161);
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 0.18em;
+    }
+
+    .comunicat-body a:hover {
+        color: rgb(2 132 199);
+    }
+
+    .comunicat-body ul,
+    .comunicat-body ol {
+        margin-top: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .comunicat-body ul {
+        list-style: disc;
+    }
+
+    .comunicat-body ol {
+        list-style: decimal;
+    }
+
+    .comunicat-body li + li {
+        margin-top: 0.4rem;
+    }
+
+    .comunicat-body blockquote {
+        margin: 2.25rem 0;
+        border-left: 4px solid rgb(14 165 233);
+        border-radius: 0 1rem 1rem 0;
+        background: rgb(240 249 255);
+        padding: 1.25rem 1.5rem;
+        color: rgb(30 64 175);
+        font-size: 1.1rem;
+        font-weight: 650;
+        line-height: 1.75;
+    }
+
+    .comunicat-body figure {
+        margin: 2.5rem 0;
+    }
+
+    .comunicat-body figure img {
+        width: 100%;
+        height: auto;
+        border-radius: 1rem;
+    }
+
+    .comunicat-body pre {
+        margin: 2rem 0;
+        overflow-x: auto;
+        border-radius: 1rem;
+        background: rgb(15 23 42);
+        padding: 1.25rem;
+        color: rgb(241 245 249);
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .comunicat-body :not(pre) > code {
+        border-radius: 0.35rem;
+        background: rgb(241 245 249);
+        padding: 0.15em 0.35em;
+        color: rgb(15 23 42);
+        font-size: 0.9em;
+    }
+
+    @media (min-width: 640px) {
+        .comunicat-body {
+            font-size: 1.1875rem;
+        }
+
+        .comunicat-body h2 {
+            font-size: 2rem;
+        }
+
+        .comunicat-body h3 {
+            font-size: 1.55rem;
+        }
+    }
+</style>

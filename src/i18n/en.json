@@ -37,7 +37,19 @@
         "submitEmailText": "Send your announcement to:",
         "backToList": "← Back to Announcements",
         "readingSuffix": "read",
-        "empty": "There are no announcements published yet."
+        "empty": "There are no announcements published yet.",
+        "eyebrow": "From the community",
+        "introTitle": "Information about Pineda, shared by its people",
+        "introText": "Activities, initiatives, notices and information of local interest shared by organisations, groups, businesses and residents of Pineda de Mar.",
+        "ctaTitle": "",
+        "ctaText": "",
+        "ctaButton": "",
+        "latestTitle": "Latest announcements",
+        "paginationLabel": "Announcements pagination",
+        "previousPage": "← Previous",
+        "nextPage": "Next →",
+        "pageLabel": "Page",
+        "relatedTitle": "More announcements from {name}"
     },
     "common": {
         "noDescription": "No description",

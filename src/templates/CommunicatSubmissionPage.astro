@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CommunicatSubmissionFlow from "../components/CommunicatSubmissionFlow.astro";
+
+interface Props {
+    lang: "ca" | "es";
+}
+
+const { lang } = Astro.props;
+
+const title =
+    lang === "ca"
+        ? "Envia un comunicat | GUIAPINEDA"
+        : "Enviar un comunicado | GUIAPINEDA";
+
+const description =
+    lang === "ca"
+        ? "Envia una activitat, iniciativa o informació d'interès per a Pineda de Mar."
+        : "Envía una actividad, iniciativa o información de interés para Pineda de Mar.";
+---
+
+<Layout
+    lang={lang}
+    title={title}
+    description={description}
+    showLanguageSwitcher={false}
+>
+    <CommunicatSubmissionFlow lang={lang} />
+</Layout>

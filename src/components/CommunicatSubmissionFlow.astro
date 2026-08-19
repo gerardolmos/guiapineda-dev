@@ -1,0 +1,709 @@
+---
+interface Props {
+    lang: "ca" | "es";
+}
+
+const { lang } = Astro.props;
+
+const text =
+    lang === "ca"
+        ? {
+              eyebrow: "Comparteix-ho amb Pineda",
+              section1: "Qui ho envia",
+              section2: "El comunicat",
+              section3: "Revisió",
+              step1Title: "Comencem per qui signa el comunicat",
+              step1Intro:
+                  "Pot ser una entitat, un club, un comerç o una persona particular. Només necessitem saber qui apareixerà com a autor.",
+              senderType: "Quin tipus de remitent sou?",
+              senderTypes: [
+                  "Entitat o associació",
+                  "Club o grup",
+                  "Escola o centre",
+                  "Comerç o empresa",
+                  "Particular",
+                  "Altres",
+              ],
+              authorLabel: "Nom que apareixerà com a autor",
+              authorPlaceholder: "Per exemple, Associació de Veïns del Carme",
+              authorHelp:
+                  "Aquest nom sí que serà públic si el comunicat es publica.",
+              continue: "Continuar",
+              back: "Enrere",
+              step2Title: "Ara explica'ns què voleu comunicar",
+              step2Intro:
+                  "Escriu-ho amb naturalitat. Abans d'enviar-ho podràs revisar com quedarà.",
+              titleLabel: "Títol",
+              titlePlaceholder: "Un títol clar que expliqui què passa",
+              summaryLabel: "Resum",
+              summaryHelp:
+                  "És el text breu que la gent veurà al llistat de Comunicats.",
+              summaryPlaceholder:
+                  "Resumeix la informació principal en dues o tres frases.",
+              contentLabel: "Comunicat complet",
+              contentPlaceholder:
+                  "Explica aquí tota la informació: què passarà, quan, on, per a qui és, com participar-hi...",
+              imageTitle: "Imatge del comunicat",
+              imageHelp:
+                  "Opcional. Pots afegir una única imatge en JPG, PNG o WebP.",
+              chooseImage: "Afegir imatge",
+              changeImage: "Canviar imatge",
+              removeImage: "Eliminar imatge",
+              previewTitle: "Així començarà a veure's",
+              previewEmptyTitle: "El títol apareixerà aquí",
+              previewEmptySummary: "El resum apareixerà aquí.",
+              readingSuffix: "min de lectura",
+              reviewTitle: "El teu comunicat està llest",
+              reviewIntro:
+                  "Revisa que la informació sigui correcta. Encara podràs tornar enrere i modificar-la.",
+              editAuthor: "Editar autor",
+              editContent: "Editar comunicat",
+              noImage: "Sense imatge",
+              contactTitle: "Qui ens envia aquest comunicat?",
+              contactIntro:
+                  "Aquestes dades són privades. Només les utilitzarem si necessitem contactar amb tu durant la revisió.",
+              contactName: "Nom i cognoms",
+              contactEmail: "Email",
+              contactPhone: "Telèfon",
+              optional: "opcional",
+              privacy:
+                  "Accepto que GUIAPINEDA utilitzi aquestes dades per gestionar i revisar aquest comunicat.",
+              send: "Enviar a GUIAPINEDA",
+              prototype:
+                  "Perfecte. El comunicat està preparat. Encara no s'ha enviat res: activarem la recepció real quan configurem la infraestructura de producció.",
+              publicLabel: "Contingut públic",
+              privateLabel: "Dades privades",
+          }
+        : {
+              eyebrow: "Compártelo con Pineda",
+              section1: "Quién lo envía",
+              section2: "El comunicado",
+              section3: "Revisión",
+              step1Title: "Empecemos por quién firma el comunicado",
+              step1Intro:
+                  "Puede ser una entidad, un club, un comercio o una persona particular. Solo necesitamos saber quién aparecerá como autor.",
+              senderType: "¿Qué tipo de remitente sois?",
+              senderTypes: [
+                  "Entidad o asociación",
+                  "Club o grupo",
+                  "Escuela o centro",
+                  "Comercio o empresa",
+                  "Particular",
+                  "Otros",
+              ],
+              authorLabel: "Nombre que aparecerá como autor",
+              authorPlaceholder:
+                  "Por ejemplo, Asociación de Vecinos del Carmen",
+              authorHelp:
+                  "Este nombre sí será público si el comunicado se publica.",
+              continue: "Continuar",
+              back: "Atrás",
+              step2Title: "Ahora cuéntanos qué queréis comunicar",
+              step2Intro:
+                  "Escríbelo con naturalidad. Antes de enviarlo podrás revisar cómo quedará.",
+              titleLabel: "Título",
+              titlePlaceholder: "Un título claro que explique qué ocurre",
+              summaryLabel: "Resumen",
+              summaryHelp:
+                  "Es el texto breve que la gente verá en el listado de Comunicados.",
+              summaryPlaceholder:
+                  "Resume la información principal en dos o tres frases.",
+              contentLabel: "Comunicado completo",
+              contentPlaceholder:
+                  "Explica aquí toda la información: qué ocurrirá, cuándo, dónde, para quién es, cómo participar...",
+              imageTitle: "Imagen del comunicado",
+              imageHelp:
+                  "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP.",
+              chooseImage: "Añadir imagen",
+              changeImage: "Cambiar imagen",
+              removeImage: "Eliminar imagen",
+              previewTitle: "Así empezará a verse",
+              previewEmptyTitle: "El título aparecerá aquí",
+              previewEmptySummary: "El resumen aparecerá aquí.",
+              readingSuffix: "min de lectura",
+              reviewTitle: "Tu comunicado está listo",
+              reviewIntro:
+                  "Revisa que la información sea correcta. Todavía podrás volver atrás y modificarla.",
+              editAuthor: "Editar autor",
+              editContent: "Editar comunicado",
+              noImage: "Sin imagen",
+              contactTitle: "¿Quién nos envía este comunicado?",
+              contactIntro:
+                  "Estos datos son privados. Solo los utilizaremos si necesitamos contactar contigo durante la revisión.",
+              contactName: "Nombre y apellidos",
+              contactEmail: "Email",
+              contactPhone: "Teléfono",
+              optional: "opcional",
+              privacy:
+                  "Acepto que GUIAPINEDA utilice estos datos para gestionar y revisar este comunicado.",
+              send: "Enviar a GUIAPINEDA",
+              prototype:
+                  "Perfecto. El comunicado está preparado. Todavía no se ha enviado nada: activaremos la recepción real cuando configuremos la infraestructura de producción.",
+              publicLabel: "Contenido público",
+              privateLabel: "Datos privados",
+          };
+---
+
+<div
+    data-comunicat-submission-flow
+    data-reading-suffix={text.readingSuffix}
+    class="bg-stone-50"
+>
+    <section
+        id="comunicat-step-author"
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8 flex items-center justify-between gap-5">
+                <div>
+                    <p class="text-sm font-black uppercase tracking-[0.18em] text-sky-700">
+                        {text.eyebrow}
+                    </p>
+                    <p class="mt-2 font-bold text-slate-500">{text.section1}</p>
+                </div>
+
+                <div class="flex items-center gap-1.5" aria-hidden="true">
+                    <span class="h-2 w-10 rounded-full bg-sky-500"></span>
+                    <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                    <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                </div>
+            </div>
+
+            <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+                <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
+                    <h1
+                        id="comunicat-author-heading"
+                        tabindex="-1"
+                        class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {text.step1Title}
+                    </h1>
+
+                    <p class="mt-3 max-w-2xl leading-7 text-slate-600">
+                        {text.step1Intro}
+                    </p>
+
+                    <fieldset class="mt-8">
+                        <legend class="font-black text-slate-950">
+                            {text.senderType}
+                        </legend>
+
+                        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                            {
+                                text.senderTypes.map((label, index) => (
+                                    <label class="comunicat-sender-option cursor-pointer">
+                                        <input
+                                            class="sr-only"
+                                            type="radio"
+                                            name="comunicat-sender-type"
+                                            value={String(index)}
+                                            data-label={label}
+                                        />
+                                        <span
+                                            class="comunicat-sender-choice flex min-h-14 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 font-bold text-slate-700"
+                                        >
+                                            {label}
+                                        </span>
+                                    </label>
+                                ))
+                            }
+                        </div>
+                    </fieldset>
+
+                    <label class="mt-8 block" for="comunicat-author">
+                        <span class="font-black text-slate-950">
+                            {text.authorLabel}
+                        </span>
+                        <input
+                            id="comunicat-author"
+                            type="text"
+                            maxlength="140"
+                            autocomplete="organization"
+                            placeholder={text.authorPlaceholder}
+                            class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        />
+                        <span class="mt-2 block text-sm text-slate-500">
+                            {text.authorHelp}
+                        </span>
+                    </label>
+
+                    <div class="mt-9 flex justify-end border-t border-slate-100 pt-6">
+                        <button
+                            id="comunicat-author-continue"
+                            type="button"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                        >
+                            {text.continue}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside class="rounded-[2rem] bg-slate-950 p-6 text-white shadow-xl sm:p-7">
+                    <p class="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
+                        GUIAPINEDA
+                    </p>
+                    <h2 class="mt-3 text-2xl font-black">
+                        {text.publicLabel}
+                    </h2>
+                    <p class="mt-3 text-sm leading-6 text-slate-300">
+                        {
+                            lang === "ca"
+                                ? "El nom de l'autor, el títol, el resum i el contingut formaran part del comunicat si finalment es publica."
+                                : "El nombre del autor, el título, el resumen y el contenido formarán parte del comunicado si finalmente se publica."
+                        }
+                    </p>
+                    <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-sm font-bold text-sky-200">
+                            {
+                                lang === "ca"
+                                    ? "Tots els comunicats es revisen abans de publicar-se."
+                                    : "Todos los comunicados se revisan antes de publicarse."
+                            }
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="comunicat-step-content"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8 flex items-center justify-between gap-5">
+                <div>
+                    <p class="text-sm font-black uppercase tracking-[0.18em] text-fuchsia-700">
+                        {text.eyebrow}
+                    </p>
+                    <p class="mt-2 font-bold text-slate-500">{text.section2}</p>
+                </div>
+
+                <div class="flex items-center gap-1.5" aria-hidden="true">
+                    <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                    <span class="h-2 w-10 rounded-full bg-fuchsia-500"></span>
+                    <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                </div>
+            </div>
+
+            <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+                <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
+                    <h1
+                        id="comunicat-content-heading"
+                        tabindex="-1"
+                        class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {text.step2Title}
+                    </h1>
+
+                    <p class="mt-3 max-w-2xl leading-7 text-slate-600">
+                        {text.step2Intro}
+                    </p>
+
+                    <div class="mt-8 space-y-7">
+                        <label class="block" for="comunicat-title">
+                            <span class="flex items-center justify-between gap-4 font-black text-slate-950">
+                                <span>{text.titleLabel}</span>
+                                <span class="text-xs font-bold text-slate-400">
+                                    <span id="comunicat-title-count">0</span>/120
+                                </span>
+                            </span>
+                            <input
+                                id="comunicat-title"
+                                type="text"
+                                maxlength="120"
+                                placeholder={text.titlePlaceholder}
+                                class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                            />
+                        </label>
+
+                        <label class="block" for="comunicat-summary">
+                            <span class="flex items-center justify-between gap-4 font-black text-slate-950">
+                                <span>{text.summaryLabel}</span>
+                                <span class="text-xs font-bold text-slate-400">
+                                    <span id="comunicat-summary-count">0</span>/280
+                                </span>
+                            </span>
+                            <span class="mt-1 block text-sm text-slate-500">
+                                {text.summaryHelp}
+                            </span>
+                            <textarea
+                                id="comunicat-summary"
+                                maxlength="280"
+                                rows="4"
+                                placeholder={text.summaryPlaceholder}
+                                class="mt-2 w-full resize-y rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                            ></textarea>
+                        </label>
+
+                        <label class="block" for="comunicat-content">
+                            <span class="flex items-center justify-between gap-4 font-black text-slate-950">
+                                <span>{text.contentLabel}</span>
+                                <span class="text-xs font-bold text-slate-400">
+                                    <span id="comunicat-content-count">0</span>/8000
+                                </span>
+                            </span>
+                            <textarea
+                                id="comunicat-content"
+                                maxlength="8000"
+                                rows="12"
+                                placeholder={text.contentPlaceholder}
+                                class="mt-2 w-full resize-y rounded-2xl border border-slate-300 px-4 py-3.5 leading-7 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                            ></textarea>
+                        </label>
+
+                        <section class="border-t border-slate-100 pt-7">
+                            <h2 class="text-xl font-black text-slate-950">
+                                {text.imageTitle}
+                            </h2>
+                            <p class="mt-1 text-sm text-slate-500">
+                                {text.imageHelp}
+                            </p>
+
+                            <div
+                                id="comunicat-image-empty"
+                                class="mt-4 flex min-h-44 flex-col items-center justify-center rounded-3xl border-2 border-dashed border-amber-200 bg-amber-50 p-6 text-center"
+                            >
+                                <div
+                                    class="flex size-12 items-center justify-center rounded-2xl bg-white text-2xl font-light shadow-sm"
+                                    aria-hidden="true"
+                                >
+                                    +
+                                </div>
+                                <label
+                                    for="comunicat-image-input"
+                                    class="mt-4 cursor-pointer rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-amber-700"
+                                >
+                                    {text.chooseImage}
+                                </label>
+                            </div>
+
+                            <div
+                                id="comunicat-image-selected"
+                                hidden
+                                class="mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-stone-50"
+                            >
+                                <img
+                                    id="comunicat-image-preview"
+                                    alt=""
+                                    class="aspect-[16/9] w-full object-cover"
+                                />
+                                <div class="flex flex-wrap gap-3 p-4">
+                                    <label
+                                        for="comunicat-image-input"
+                                        class="cursor-pointer rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700"
+                                    >
+                                        {text.changeImage}
+                                    </label>
+                                    <button
+                                        id="comunicat-image-remove"
+                                        type="button"
+                                        class="rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-bold text-rose-800"
+                                    >
+                                        {text.removeImage}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input
+                                id="comunicat-image-input"
+                                type="file"
+                                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                                class="sr-only"
+                            />
+                        </section>
+                    </div>
+
+                    <div class="mt-9 flex items-center justify-between gap-4 border-t border-slate-100 pt-6">
+                        <button
+                            id="comunicat-content-back"
+                            type="button"
+                            class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                        >
+                            ← {text.back}
+                        </button>
+
+                        <button
+                            id="comunicat-content-continue"
+                            type="button"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-fuchsia-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                        >
+                            {text.continue}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-lg">
+                    <div class="border-b border-slate-100 px-5 py-4">
+                        <p class="text-sm font-black text-slate-950">
+                            {text.previewTitle}
+                        </p>
+                    </div>
+
+                    <div
+                        id="comunicat-live-image-wrap"
+                        hidden
+                        class="aspect-[16/9] overflow-hidden bg-slate-100"
+                    >
+                        <img
+                            id="comunicat-live-image"
+                            alt=""
+                            class="size-full object-cover"
+                        />
+                    </div>
+
+                    <div class="p-5">
+                        <p
+                            id="comunicat-live-author"
+                            class="text-xs font-black uppercase tracking-[0.14em] text-sky-700"
+                        ></p>
+                        <h2
+                            id="comunicat-live-title"
+                            class="mt-2 text-2xl font-black leading-tight text-slate-950"
+                        >
+                            {text.previewEmptyTitle}
+                        </h2>
+                        <p
+                            id="comunicat-live-summary"
+                            class="mt-3 text-sm leading-6 text-slate-600"
+                        >
+                            {text.previewEmptySummary}
+                        </p>
+                        <p class="mt-5 text-xs font-bold text-slate-400">
+                            <span id="comunicat-live-reading">1</span>
+                            {" "}
+                            {text.readingSuffix}
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="comunicat-step-review"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-5xl">
+            <div class="mb-8 flex items-center justify-between gap-5">
+                <div>
+                    <p class="text-sm font-black uppercase tracking-[0.18em] text-emerald-700">
+                        {text.eyebrow}
+                    </p>
+                    <p class="mt-2 font-bold text-slate-500">{text.section3}</p>
+                </div>
+
+                <div class="flex items-center gap-1.5" aria-hidden="true">
+                    <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                    <span class="h-2 w-5 rounded-full bg-fuchsia-500"></span>
+                    <span class="h-2 w-10 rounded-full bg-emerald-500"></span>
+                </div>
+            </div>
+
+            <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white text-slate-950 shadow-sm">
+                <div
+                    id="comunicat-review-image-wrap"
+                    hidden
+                    class="aspect-[16/7] overflow-hidden bg-slate-800"
+                >
+                    <img
+                        id="comunicat-review-image"
+                        alt=""
+                        class="size-full object-cover"
+                    />
+                </div>
+
+                <div class="p-6 sm:p-10">
+                    <p class="text-xs font-black uppercase tracking-[0.16em] text-emerald-700">
+                        {text.publicLabel}
+                    </p>
+
+                    <div class="mt-5 flex flex-wrap items-start justify-between gap-4">
+                        <div>
+                            <p
+                                id="comunicat-review-type"
+                                class="text-sm font-bold text-sky-700"
+                            ></p>
+                            <p
+                                id="comunicat-review-author"
+                                class="mt-1 font-black text-slate-950"
+                            ></p>
+                        </div>
+
+                        <button
+                            type="button"
+                            data-comunicat-edit="author"
+                            class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                        >
+                            {text.editAuthor}
+                        </button>
+                    </div>
+
+                    <div class="mt-8 border-t border-slate-200 pt-8">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div class="max-w-3xl">
+                                <h1
+                                    id="comunicat-review-title"
+                                    tabindex="-1"
+                                    class="text-3xl font-black leading-tight tracking-tight sm:text-4xl"
+                                ></h1>
+                                <p
+                                    id="comunicat-review-summary"
+                                    class="mt-4 text-lg leading-8 text-slate-600"
+                                ></p>
+                            </div>
+
+                            <button
+                                type="button"
+                                data-comunicat-edit="content"
+                                class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                            >
+                                {text.editContent}
+                            </button>
+                        </div>
+
+                        <div
+                            id="comunicat-review-content"
+                            class="mt-8 whitespace-pre-line border-t border-slate-200 pt-7 leading-8 text-slate-700"
+                        ></div>
+
+                        <p class="mt-6 text-sm font-bold text-slate-500">
+                            <span id="comunicat-review-reading">1</span>
+                            {" "}
+                            {text.readingSuffix}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="mt-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
+                <p class="text-xs font-black uppercase tracking-[0.16em] text-rose-700">
+                    {text.privateLabel}
+                </p>
+                <h2 class="mt-3 text-2xl font-black text-slate-950">
+                    {text.contactTitle}
+                </h2>
+                <p class="mt-2 max-w-2xl text-slate-600">
+                    {text.contactIntro}
+                </p>
+
+                <div class="mt-7 grid gap-5 sm:grid-cols-2">
+                    <label class="block" for="comunicat-contact-name">
+                        <span class="font-bold text-slate-950">
+                            {text.contactName}
+                        </span>
+                        <input
+                            id="comunicat-contact-name"
+                            type="text"
+                            maxlength="120"
+                            autocomplete="name"
+                            class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                        />
+                    </label>
+
+                    <label class="block" for="comunicat-contact-email">
+                        <span class="font-bold text-slate-950">
+                            {text.contactEmail}
+                        </span>
+                        <input
+                            id="comunicat-contact-email"
+                            type="email"
+                            maxlength="180"
+                            autocomplete="email"
+                            class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                        />
+                    </label>
+
+                    <label
+                        class="block sm:col-span-2 sm:max-w-[calc(50%-0.625rem)]"
+                        for="comunicat-contact-phone"
+                    >
+                        <span class="font-bold text-slate-950">
+                            {text.contactPhone}
+                            <span class="font-medium text-slate-400">
+                                ({text.optional})
+                            </span>
+                        </span>
+                        <input
+                            id="comunicat-contact-phone"
+                            type="tel"
+                            maxlength="40"
+                            autocomplete="tel"
+                            class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                        />
+                    </label>
+                </div>
+
+                <label class="mt-7 flex cursor-pointer items-start gap-3 rounded-2xl bg-stone-50 p-4">
+                    <input
+                        id="comunicat-privacy"
+                        type="checkbox"
+                        class="mt-1 size-5 shrink-0 accent-slate-950"
+                    />
+                    <span class="text-sm leading-6 text-slate-700">
+                        {text.privacy}
+                    </span>
+                </label>
+
+                <div class="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-6">
+                    <button
+                        id="comunicat-review-back"
+                        type="button"
+                        class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                    >
+                        ← {text.back}
+                    </button>
+
+                    <button
+                        id="comunicat-review-send"
+                        type="button"
+                        disabled
+                        class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-8 py-3 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                    >
+                        {text.send}
+                        <span aria-hidden="true" class="ml-3">→</span>
+                    </button>
+                </div>
+
+                <div
+                    id="comunicat-prototype-note"
+                    hidden
+                    class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-relaxed text-emerald-950"
+                >
+                    {text.prototype}
+                </div>
+            </section>
+        </div>
+    </section>
+</div>
+
+<style>
+    .comunicat-sender-choice {
+        transition: background-color 150ms ease;
+    }
+
+    .comunicat-sender-option:hover .comunicat-sender-choice {
+        background-color: rgb(240 249 255);
+    }
+
+    .comunicat-sender-option > input:checked + .comunicat-sender-choice {
+        background-color: rgb(186 230 253);
+    }
+
+    .comunicat-sender-option > input:focus-visible + .comunicat-sender-choice {
+        outline: 2px solid rgb(2 132 199);
+        outline-offset: 2px;
+    }
+</style>
+
+<script>
+    import { initCommunicatSubmissionFlow } from "../lib/comunicatSubmissionFlow";
+
+    initCommunicatSubmissionFlow();
+</script>

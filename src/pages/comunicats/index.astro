@@ -1,59 +1,339 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import ArticleCard from "../../components/ArticleCard.astro";
+import CommunicatCard from "../../components/CommunicatCard.astro";
 import { fetchAPI, endpoints } from "../../lib/api";
 import { getTranslations } from "../../i18n/getTranslations";
 import { filterVisibleComunicats } from "../../lib/comunicats";
 
 const { lang = "ca" } = Astro.props;
+
 const t = getTranslations(lang);
 
 const comunicatsData = await fetchAPI(endpoints.comunicats);
+
 const comunicats = filterVisibleComunicats(
     comunicatsData.data || [],
 );
 
 const sortedComunicats = [...comunicats].sort(
-        (a: any, b: any) =>
-            new Date(b.data_publicacio).getTime() -
-            new Date(a.data_publicacio).getTime(),
-    );
+    (a: any, b: any) =>
+        new Date(b.data_publicacio).getTime() -
+        new Date(a.data_publicacio).getTime(),
+);
+
+const submitUrl =
+    lang === "ca"
+        ? "/envia-un-comunicat/"
+        : lang === "es"
+          ? "/es/enviar-comunicado/"
+          : null;
+
+const itemsPerPage = 16;
+
+const basePath =
+    lang === "ca"
+        ? "/comunicats/"
+        : `/${lang}/comunicats/`;
 ---
 
-<Layout lang={lang} title={`${t.comunicats.title} | GUIAPINEDA`}>
-    <main>
-        <h1>{t.comunicats.title}</h1>
+<Layout
+    lang={lang}
+    title={`${t.comunicats.title} | GUIAPINEDA`}
+    description={t.comunicats.introText}
+>
+    <div class="bg-stone-50">
+        <!-- Hero breve: solo sitúa la sección -->
+        <section class="px-5 pb-8 pt-9 sm:px-8 sm:pb-10 sm:pt-11">
+            <div class="mx-auto max-w-6xl">
+                <div
+                    class="grid gap-4 lg:grid-cols-[minmax(0,0.75fr)_minmax(20rem,0.8fr)] lg:items-end lg:gap-12"
+                >
+                    <div>
+                        <p
+                            class="text-xs font-black uppercase tracking-[0.2em] text-sky-700"
+                        >
+                            {t.comunicats.eyebrow}
+                        </p>
 
-        <section>
-            <h2>{t.comunicats.submitTitle}</h2>
+                        <h1
+                            class="mt-3 text-4xl font-black leading-none tracking-tight text-slate-950 sm:text-5xl"
+                        >
+                            {t.comunicats.title}
+                        </h1>
+                    </div>
 
-            <p>{t.comunicats.submitText1}</p>
+                    <div>
+                        <h2
+                            class="text-xl font-black leading-tight text-slate-800"
+                        >
+                            {t.comunicats.introTitle}
+                        </h2>
 
-            <p>{t.comunicats.submitText2}</p>
-
-            <p>
-                {t.comunicats.submitEmailText}
-                <a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
-            </p>
+                        <p
+                            class="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base"
+                        >
+                            {t.comunicats.introText}
+                        </p>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        {
-            sortedComunicats.length === 0 ? (
-                <p>{t.comunicats.empty}</p>
-            ) : (
-                sortedComunicats.map((comunicat: any) => (
-                    <ArticleCard
-                        item={comunicat}
-                        href={
-                            lang === "ca"
-                                ? `/comunicats/${comunicat.slug}`
-                                : `/${lang}/comunicats/${comunicat.slug}`
-                        }
-                        lang={lang as "ca" | "es" | "en"}
-                        readingSuffix={t.comunicats.readingSuffix}
-                    />
-                ))
-            )
-        }
-    </main>
+        <!-- Los comunicados son el contenido principal -->
+        <section
+            id="comunicats-list"
+            class="border-t border-slate-200 bg-white px-5 py-10 sm:px-8 sm:py-12"
+        >
+            <div class="mx-auto max-w-6xl">
+                <div>
+                    <p
+                        class="text-xs font-black uppercase tracking-[0.18em] text-sky-700"
+                    >
+                        GUIAPINEDA
+                    </p>
+
+                    <h2
+                        class="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {t.comunicats.latestTitle}
+                    </h2>
+                </div>
+
+                {
+                    sortedComunicats.length === 0 ? (
+                        <div
+                            class="mt-8 rounded-2xl border border-dashed border-slate-300 bg-stone-50 p-8 text-slate-600"
+                        >
+                            {t.comunicats.empty}
+                        </div>
+                    ) : (
+                        <div
+                            id="comunicats-grid"
+                            class="mt-8 grid gap-5 md:grid-cols-2"
+                        >
+                            {
+                                sortedComunicats.map(
+                                    (comunicat: any, index: number) => (
+                                        <div
+                                            class="comunicat-list-item"
+                                            hidden={index >= itemsPerPage}
+                                        >
+                                            <CommunicatCard
+                                                item={comunicat}
+                                                href={
+                                                    lang === "ca"
+                                                        ? `/comunicats/${comunicat.slug}`
+                                                        : `/${lang}/comunicats/${comunicat.slug}`
+                                                }
+                                                lang={
+                                                    lang as
+                                                        | "ca"
+                                                        | "es"
+                                                        | "en"
+                                                }
+                                                readingSuffix={
+                                                    t.comunicats
+                                                        .readingSuffix
+                                                }
+                                            />
+                                        </div>
+                                    ),
+                                )
+                            }
+                        </div>
+                    )
+                }
+
+                {
+                    sortedComunicats.length > itemsPerPage && (
+                        <nav
+                            id="comunicats-pagination"
+                            aria-label={t.comunicats.paginationLabel}
+                            class="mt-10 flex items-center justify-center gap-4 border-t border-slate-200 pt-7"
+                        >
+                            <button
+                                type="button"
+                                id="comunicats-prev-page"
+                                class="min-h-10 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-black text-slate-700 transition hover:border-sky-300 hover:text-sky-800 disabled:cursor-not-allowed disabled:opacity-35"
+                            >
+                                {t.comunicats.previousPage}
+                            </button>
+
+                            <span
+                                id="comunicats-page-info"
+                                aria-live="polite"
+                                class="min-w-24 text-center text-sm font-bold text-slate-500"
+                            ></span>
+
+                            <button
+                                type="button"
+                                id="comunicats-next-page"
+                                class="min-h-10 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-black text-slate-700 transition hover:border-sky-300 hover:text-sky-800 disabled:cursor-not-allowed disabled:opacity-35"
+                            >
+                                {t.comunicats.nextPage}
+                            </button>
+                        </nav>
+                    )
+                }
+
+                {
+                    submitUrl && (
+                        <aside
+                            class="mt-10 border-t border-slate-200 pt-7"
+                        >
+                            <div
+                                class="flex flex-col gap-3 rounded-2xl bg-sky-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"
+                            >
+                                <div>
+                                    <p class="font-black text-slate-950">
+                                        {t.comunicats.ctaTitle}
+                                    </p>
+
+                                    <p
+                                        class="mt-1 max-w-2xl text-sm leading-6 text-slate-600"
+                                    >
+                                        {t.comunicats.ctaText}
+                                    </p>
+                                </div>
+
+                                <a
+                                    href={submitUrl}
+                                    class="inline-flex min-h-10 shrink-0 items-center justify-center self-start rounded-full bg-sky-950 px-5 py-2.5 text-sm font-black text-white transition hover:bg-sky-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 sm:self-auto"
+                                >
+                                    {t.comunicats.ctaButton}
+                                    <span aria-hidden="true" class="ml-2">
+                                        →
+                                    </span>
+                                </a>
+                            </div>
+                        </aside>
+                    )
+                }
+            </div>
+        </section>
+    </div>
+
+    {
+        sortedComunicats.length > itemsPerPage && (
+            <script
+                define:vars={{
+                    itemsPerPage,
+                    basePath,
+                    pageLabel: t.comunicats.pageLabel,
+                }}
+            >
+                const items = Array.from(
+                    document.querySelectorAll(".comunicat-list-item"),
+                );
+
+                const list = document.getElementById("comunicats-list");
+                const prevButton = document.getElementById(
+                    "comunicats-prev-page",
+                );
+                const nextButton = document.getElementById(
+                    "comunicats-next-page",
+                );
+                const pageInfo = document.getElementById(
+                    "comunicats-page-info",
+                );
+
+                const params = new URLSearchParams(
+                    window.location.search,
+                );
+
+                let currentPage = Number(
+                    params.get("page") || "1",
+                );
+
+                const totalPages = Math.max(
+                    1,
+                    Math.ceil(items.length / itemsPerPage),
+                );
+
+                currentPage = Math.min(
+                    Math.max(currentPage, 1),
+                    totalPages,
+                );
+
+                function updateUrl() {
+                    const newParams = new URLSearchParams();
+
+                    if (currentPage > 1) {
+                        newParams.set(
+                            "page",
+                            String(currentPage),
+                        );
+                    }
+
+                    const query = newParams.toString();
+
+                    window.history.replaceState(
+                        {},
+                        "",
+                        query
+                            ? `${basePath}?${query}`
+                            : basePath,
+                    );
+                }
+
+                function render() {
+                    const start =
+                        (currentPage - 1) * itemsPerPage;
+
+                    const end = start + itemsPerPage;
+
+                    items.forEach((item, index) => {
+                        item.hidden =
+                            index < start || index >= end;
+                    });
+
+                    prevButton.disabled = currentPage <= 1;
+                    nextButton.disabled =
+                        currentPage >= totalPages;
+
+                    pageInfo.textContent =
+                        `${pageLabel} ${currentPage} / ${totalPages}`;
+
+                    updateUrl();
+                }
+
+                function goToPage(page) {
+                    currentPage = Math.min(
+                        Math.max(page, 1),
+                        totalPages,
+                    );
+
+                    render();
+
+                    const reduceMotion =
+                        window.matchMedia(
+                            "(prefers-reduced-motion: reduce)",
+                        ).matches;
+
+                    list?.scrollIntoView({
+                        behavior: reduceMotion
+                            ? "auto"
+                            : "smooth",
+                        block: "start",
+                    });
+                }
+
+                prevButton?.addEventListener(
+                    "click",
+                    () => {
+                        goToPage(currentPage - 1);
+                    },
+                );
+
+                nextButton?.addEventListener(
+                    "click",
+                    () => {
+                        goToPage(currentPage + 1);
+                    },
+                );
+
+                render();
+            </script>
+        )
+    }
 </Layout>

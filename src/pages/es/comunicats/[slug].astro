@@ -1,7 +1,10 @@
 ---
 import { fetchAPI, endpoints } from "../../../lib/api";
 import ComunicatArticlePage from "../../../templates/ComunicatArticlePage.astro";
-import { filterVisibleComunicats } from "../../../lib/comunicats";
+import {
+    filterVisibleComunicats,
+    getRelatedComunicats,
+} from "../../../lib/comunicats";
 
 export async function getStaticPaths() {
     const comunicatsData = await fetchAPI(endpoints.comunicats);
@@ -21,12 +24,24 @@ export async function getStaticPaths() {
             },
             props: {
                 comunicat,
+                relatedComunicats: getRelatedComunicats(
+                    comunicat,
+                    comunicats,
+                ),
                 lang: "es",
             },
         }));
 }
 
-const { comunicat, lang } = Astro.props;
+const {
+    comunicat,
+    relatedComunicats,
+    lang,
+} = Astro.props;
 ---
 
-<ComunicatArticlePage comunicat={comunicat} lang={lang} />
+<ComunicatArticlePage
+    comunicat={comunicat}
+    relatedComunicats={relatedComunicats}
+    lang={lang}
+/>

@@ -63,3 +63,50 @@ export function filterVisibleComunicats<T extends ComunicatWithExpiry>(
         isComunicatVisible(comunicat, today),
     );
 }
+
+export function getRelatedComunicats(
+    current: any,
+    comunicats: any[],
+    limit = 2,
+): any[] {
+    const currentCommerceKey =
+        current?.comercio?.documentId ??
+        current?.comercio?.id;
+
+    if (!currentCommerceKey) {
+        return [];
+    }
+
+    const currentKey =
+        current?.documentId ??
+        current?.id ??
+        current?.slug;
+
+    return comunicats
+        .filter((item: any) => {
+            const commerceKey =
+                item?.comercio?.documentId ??
+                item?.comercio?.id;
+
+            const itemKey =
+                item?.documentId ??
+                item?.id ??
+                item?.slug;
+
+            return (
+                commerceKey != null &&
+                String(commerceKey) ===
+                    String(currentCommerceKey) &&
+                String(itemKey) !== String(currentKey)
+            );
+        })
+        .sort((a: any, b: any) => {
+            const aTime =
+                new Date(a.data_publicacio).getTime() || 0;
+            const bTime =
+                new Date(b.data_publicacio).getTime() || 0;
+
+            return bTime - aTime;
+        })
+        .slice(0, limit);
+}

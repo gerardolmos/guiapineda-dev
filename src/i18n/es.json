@@ -37,7 +37,19 @@
         "submitEmailText": "Envía tu comunicado a:",
         "backToList": "← Volver a Comunicados",
         "readingSuffix": "de lectura",
-        "empty": "Todavía no hay comunicados publicados."
+        "empty": "Todavía no hay comunicados publicados.",
+        "eyebrow": "La comunidad cuenta",
+        "introTitle": "Información de Pineda, compartida por su gente",
+        "introText": "Actividades, iniciativas, avisos e informaciones de interés local compartidas por entidades, colectivos, comercios y vecinos de Pineda de Mar.",
+        "ctaTitle": "¿Tienes algo que contar?",
+        "ctaText": "Si es de interés para Pineda, envíanos tu comunicado. Lo revisaremos antes de publicarlo.",
+        "ctaButton": "Enviar un comunicado",
+        "latestTitle": "Últimos comunicados",
+        "paginationLabel": "Paginación de comunicados",
+        "previousPage": "← Anterior",
+        "nextPage": "Siguiente →",
+        "pageLabel": "Página",
+        "relatedTitle": "Más comunicados de {name}"
     },
     "common": {
         "noDescription": "Sin descripción",
