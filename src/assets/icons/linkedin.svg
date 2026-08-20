@@ -3,15 +3,20 @@
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="25px" height="25px" viewBox="0 0 25 25" style="enable-background:new 0 0 25 25;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#FFFFFF;}
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:#FFFFFF;}
 </style>
 <g>
-	<ellipse transform="matrix(0.9247 -0.3808 0.3808 0.9247 -3.8179 5.701)" cx="12.5" cy="12.5" rx="12.441" ry="12.441"/>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="21.3358" y1="21.3358" x2="3.6642" y2="3.6642">
+		<stop  offset="0" style="stop-color:#007BB8"/>
+		<stop  offset="1" style="stop-color:#0044E9"/>
+	</linearGradient>
+	<circle class="st0" cx="12.5" cy="12.5" r="12.5"/>
 	<g>
-		<path class="st0" d="M6.242,9.58h2.686v8.627H6.242V9.58z M7.585,5.293c0.859,0,1.555,0.697,1.555,1.554
-			c0,0.858-0.696,1.556-1.555,1.556c-0.861,0-1.557-0.698-1.557-1.556C6.028,5.99,6.724,5.293,7.585,5.293"/>
-		<path class="st0" d="M10.61,9.58h2.572v1.18h0.035c0.359-0.679,1.233-1.394,2.539-1.394c2.715,0,3.216,1.786,3.216,4.109v4.732
-			h-2.68v-4.194c0-1.001-0.02-2.288-1.394-2.288c-1.396,0-1.609,1.09-1.609,2.215v4.267h-2.68V9.58z"/>
+		<path class="st1" d="M6.2,9.6h2.7l0,8.7H6.2L6.2,9.6z M7.6,5.3c0.9,0,1.6,0.7,1.6,1.6c0,0.9-0.7,1.6-1.6,1.6C6.7,8.4,6,7.7,6,6.8
+			C6,6,6.7,5.3,7.6,5.3"/>
+		<path class="st1" d="M10.6,9.6h2.6v1.2h0c0.4-0.7,1.2-1.4,2.6-1.4c2.7,0,3.2,1.8,3.2,4.1v4.8h-2.7l0-4.2c0-1,0-2.3-1.4-2.3
+			c-1.4,0-1.6,1.1-1.6,2.2l0,4.3h-2.7L10.6,9.6z"/>
 	</g>
 </g>
 </svg>
