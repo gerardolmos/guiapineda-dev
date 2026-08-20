@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import ArticleCard from "../../components/ArticleCard.astro";
+import MilloraCard from "../../components/MilloraCard.astro";
 import { fetchAPI, endpoints } from "../../lib/api";
 import { getTranslations } from "../../i18n/getTranslations";
 
@@ -16,249 +16,399 @@ const basePath =
     lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
 
 const sortedMillores = [...millores].sort(
-        (a: any, b: any) =>
-            new Date(b.data_publicacio).getTime() -
-            new Date(a.data_publicacio).getTime(),
-    );
+    (a: any, b: any) =>
+        new Date(b.data_publicacio).getTime() -
+        new Date(a.data_publicacio).getTime(),
+);
 ---
 
-<Layout lang={lang} title={`${t.millores.title} | GUIAPINEDA`}>
-    <main>
-        <h1>{t.millores.title}</h1>
-
-        <section>
-            <h2>{t.millores.submitTitle}</h2>
-
-            <p>{t.millores.submitText1}</p>
-
-            <p>{t.millores.submitText2}</p>
-
-            <p>
-                {t.millores.submitEmailText}
-                <a href="mailto:info@guiapineda.com"> info@guiapineda.com </a>
-            </p>
-        </section>
-
-        <section>
-            <h2>{t.millores.filtersTitle}</h2>
-
-            <form id="millores-filters">
-                <label>
-                    {t.millores.categoryLabel}
-
-                    <select name="categoria" id="filter-categoria">
-                        <option value="totes">
-                            {t.millores.allCategories}
-                        </option>
-
-                        {
-                            Object.entries(t.millores.categories).map(
-                                ([value, label]) => (
-                                    <option value={value}>{label}</option>
-                                ),
-                            )
-                        }
-                    </select>
-                </label>
-
-                <label>
-                    {t.millores.zoneLabel}
-
-                    <select name="zona" id="filter-zona">
-                        <option value="totes">
-                            {t.millores.allZones}
-                        </option>
-
-                        {
-                            Object.entries(t.millores.zones).map(
-                                ([value, label]) => (
-                                    <option value={value}>{label}</option>
-                                ),
-                            )
-                        }
-                    </select>
-                </label>
-
-                <button type="submit">
-                    {t.millores.applyFilters}
-                </button>
-
-                <a href={basePath}>
-                    {t.millores.clearFilters}
-                </a>
-            </form>
-        </section>
-
-        <section id="millores-list">
-            {
-                sortedMillores.length === 0 ? (
-                    <p>{t.millores.empty}</p>
-                ) : (
-                    sortedMillores.map((millora: any) => (
-                        <div
-                            class="millora-item"
-                            data-categoria={millora.categoria}
-                            data-zona={millora.zona}
-                        >
-                            <ArticleCard
-                                item={millora}
-                                href={
-                                    lang === "ca"
-                                        ? `/millorem-pineda/${millora.slug}`
-                                        : `/${lang}/millorem-pineda/${millora.slug}`
-                                }
-                                lang={lang as "ca" | "es" | "en"}
-                                readingSuffix={t.millores.readingSuffix}
-                            />
-                        </div>
-                    ))
-                )
-            }
-        </section>
-
-        <p id="millores-empty" hidden>
-            {t.millores.empty}
-        </p>
-
-        <nav id="millores-pagination" aria-label={t.millores.paginationLabel}>
-            <button type="button" id="prev-page">
-                {t.millores.previousPage}
-            </button>
-
-            <span id="page-info"></span>
-
-            <button type="button" id="next-page">
-                {t.millores.nextPage}
-            </button>
-        </nav>
-
-        <script
-            define:vars={{
-                itemsPerPage,
-                basePath,
-                pageLabel: t.millores.pageLabel,
-            }}
+<Layout
+    lang={lang}
+    title={`${t.millores.title} | GUIAPINEDA`}
+    description={t.millores.introText}
+>
+    <div class="bg-stone-50">
+        <section
+            class="relative overflow-hidden bg-sky-950 px-5 py-14 sm:px-8 sm:py-16 lg:py-20"
         >
-            const form = document.getElementById("millores-filters");
+            <div class="mx-auto max-w-6xl">
+                <div
+                    class="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.75fr)] lg:items-end lg:gap-16"
+                >
+                    <div>
+                        <p
+                            class="text-xs font-black uppercase tracking-[0.22em] text-amber-300"
+                        >
+                            {t.millores.eyebrow}
+                        </p>
 
-            const categorySelect = document.getElementById("filter-categoria");
+                        <h1
+                            class="mt-4 max-w-4xl text-5xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl"
+                        >
+                            {t.millores.title}
+                        </h1>
+                    </div>
 
-            const zoneSelect = document.getElementById("filter-zona");
+                    <div
+                        class="border-l-4 border-amber-300 pl-5 sm:pl-6"
+                    >
+                        <h2
+                            class="text-2xl font-black leading-tight text-white sm:text-3xl"
+                        >
+                            {t.millores.introTitle}
+                        </h2>
 
-            const items = Array.from(
-                document.querySelectorAll(".millora-item"),
+                        <p
+                            class="mt-4 max-w-2xl text-base leading-7 text-sky-100 sm:text-lg"
+                        >
+                            {t.millores.introText}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div
+            aria-hidden="true"
+            class="grid h-2 grid-cols-6"
+        >
+            <span class="bg-sky-500"></span>
+            <span class="bg-fuchsia-500"></span>
+            <span class="bg-amber-400"></span>
+            <span class="bg-emerald-500"></span>
+            <span class="bg-violet-500"></span>
+            <span class="bg-cyan-500"></span>
+        </div>
+
+        <section
+            class="bg-white px-5 py-8 sm:px-8 sm:py-10"
+        >
+            <div class="mx-auto max-w-6xl">
+                <div
+                    class="rounded-2xl border border-slate-200 bg-stone-50 p-5 sm:p-6"
+                >
+                    <div
+                        class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+                    >
+                        <div class="max-w-xl">
+                            <h2
+                                class="text-xl font-black tracking-tight text-slate-950"
+                            >
+                                {t.millores.filtersTitle}
+                            </h2>
+
+                            <p
+                                class="mt-1 text-sm leading-6 text-slate-600"
+                            >
+                                {t.millores.filterHelp}
+                            </p>
+                        </div>
+
+                        <div
+                            id="millores-filters"
+                            class="grid w-full gap-4 sm:grid-cols-2 lg:w-auto lg:grid-cols-[15rem_15rem]"
+                        >
+                            <label class="block">
+                                <span
+                                    class="mb-1.5 block text-xs font-black uppercase tracking-[0.08em] text-slate-600"
+                                >
+                                    {t.millores.categoryLabel}
+                                </span>
+
+                                <select
+                                    name="categoria"
+                                    id="filter-categoria"
+                                    class="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm font-bold text-slate-700 focus:border-sky-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                                >
+                                    <option value="totes">
+                                        {t.millores.allCategories}
+                                    </option>
+
+                                    {
+                                        Object.entries(
+                                            t.millores.categories,
+                                        ).map(([value, label]) => (
+                                            <option value={value}>
+                                                {label}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+                            </label>
+
+                            <label class="block">
+                                <span
+                                    class="mb-1.5 block text-xs font-black uppercase tracking-[0.08em] text-slate-600"
+                                >
+                                    {t.millores.zoneLabel}
+                                </span>
+
+                                <select
+                                    name="zona"
+                                    id="filter-zona"
+                                    class="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm font-bold text-slate-700 focus:border-sky-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                                >
+                                    <option value="totes">
+                                        {t.millores.allZones}
+                                    </option>
+
+                                    {
+                                        Object.entries(
+                                            t.millores.zones,
+                                        ).map(([value, label]) => (
+                                            <option value={value}>
+                                                {label}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section
+            id="millores-list-section"
+            class="border-t border-slate-200 bg-white px-5 py-10 sm:px-8 sm:py-12"
+        >
+            <div class="mx-auto max-w-6xl">
+                <div>
+                    <p
+                        class="text-xs font-black uppercase tracking-[0.18em] text-sky-700"
+                    >
+                        GUIAPINEDA
+                    </p>
+
+                    <h2
+                        class="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {t.millores.latestTitle}
+                    </h2>
+                </div>
+
+                <div
+                    id="millores-list"
+                    class="mt-8 grid gap-5 md:grid-cols-2"
+                >
+                    {
+                        sortedMillores.map((millora: any) => (
+                            <div
+                                class="millora-item"
+                                data-categoria={millora.categoria}
+                                data-zona={millora.zona}
+                            >
+                                <MilloraCard
+                                    item={millora}
+                                    href={
+                                        lang === "ca"
+                                            ? `/millorem-pineda/${millora.slug}`
+                                            : `/${lang}/millorem-pineda/${millora.slug}`
+                                    }
+                                    lang={lang as "ca" | "es" | "en"}
+                                    readingSuffix={
+                                        t.millores.readingSuffix
+                                    }
+                                    category={
+                                        t.millores.categories[
+                                            millora.categoria as keyof typeof t.millores.categories
+                                        ] ?? millora.categoria
+                                    }
+                                    zone={
+                                        t.millores.zones[
+                                            millora.zona as keyof typeof t.millores.zones
+                                        ] ?? millora.zona
+                                    }
+                                />
+                            </div>
+                        ))
+                    }
+                </div>
+
+                <p
+                    id="millores-empty"
+                    hidden={sortedMillores.length !== 0}
+                    class="mt-8 rounded-2xl border border-dashed border-slate-300 bg-stone-50 p-8 text-slate-600"
+                >
+                    {t.millores.empty}
+                </p>
+
+                <nav
+                    id="millores-pagination"
+                    aria-label={t.millores.paginationLabel}
+                    class="mt-10 flex items-center justify-center gap-4 border-t border-slate-200 pt-7"
+                >
+                    <button
+                        type="button"
+                        id="prev-page"
+                        class="min-h-10 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-black text-slate-700 transition hover:border-sky-300 hover:text-sky-800 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                        {t.millores.previousPage}
+                    </button>
+
+                    <span
+                        id="page-info"
+                        aria-live="polite"
+                        class="min-w-24 text-center text-sm font-bold text-slate-500"
+                    ></span>
+
+                    <button
+                        type="button"
+                        id="next-page"
+                        class="min-h-10 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-black text-slate-700 transition hover:border-sky-300 hover:text-sky-800 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                        {t.millores.nextPage}
+                    </button>
+                </nav>
+            </div>
+        </section>
+    </div>
+
+    <script
+        define:vars={{
+            itemsPerPage,
+            basePath,
+            pageLabel: t.millores.pageLabel,
+        }}
+    >
+        const categorySelect =
+            document.getElementById("filter-categoria");
+        const zoneSelect = document.getElementById("filter-zona");
+        const items = Array.from(
+            document.querySelectorAll(".millora-item"),
+        );
+        const emptyMessage =
+            document.getElementById("millores-empty");
+        const pagination =
+            document.getElementById("millores-pagination");
+        const prevButton = document.getElementById("prev-page");
+        const nextButton = document.getElementById("next-page");
+        const pageInfo = document.getElementById("page-info");
+        const listSection =
+            document.getElementById("millores-list-section");
+
+        let currentPage = 1;
+
+        const params = new URLSearchParams(window.location.search);
+
+        categorySelect.value =
+            params.get("categoria") || "totes";
+
+        zoneSelect.value =
+            params.get("zona") || "totes";
+
+        currentPage = Number(params.get("page") || "1");
+
+        function updateUrl(category, zone, page) {
+            const newParams = new URLSearchParams();
+
+            if (category !== "totes") {
+                newParams.set("categoria", category);
+            }
+
+            if (zone !== "totes") {
+                newParams.set("zona", zone);
+            }
+
+            if (page > 1) {
+                newParams.set("page", String(page));
+            }
+
+            const query = newParams.toString();
+
+            const newUrl = query
+                ? `${basePath}?${query}`
+                : basePath;
+
+            window.history.replaceState({}, "", newUrl);
+        }
+
+        function render({ scroll = false } = {}) {
+            const category = categorySelect.value;
+            const zone = zoneSelect.value;
+
+            const filteredItems = items.filter((item) => {
+                const matchesCategory =
+                    category === "totes" ||
+                    item.dataset.categoria === category;
+
+                const matchesZone =
+                    zone === "totes" ||
+                    item.dataset.zona === zone;
+
+                return matchesCategory && matchesZone;
+            });
+
+            const totalPages = Math.max(
+                1,
+                Math.ceil(filteredItems.length / itemsPerPage),
             );
 
-            const emptyMessage = document.getElementById("millores-empty");
+            currentPage = Math.min(
+                Math.max(currentPage, 1),
+                totalPages,
+            );
 
-            const pagination = document.getElementById("millores-pagination");
+            items.forEach((item) => {
+                item.hidden = true;
+            });
 
-            const prevButton = document.getElementById("prev-page");
+            const start = (currentPage - 1) * itemsPerPage;
 
-            const nextButton = document.getElementById("next-page");
+            const visibleItems = filteredItems.slice(
+                start,
+                start + itemsPerPage,
+            );
 
-            const pageInfo = document.getElementById("page-info");
+            visibleItems.forEach((item) => {
+                item.hidden = false;
+            });
 
-            let currentPage = 1;
+            emptyMessage.hidden = filteredItems.length !== 0;
+            pagination.hidden =
+                filteredItems.length <= itemsPerPage;
 
-            const params = new URLSearchParams(window.location.search);
+            prevButton.disabled = currentPage <= 1;
+            nextButton.disabled = currentPage >= totalPages;
 
-            categorySelect.value = params.get("categoria") || "totes";
+            pageInfo.textContent =
+                `${pageLabel} ${currentPage} / ${totalPages}`;
 
-            zoneSelect.value = params.get("zona") || "totes";
+            updateUrl(category, zone, currentPage);
 
-            currentPage = Number(params.get("page") || "1");
+            if (scroll) {
+                const reduceMotion = window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                ).matches;
 
-            function updateUrl(category, zone, page) {
-                const newParams = new URLSearchParams();
-
-                if (category !== "totes") {
-                    newParams.set("categoria", category);
-                }
-
-                if (zone !== "totes") {
-                    newParams.set("zona", zone);
-                }
-
-                if (page > 1) {
-                    newParams.set("page", String(page));
-                }
-
-                const query = newParams.toString();
-
-                const newUrl = query ? `${basePath}?${query}` : basePath;
-
-                window.history.replaceState({}, "", newUrl);
+                listSection?.scrollIntoView({
+                    behavior: reduceMotion ? "auto" : "smooth",
+                    block: "start",
+                });
             }
+        }
 
-            function render() {
-                const category = categorySelect.value;
+        categorySelect.addEventListener("change", () => {
+            currentPage = 1;
+            render({ scroll: true });
+        });
 
-                const zone = zoneSelect.value;
+        zoneSelect.addEventListener("change", () => {
+            currentPage = 1;
+            render({ scroll: true });
+        });
 
-                const filteredItems = items.filter((item) => {
-                    const matchesCategory =
-                        category === "totes" ||
-                        item.dataset.categoria === category;
+        prevButton.addEventListener("click", () => {
+            currentPage -= 1;
+            render({ scroll: true });
+        });
 
-                    const matchesZone =
-                        zone === "totes" || item.dataset.zona === zone;
+        nextButton.addEventListener("click", () => {
+            currentPage += 1;
+            render({ scroll: true });
+        });
 
-                    return matchesCategory && matchesZone;
-                });
-
-                const totalPages = Math.max(
-                    1,
-                    Math.ceil(filteredItems.length / itemsPerPage),
-                );
-
-                currentPage = Math.min(Math.max(currentPage, 1), totalPages);
-
-                items.forEach((item) => {
-                    item.hidden = true;
-                });
-
-                const start = (currentPage - 1) * itemsPerPage;
-
-                const visibleItems = filteredItems.slice(
-                    start,
-                    start + itemsPerPage,
-                );
-
-                visibleItems.forEach((item) => {
-                    item.hidden = false;
-                });
-
-                emptyMessage.hidden = filteredItems.length !== 0;
-
-                pagination.hidden = filteredItems.length <= itemsPerPage;
-
-                prevButton.disabled = currentPage <= 1;
-
-                nextButton.disabled = currentPage >= totalPages;
-
-                pageInfo.textContent = `${pageLabel} ${currentPage} / ${totalPages}`;
-
-                updateUrl(category, zone, currentPage);
-            }
-
-            form.addEventListener("submit", (event) => {
-                event.preventDefault();
-                currentPage = 1;
-                render();
-            });
-
-            prevButton.addEventListener("click", () => {
-                currentPage -= 1;
-                render();
-            });
-
-            nextButton.addEventListener("click", () => {
-                currentPage += 1;
-                render();
-            });
-
-            render();
-        </script>
-    </main>
+        render();
+    </script>
 </Layout>

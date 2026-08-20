@@ -81,6 +81,11 @@
     },
     "millores": {
         "title": "Improving Pineda",
+        "eyebrow": "Community participation",
+        "introTitle": "Ideas, issues and proposals to improve Pineda de Mar",
+        "introText": "An open space for residents and visitors to share issues, civic concerns and constructive proposals that may help improve Pineda de Mar.",
+        "filterHelp": "Filter contributions by type or area of Pineda de Mar.",
+        "latestTitle": "Recent contributions",
         "submitTitle": "Would you like to suggest an improvement?",
         "submitText1": "This section collects issues, proposals and civic matters that may help improve Pineda de Mar.",
         "submitText2": "All submissions are reviewed before publication and must keep a respectful and constructive tone.",

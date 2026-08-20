@@ -81,6 +81,11 @@
     },
     "millores": {
         "title": "Millorem Pineda",
+        "eyebrow": "Participació ciutadana",
+        "introTitle": "Idees, incidències i propostes per millorar Pineda de Mar",
+        "introText": "Un espai obert a veïns, veïnes i visitants per compartir incidències, qüestions de civisme i propostes constructives que poden ajudar a millorar el municipi.",
+        "filterHelp": "Filtra les aportacions per tipus o per zona de Pineda de Mar.",
+        "latestTitle": "Aportacions recents",
         "submitTitle": "Vols proposar una millora?",
         "submitText1": "Aquest espai recull incidències, propostes i temes de civisme que poden ajudar a millorar Pineda de Mar.",
         "submitText2": "Les publicacions són revisades abans de ser publicades i han de tenir un to respectuós i constructiu.",
