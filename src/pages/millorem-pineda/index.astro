@@ -15,6 +15,32 @@ const itemsPerPage = 6;
 const basePath =
     lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
 
+const submitUrl =
+    lang === "ca"
+        ? "/millorem-pineda/envia-una-millora"
+        : lang === "es"
+          ? "/es/millorem-pineda/enviar-una-mejora"
+          : "/en/millorem-pineda/send-an-improvement";
+
+const submitCopy =
+    lang === "ca"
+        ? {
+              title: "Hi ha alguna cosa que creus que podria millorar?",
+              text: "Comparteix una incidència, una qüestió de civisme o una proposta constructiva. Totes les aportacions es revisen abans de publicar-se.",
+              button: "Enviar una aportació",
+          }
+        : lang === "es"
+          ? {
+                title: "¿Hay algo que crees que podría mejorar?",
+                text: "Comparte una incidencia, una cuestión de civismo o una propuesta constructiva. Todas las aportaciones se revisan antes de publicarse.",
+                button: "Enviar una aportación",
+            }
+          : {
+                title: "Is there something you think could improve?",
+                text: "Share an issue, civic concern or constructive proposal. Every contribution is reviewed before publication.",
+                button: "Send a contribution",
+            };
+
 const sortedMillores = [...millores].sort(
     (a: any, b: any) =>
         new Date(b.data_publicacio).getTime() -
@@ -261,6 +287,42 @@ const sortedMillores = [...millores].sort(
                         {t.millores.nextPage}
                     </button>
                 </nav>
+
+                <aside
+                    class="mt-12 overflow-hidden rounded-[2rem] bg-sky-950 p-7 text-white sm:p-9"
+                >
+                    <div
+                        class="flex flex-col gap-7 md:flex-row md:items-center md:justify-between"
+                    >
+                        <div class="max-w-2xl">
+                            <p
+                                class="text-xs font-black uppercase tracking-[0.18em] text-amber-300"
+                            >
+                                Millorem Pineda
+                            </p>
+
+                            <h2
+                                class="mt-3 text-2xl font-black tracking-tight sm:text-3xl"
+                            >
+                                {submitCopy.title}
+                            </h2>
+
+                            <p
+                                class="mt-3 max-w-xl leading-7 text-sky-100"
+                            >
+                                {submitCopy.text}
+                            </p>
+                        </div>
+
+                        <a
+                            href={submitUrl}
+                            class="inline-flex min-h-12 shrink-0 items-center justify-center self-start rounded-full bg-white px-6 py-3 font-black text-sky-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-300 md:self-auto"
+                        >
+                            {submitCopy.button}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </a>
+                    </div>
+                </aside>
             </div>
         </section>
     </div>

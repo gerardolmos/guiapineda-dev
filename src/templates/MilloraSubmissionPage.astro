@@ -1,0 +1,39 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MilloraSubmissionFlow from "../components/MilloraSubmissionFlow.astro";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const meta = {
+    ca: {
+        title: "Envia una millora | GUIAPINEDA",
+        description:
+            "Comparteix una incidència, una qüestió de civisme o una proposta constructiva per millorar Pineda de Mar.",
+    },
+    es: {
+        title: "Enviar una mejora | GUIAPINEDA",
+        description:
+            "Comparte una incidencia, una cuestión de civismo o una propuesta constructiva para mejorar Pineda de Mar.",
+    },
+    en: {
+        title: "Send an improvement | GUIAPINEDA",
+        description:
+            "Share an issue, civic concern or constructive proposal that could help improve Pineda de Mar.",
+    },
+} as const;
+
+const page = meta[lang];
+---
+
+<Layout
+    lang={lang}
+    title={page.title}
+    description={page.description}
+    showLanguageSwitcher={false}
+>
+    <MilloraSubmissionFlow lang={lang} />
+</Layout>

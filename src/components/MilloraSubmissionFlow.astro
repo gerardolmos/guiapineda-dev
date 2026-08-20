@@ -1,0 +1,1054 @@
+---
+import { getTranslations } from "../i18n/getTranslations";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+const t = getTranslations(lang);
+
+const copy = {
+    ca: {
+        eyebrow: "Millorem Pineda",
+        language: "Idioma",
+        section1: "Què vols millorar",
+        section2: "Explica'ns-ho",
+        section3: "Revisió",
+        step1Title: "Situa la teva aportació",
+        step1Intro:
+            "Comencem pel context. Digues-nos de quin tipus d'aportació es tracta, a quina zona fa referència i com vols aparèixer públicament.",
+        categoryLabel: "Quin tipus d'aportació és?",
+        zoneLabel: "A quina zona de Pineda de Mar?",
+        zonePlaceholder: "Tria una zona",
+        authorTitle: "Com vols aparèixer si es publica?",
+        authorResident: "Resident de Pineda de Mar",
+        authorVisitor: "Visitant de Pineda de Mar",
+        authorAlias: "Nom o àlies públic",
+        aliasLabel: "Escriu el nom o àlies públic",
+        aliasPlaceholder: "Per exemple: Maria, J. Costa, Veí del Poblenou...",
+        aliasHelp:
+            "Aquest text serà públic si l'aportació es publica. No hi posis dades que vulguis mantenir privades.",
+        publicTitle: "Només informació pública",
+        publicText:
+            "GUIAPINEDA no et demana nom real, email, telèfon ni cap altra dada privada per enviar una aportació.",
+        reviewNotice:
+            "Totes les aportacions es revisen abans que puguin publicar-se.",
+        continue: "Continuar",
+        back: "Enrere",
+        step2Title: "Explica què passa i què podria millorar",
+        step2Intro:
+            "Com més concreta sigui la informació, més útil serà. No cal escriure molt, però sí donar prou context per entendre la situació.",
+        titleLabel: "Títol",
+        titlePlaceholder: "Resumeix la idea o el problema en una frase clara",
+        summaryLabel: "Resum",
+        summaryHelp:
+            "Explica en dues o tres frases què passa i per què creus que és important.",
+        summaryPlaceholder:
+            "Per exemple: En aquest tram hi ha poca visibilitat al vespre i diversos punts queden completament foscos.",
+        contentLabel: "Explicació completa",
+        contentHelpTitle: "Ajuda'ns a entendre-ho bé",
+        contentHelp:
+            "Explica què passa, on passa exactament, des de quan ho has observat i què creus que podria millorar-se.",
+        contentPlaceholder:
+            "Explica la situació amb les teves paraules. Pots indicar punts concrets, moments del dia, freqüència, conseqüències i una possible millora...",
+        imageTitle: "Vols afegir una imatge?",
+        imageHelp:
+            "Opcional. Pots afegir una única imatge en JPG, PNG o WebP. Evita fotografies que mostrin dades personals de terceres persones.",
+        chooseImage: "Afegir imatge",
+        changeImage: "Canviar imatge",
+        removeImage: "Eliminar imatge",
+        previewTitle: "Així començarà a veure's",
+        previewEmptyTitle: "El títol apareixerà aquí",
+        previewEmptySummary: "El resum apareixerà aquí.",
+        readingSuffix: "min de lectura",
+        minLabel: "mín.",
+        minLabel: "mín.",
+        step3Title: "Revisa la teva aportació",
+        step3Intro:
+            "Això és el que rebrà GUIAPINEDA. Revisa-ho abans d'enviar-ho.",
+        editContext: "Editar context",
+        editContent: "Editar contingut",
+        rulesTitle: "Abans d'enviar",
+        rulesIntro:
+            "Volem que Millorem Pineda sigui un espai útil, constructiu i respectuós.",
+        rules: [
+            "Sigues concret i explica fets o propostes que es puguin entendre.",
+            "No incloguis insults, desqualificacions ni acusacions irresponsables.",
+            "No incloguis telèfons, emails, adreces privades ni altres dades personals de terceres persones.",
+            "GUIAPINEDA revisarà l'aportació abans de decidir si es publica.",
+        ],
+        send: "Enviar a GUIAPINEDA",
+        prototype:
+            "Perfecte. L'aportació està preparada. Encara no s'ha enviat res: connectarem aquest formulari amb el sistema de recepció i revisió quan activem la infraestructura corresponent.",
+        publicLabel: "Contingut públic",
+    },
+
+    es: {
+        eyebrow: "Mejoramos Pineda",
+        language: "Idioma",
+        section1: "Qué quieres mejorar",
+        section2: "Cuéntanoslo",
+        section3: "Revisión",
+        step1Title: "Sitúa tu aportación",
+        step1Intro:
+            "Empecemos por el contexto. Dinos de qué tipo de aportación se trata, a qué zona hace referencia y cómo quieres aparecer públicamente.",
+        categoryLabel: "¿Qué tipo de aportación es?",
+        zoneLabel: "¿En qué zona de Pineda de Mar?",
+        zonePlaceholder: "Elige una zona",
+        authorTitle: "¿Cómo quieres aparecer si se publica?",
+        authorResident: "Residente de Pineda de Mar",
+        authorVisitor: "Visitante de Pineda de Mar",
+        authorAlias: "Nombre o alias público",
+        aliasLabel: "Escribe el nombre o alias público",
+        aliasPlaceholder: "Por ejemplo: María, J. Costa, Vecino de Poblenou...",
+        aliasHelp:
+            "Este texto será público si la aportación se publica. No incluyas datos que quieras mantener privados.",
+        publicTitle: "Solo información pública",
+        publicText:
+            "GUIAPINEDA no te pide nombre real, email, teléfono ni ningún otro dato privado para enviar una aportación.",
+        reviewNotice:
+            "Todas las aportaciones se revisan antes de que puedan publicarse.",
+        continue: "Continuar",
+        back: "Atrás",
+        step2Title: "Explica qué ocurre y qué podría mejorar",
+        step2Intro:
+            "Cuanto más concreta sea la información, más útil será. No hace falta escribir mucho, pero sí dar suficiente contexto para entender la situación.",
+        titleLabel: "Título",
+        titlePlaceholder: "Resume la idea o el problema en una frase clara",
+        summaryLabel: "Resumen",
+        summaryHelp:
+            "Explica en dos o tres frases qué ocurre y por qué crees que es importante.",
+        summaryPlaceholder:
+            "Por ejemplo: En este tramo hay poca visibilidad por la noche y varios puntos quedan completamente oscuros.",
+        contentLabel: "Explicación completa",
+        contentHelpTitle: "Ayúdanos a entenderlo bien",
+        contentHelp:
+            "Explica qué ocurre, dónde ocurre exactamente, desde cuándo lo has observado y qué crees que podría mejorarse.",
+        contentPlaceholder:
+            "Explica la situación con tus propias palabras. Puedes indicar puntos concretos, momentos del día, frecuencia, consecuencias y una posible mejora...",
+        imageTitle: "¿Quieres añadir una imagen?",
+        imageHelp:
+            "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP. Evita fotografías que muestren datos personales de terceras personas.",
+        chooseImage: "Añadir imagen",
+        changeImage: "Cambiar imagen",
+        removeImage: "Eliminar imagen",
+        previewTitle: "Así empezará a verse",
+        previewEmptyTitle: "El título aparecerá aquí",
+        previewEmptySummary: "El resumen aparecerá aquí.",
+        readingSuffix: "min de lectura",
+        step3Title: "Revisa tu aportación",
+        step3Intro:
+            "Esto es lo que recibirá GUIAPINEDA. Revísalo antes de enviarlo.",
+        editContext: "Editar contexto",
+        editContent: "Editar contenido",
+        rulesTitle: "Antes de enviar",
+        rulesIntro:
+            "Queremos que Mejoramos Pineda sea un espacio útil, constructivo y respetuoso.",
+        rules: [
+            "Sé concreto y explica hechos o propuestas que puedan entenderse.",
+            "No incluyas insultos, descalificaciones ni acusaciones irresponsables.",
+            "No incluyas teléfonos, emails, direcciones privadas ni otros datos personales de terceras personas.",
+            "GUIAPINEDA revisará la aportación antes de decidir si se publica.",
+        ],
+        send: "Enviar a GUIAPINEDA",
+        prototype:
+            "Perfecto. La aportación está preparada. Todavía no se ha enviado nada: conectaremos este formulario con el sistema de recepción y revisión cuando activemos la infraestructura correspondiente.",
+        publicLabel: "Contenido público",
+    },
+
+    en: {
+        eyebrow: "Improve Pineda",
+        language: "Language",
+        section1: "What could improve",
+        section2: "Tell us about it",
+        section3: "Review",
+        step1Title: "Give us the context",
+        step1Intro:
+            "Start with the basics. Tell us what kind of contribution this is, which area it concerns and how you want to appear publicly.",
+        categoryLabel: "What kind of contribution is it?",
+        zoneLabel: "Which area of Pineda de Mar?",
+        zonePlaceholder: "Choose an area",
+        authorTitle: "How should you appear if it is published?",
+        authorResident: "Pineda de Mar resident",
+        authorVisitor: "Visitor to Pineda de Mar",
+        authorAlias: "Public name or alias",
+        aliasLabel: "Enter the public name or alias",
+        aliasPlaceholder: "For example: Maria, J. Costa, Poblenou resident...",
+        aliasHelp:
+            "This text will be public if the contribution is published. Do not include information you want to keep private.",
+        publicTitle: "Public information only",
+        publicText:
+            "GUIAPINEDA does not ask for your real name, email address, phone number or any other private contact information.",
+        reviewNotice:
+            "Every contribution is reviewed before it can be published.",
+        continue: "Continue",
+        back: "Back",
+        step2Title: "Explain what is happening and what could improve",
+        step2Intro:
+            "The more specific the information is, the more useful it will be. You do not need to write a lot, but please provide enough context to understand the situation.",
+        titleLabel: "Title",
+        titlePlaceholder: "Summarise the idea or issue in one clear sentence",
+        summaryLabel: "Summary",
+        summaryHelp:
+            "In two or three sentences, explain what is happening and why you think it matters.",
+        summaryPlaceholder:
+            "For example: This stretch has poor visibility at night and several areas are left completely dark.",
+        contentLabel: "Full explanation",
+        contentHelpTitle: "Help us understand it clearly",
+        contentHelp:
+            "Explain what is happening, exactly where it happens, how long you have noticed it and what you think could improve.",
+        contentPlaceholder:
+            "Describe the situation in your own words. You can mention specific locations, times of day, frequency, consequences and a possible improvement...",
+        imageTitle: "Would you like to add an image?",
+        imageHelp:
+            "Optional. You can add one JPG, PNG or WebP image. Avoid photographs containing other people's personal information.",
+        chooseImage: "Add image",
+        changeImage: "Change image",
+        removeImage: "Remove image",
+        previewTitle: "How it will start to look",
+        previewEmptyTitle: "Your title will appear here",
+        previewEmptySummary: "Your summary will appear here.",
+        readingSuffix: "min read",
+        minLabel: "min.",
+        step3Title: "Review your contribution",
+        step3Intro:
+            "This is what GUIAPINEDA will receive. Check it before sending.",
+        editContext: "Edit context",
+        editContent: "Edit content",
+        rulesTitle: "Before sending",
+        rulesIntro:
+            "We want Improve Pineda to be useful, constructive and respectful.",
+        rules: [
+            "Be specific and describe facts or proposals clearly.",
+            "Do not include insults, personal attacks or irresponsible accusations.",
+            "Do not include phone numbers, emails, private addresses or other personal data belonging to third parties.",
+            "GUIAPINEDA will review the contribution before deciding whether to publish it.",
+        ],
+        send: "Send to GUIAPINEDA",
+        prototype:
+            "Perfect. Your contribution is ready. Nothing has been sent yet: we will connect this form to the submission and review system when the corresponding infrastructure is activated.",
+        publicLabel: "Public content",
+    },
+} as const;
+
+const text = copy[lang];
+
+const routes = {
+    ca: "/millorem-pineda/envia-una-millora",
+    es: "/es/millorem-pineda/enviar-una-mejora",
+    en: "/en/millorem-pineda/send-an-improvement",
+} as const;
+
+const categoryClasses: Record<string, string> = {
+    incidencies:
+        "border-amber-200 bg-amber-50 text-amber-900 peer-checked:border-amber-500 peer-checked:bg-amber-100",
+    civisme:
+        "border-emerald-200 bg-emerald-50 text-emerald-900 peer-checked:border-emerald-500 peer-checked:bg-emerald-100",
+    propostes:
+        "border-violet-200 bg-violet-50 text-violet-900 peer-checked:border-violet-500 peer-checked:bg-violet-100",
+};
+---
+
+<div
+    data-millora-submission-flow
+    class="min-h-screen bg-stone-50"
+>
+    <div class="border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
+        <div
+            class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4"
+        >
+            <a
+                href={lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`}
+                class="text-sm font-black text-slate-600 transition hover:text-sky-800"
+            >
+                ← Millorem Pineda
+            </a>
+
+            <nav
+                aria-label={text.language}
+                class="inline-flex rounded-full border border-slate-200 bg-stone-50 p-1 text-sm"
+            >
+                <a
+                    href={routes.ca}
+                    aria-current={lang === "ca" ? "page" : undefined}
+                    class:list={[
+                        "rounded-full px-3.5 py-2 font-bold transition",
+                        lang === "ca"
+                            ? "bg-slate-950 text-white"
+                            : "text-slate-600 hover:text-slate-950",
+                    ]}
+                >
+                    CA
+                </a>
+
+                <a
+                    href={routes.es}
+                    aria-current={lang === "es" ? "page" : undefined}
+                    class:list={[
+                        "rounded-full px-3.5 py-2 font-bold transition",
+                        lang === "es"
+                            ? "bg-slate-950 text-white"
+                            : "text-slate-600 hover:text-slate-950",
+                    ]}
+                >
+                    ES
+                </a>
+
+                <a
+                    href={routes.en}
+                    aria-current={lang === "en" ? "page" : undefined}
+                    class:list={[
+                        "rounded-full px-3.5 py-2 font-bold transition",
+                        lang === "en"
+                            ? "bg-slate-950 text-white"
+                            : "text-slate-600 hover:text-slate-950",
+                    ]}
+                >
+                    EN
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ====================================================
+         PASO 1
+         ==================================================== -->
+
+    <section
+        id="millora-step-context"
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8 flex items-center justify-between gap-5">
+                <div>
+                    <p
+                        class="text-sm font-black uppercase tracking-[0.18em] text-sky-700"
+                    >
+                        {text.eyebrow}
+                    </p>
+
+                    <p class="mt-2 font-bold text-slate-500">
+                        {text.section1}
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-1.5" aria-hidden="true">
+                    <span class="h-2 w-10 rounded-full bg-sky-500"></span>
+                    <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                    <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                </div>
+            </div>
+
+            <div
+                class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]"
+            >
+                <div
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+                >
+                    <h1
+                        id="millora-context-heading"
+                        tabindex="-1"
+                        class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {text.step1Title}
+                    </h1>
+
+                    <p class="mt-3 max-w-2xl leading-7 text-slate-600">
+                        {text.step1Intro}
+                    </p>
+
+                    <fieldset class="mt-8">
+                        <legend class="font-black text-slate-950">
+                            {text.categoryLabel}
+                        </legend>
+
+                        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+                            {
+                                Object.entries(t.millores.categories).map(
+                                    ([value, label]) => (
+                                        <label class="cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="millora-category"
+                                                value={value}
+                                                data-label={label}
+                                                class="peer sr-only"
+                                            />
+
+                                            <span
+                                                class={`flex min-h-16 items-center rounded-2xl border px-4 py-3 text-sm font-black transition ${categoryClasses[value] ?? "border-slate-200 bg-stone-50 text-slate-800 peer-checked:border-sky-500 peer-checked:bg-sky-50"}`}
+                                            >
+                                                {label}
+                                            </span>
+                                        </label>
+                                    ),
+                                )
+                            }
+                        </div>
+                    </fieldset>
+
+                    <label class="mt-8 block" for="millora-zone">
+                        <span class="font-black text-slate-950">
+                            {text.zoneLabel}
+                        </span>
+
+                        <select
+                            id="millora-zone"
+                            class="mt-2 min-h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        >
+                            <option value="">
+                                {text.zonePlaceholder}
+                            </option>
+
+                            {
+                                Object.entries(t.millores.zones).map(
+                                    ([value, label]) => (
+                                        <option value={value}>{label}</option>
+                                    ),
+                                )
+                            }
+                        </select>
+                    </label>
+
+                    <fieldset class="mt-9 border-t border-slate-100 pt-8">
+                        <legend class="font-black text-slate-950">
+                            {text.authorTitle}
+                        </legend>
+
+                        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+                            <label class="cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="millora-author-type"
+                                    value="resident"
+                                    data-label={text.authorResident}
+                                    class="peer sr-only"
+                                />
+
+                                <span
+                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950"
+                                >
+                                    {text.authorResident}
+                                </span>
+                            </label>
+
+                            <label class="cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="millora-author-type"
+                                    value="visitor"
+                                    data-label={text.authorVisitor}
+                                    class="peer sr-only"
+                                />
+
+                                <span
+                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950"
+                                >
+                                    {text.authorVisitor}
+                                </span>
+                            </label>
+
+                            <label class="cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="millora-author-type"
+                                    value="alias"
+                                    data-label={text.authorAlias}
+                                    class="peer sr-only"
+                                />
+
+                                <span
+                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950"
+                                >
+                                    {text.authorAlias}
+                                </span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <label
+                        id="millora-alias-wrap"
+                        hidden
+                        class="mt-5 block rounded-2xl bg-sky-50 p-5"
+                        for="millora-alias"
+                    >
+                        <span class="font-black text-slate-950">
+                            {text.aliasLabel}
+                        </span>
+
+                        <input
+                            id="millora-alias"
+                            type="text"
+                            maxlength="100"
+                            placeholder={text.aliasPlaceholder}
+                            class="mt-2 w-full rounded-2xl border border-sky-200 bg-white px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        />
+
+                        <span class="mt-2 block text-sm leading-6 text-slate-600">
+                            {text.aliasHelp}
+                        </span>
+                    </label>
+
+                    <div
+                        class="mt-9 flex justify-end border-t border-slate-100 pt-6"
+                    >
+                        <button
+                            id="millora-context-continue"
+                            type="button"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                        >
+                            {text.continue}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside
+                    class="rounded-[2rem] bg-sky-950 p-6 text-white shadow-xl sm:p-7"
+                >
+                    <p
+                        class="text-xs font-black uppercase tracking-[0.18em] text-amber-300"
+                    >
+                        GUIAPINEDA
+                    </p>
+
+                    <h2 class="mt-3 text-2xl font-black">
+                        {text.publicTitle}
+                    </h2>
+
+                    <p class="mt-3 text-sm leading-6 text-sky-100">
+                        {text.publicText}
+                    </p>
+
+                    <div
+                        class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4"
+                    >
+                        <p class="text-sm font-bold leading-6 text-amber-200">
+                            {text.reviewNotice}
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         PASO 2
+         ==================================================== -->
+
+    <section
+        id="millora-step-content"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-8 flex items-center justify-between gap-5">
+                <div>
+                    <p
+                        class="text-sm font-black uppercase tracking-[0.18em] text-fuchsia-700"
+                    >
+                        {text.eyebrow}
+                    </p>
+
+                    <p class="mt-2 font-bold text-slate-500">
+                        {text.section2}
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-1.5" aria-hidden="true">
+                    <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                    <span class="h-2 w-10 rounded-full bg-fuchsia-500"></span>
+                    <span class="h-2 w-5 rounded-full bg-slate-200"></span>
+                </div>
+            </div>
+
+            <div
+                class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]"
+            >
+                <div
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+                >
+                    <h1
+                        id="millora-content-heading"
+                        tabindex="-1"
+                        class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+                    >
+                        {text.step2Title}
+                    </h1>
+
+                    <p class="mt-3 max-w-2xl leading-7 text-slate-600">
+                        {text.step2Intro}
+                    </p>
+
+                    <div
+                        class="mt-7 rounded-2xl border-l-4 border-amber-400 bg-amber-50 p-5"
+                    >
+                        <p class="font-black text-amber-950">
+                            {text.contentHelpTitle}
+                        </p>
+
+                        <p class="mt-1 text-sm leading-6 text-amber-900">
+                            {text.contentHelp}
+                        </p>
+                    </div>
+
+                    <div class="mt-8 space-y-7">
+                        <label class="block" for="millora-title">
+                            <span
+                                class="flex items-center justify-between gap-4 font-black text-slate-950"
+                            >
+                                <span>{text.titleLabel}</span>
+
+                                <span
+                                    id="millora-title-meta"
+                                    class="text-xs font-bold text-slate-400"
+                                >
+                                    <span id="millora-title-count">0</span>/120
+                                    · {text.minLabel} 8
+                                </span>
+                            </span>
+
+                            <input
+                                id="millora-title"
+                                type="text"
+                                minlength="8"
+                                maxlength="120"
+                                placeholder={text.titlePlaceholder}
+                                class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                            />
+                        </label>
+
+                        <label class="block" for="millora-summary">
+                            <span
+                                class="flex items-center justify-between gap-4 font-black text-slate-950"
+                            >
+                                <span>{text.summaryLabel}</span>
+
+                                <span
+                                    id="millora-summary-meta"
+                                    class="text-xs font-bold text-slate-400"
+                                >
+                                    <span id="millora-summary-count">0</span>/280
+                                    · {text.minLabel} 30
+                                </span>
+                            </span>
+
+                            <span class="mt-1 block text-sm text-slate-500">
+                                {text.summaryHelp}
+                            </span>
+
+                            <textarea
+                                id="millora-summary"
+                                minlength="30"
+                                maxlength="280"
+                                rows="4"
+                                placeholder={text.summaryPlaceholder}
+                                class="mt-2 w-full resize-y rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                            ></textarea>
+                        </label>
+
+                        <label class="block" for="millora-content">
+                            <span
+                                class="flex items-center justify-between gap-4 font-black text-slate-950"
+                            >
+                                <span>{text.contentLabel}</span>
+
+                                <span
+                                    id="millora-content-meta"
+                                    class="text-xs font-bold text-slate-400"
+                                >
+                                    <span id="millora-content-count">0</span>/6000
+                                    · {text.minLabel} 80
+                                </span>
+                            </span>
+
+                            <textarea
+                                id="millora-content"
+                                minlength="80"
+                                maxlength="6000"
+                                rows="12"
+                                placeholder={text.contentPlaceholder}
+                                class="mt-2 w-full resize-y rounded-2xl border border-slate-300 px-4 py-3.5 leading-7 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
+                            ></textarea>
+                        </label>
+
+                        <section class="border-t border-slate-100 pt-7">
+                            <h2 class="text-xl font-black text-slate-950">
+                                {text.imageTitle}
+                            </h2>
+
+                            <p class="mt-1 text-sm leading-6 text-slate-500">
+                                {text.imageHelp}
+                            </p>
+
+                            <div
+                                id="millora-image-empty"
+                                class="mt-4 flex min-h-44 flex-col items-center justify-center rounded-3xl border-2 border-dashed border-amber-200 bg-amber-50 p-6 text-center"
+                            >
+                                <div
+                                    aria-hidden="true"
+                                    class="flex size-12 items-center justify-center rounded-2xl bg-white text-2xl font-light shadow-sm"
+                                >
+                                    +
+                                </div>
+
+                                <label
+                                    for="millora-image-input"
+                                    class="mt-4 cursor-pointer rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-amber-700"
+                                >
+                                    {text.chooseImage}
+                                </label>
+                            </div>
+
+                            <div
+                                id="millora-image-selected"
+                                hidden
+                                class="mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-stone-50"
+                            >
+                                <img
+                                    id="millora-image-preview"
+                                    alt=""
+                                    class="aspect-[16/9] w-full object-cover"
+                                />
+
+                                <div class="flex flex-wrap gap-3 p-4">
+                                    <label
+                                        for="millora-image-input"
+                                        class="cursor-pointer rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700"
+                                    >
+                                        {text.changeImage}
+                                    </label>
+
+                                    <button
+                                        id="millora-image-remove"
+                                        type="button"
+                                        class="rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-bold text-rose-800"
+                                    >
+                                        {text.removeImage}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input
+                                id="millora-image-input"
+                                type="file"
+                                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                                class="sr-only"
+                            />
+                        </section>
+                    </div>
+
+                    <div
+                        class="mt-9 flex items-center justify-between gap-4 border-t border-slate-100 pt-6"
+                    >
+                        <button
+                            id="millora-content-back"
+                            type="button"
+                            class="rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+                        >
+                            ← {text.back}
+                        </button>
+
+                        <button
+                            id="millora-content-continue"
+                            type="button"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-fuchsia-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                        >
+                            {text.continue}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside
+                    class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-lg"
+                >
+                    <div class="border-b border-slate-100 px-5 py-4">
+                        <p class="text-sm font-black text-slate-950">
+                            {text.previewTitle}
+                        </p>
+                    </div>
+
+                    <div
+                        id="millora-live-image-wrap"
+                        hidden
+                        class="aspect-[16/9] overflow-hidden bg-slate-100"
+                    >
+                        <img
+                            id="millora-live-image"
+                            alt=""
+                            class="size-full object-cover"
+                        />
+                    </div>
+
+                    <div class="p-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                id="millora-live-category"
+                                class="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-800"
+                            ></span>
+
+                            <span
+                                id="millora-live-zone"
+                                class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600"
+                            ></span>
+                        </div>
+
+                        <p
+                            id="millora-live-author"
+                            class="mt-4 text-xs font-black uppercase tracking-[0.12em] text-sky-700"
+                        ></p>
+
+                        <h2
+                            id="millora-live-title"
+                            class="mt-2 text-2xl font-black leading-tight text-slate-950"
+                        >
+                            {text.previewEmptyTitle}
+                        </h2>
+
+                        <p
+                            id="millora-live-summary"
+                            class="mt-3 text-sm leading-6 text-slate-600"
+                        >
+                            {text.previewEmptySummary}
+                        </p>
+
+                        <p class="mt-5 text-xs font-bold text-slate-400">
+                            <span id="millora-live-reading">1</span>
+                            {" "}
+                            {text.readingSuffix}
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         PASO 3
+         ==================================================== -->
+
+    <section
+        id="millora-step-review"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-5xl">
+            <div class="mb-8 flex items-center justify-between gap-5">
+                <div>
+                    <p
+                        class="text-sm font-black uppercase tracking-[0.18em] text-emerald-700"
+                    >
+                        {text.eyebrow}
+                    </p>
+
+                    <p class="mt-2 font-bold text-slate-500">
+                        {text.section3}
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-1.5" aria-hidden="true">
+                    <span class="h-2 w-5 rounded-full bg-sky-500"></span>
+                    <span class="h-2 w-5 rounded-full bg-fuchsia-500"></span>
+                    <span class="h-2 w-10 rounded-full bg-emerald-500"></span>
+                </div>
+            </div>
+
+            <div
+                class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white text-slate-950 shadow-sm"
+            >
+                <div
+                    id="millora-review-image-wrap"
+                    hidden
+                    class="aspect-[16/7] overflow-hidden bg-slate-800"
+                >
+                    <img
+                        id="millora-review-image"
+                        alt=""
+                        class="size-full object-cover"
+                    />
+                </div>
+
+                <div class="p-6 sm:p-10">
+                    <p
+                        class="text-xs font-black uppercase tracking-[0.16em] text-emerald-700"
+                    >
+                        {text.publicLabel}
+                    </p>
+
+                    <div
+                        class="mt-5 flex flex-wrap items-start justify-between gap-4"
+                    >
+                        <div>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    id="millora-review-category"
+                                    class="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-800"
+                                ></span>
+
+                                <span
+                                    id="millora-review-zone"
+                                    class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600"
+                                ></span>
+                            </div>
+
+                            <p
+                                id="millora-review-author"
+                                class="mt-3 font-black text-sky-800"
+                            ></p>
+                        </div>
+
+                        <button
+                            type="button"
+                            data-millora-edit="context"
+                            class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                        >
+                            {text.editContext}
+                        </button>
+                    </div>
+
+                    <div class="mt-8 border-t border-slate-200 pt-8">
+                        <div
+                            class="flex flex-wrap items-start justify-between gap-4"
+                        >
+                            <div class="max-w-3xl">
+                                <h1
+                                    id="millora-review-heading"
+                                    tabindex="-1"
+                                    class="text-3xl font-black leading-tight tracking-tight sm:text-4xl"
+                                >
+                                    {text.step3Title}
+                                </h1>
+
+                                <p class="mt-2 text-slate-500">
+                                    {text.step3Intro}
+                                </p>
+
+                                <h2
+                                    id="millora-review-title"
+                                    class="mt-8 text-3xl font-black leading-tight tracking-tight"
+                                ></h2>
+
+                                <p
+                                    id="millora-review-summary"
+                                    class="mt-4 text-lg leading-8 text-slate-600"
+                                ></p>
+                            </div>
+
+                            <button
+                                type="button"
+                                data-millora-edit="content"
+                                class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                            >
+                                {text.editContent}
+                            </button>
+                        </div>
+
+                        <div
+                            id="millora-review-content"
+                            class="mt-8 whitespace-pre-line border-t border-slate-200 pt-7 leading-8 text-slate-700"
+                        ></div>
+
+                        <p class="mt-6 text-sm font-bold text-slate-500">
+                            <span id="millora-review-reading">1</span>
+                            {" "}
+                            {text.readingSuffix}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <section
+                class="mt-8 overflow-hidden rounded-[2rem] border border-amber-300 bg-white shadow-md"
+            >
+                <div
+                    class="border-b border-amber-200 bg-gradient-to-r from-amber-100 via-orange-50 to-amber-50 px-6 py-5 sm:px-8 sm:py-6"
+                >
+                    <div class="flex items-start gap-4">
+                        <div
+                            aria-hidden="true"
+                            class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-xl font-black text-white shadow-sm"
+                        >
+                            !
+                        </div>
+
+                        <div>
+                            <h2 class="text-2xl font-black tracking-tight text-amber-950 sm:text-3xl">
+                                {text.rulesTitle}
+                            </h2>
+
+                            <p class="mt-1.5 max-w-3xl text-base font-semibold leading-7 text-amber-900 sm:text-lg">
+                                {text.rulesIntro}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 py-5 sm:px-8 sm:py-6">
+                    <ul class="grid gap-2.5">
+                        {
+                            text.rules.map((rule, index) => (
+                                <li
+                                    class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3.5 sm:px-5 sm:py-4"
+                                >
+                                    <span
+                                        aria-hidden="true"
+                                        class="flex size-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-xs font-black text-white"
+                                    >
+                                        {String(index + 1).padStart(2, "0")}
+                                    </span>
+
+                                    <span class="text-base font-semibold leading-6 text-slate-800">
+                                        {rule}
+                                    </span>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+
+                <div
+                    class="border-t border-slate-200 bg-slate-950 px-6 py-5 sm:px-8"
+                >
+                    <div
+                        class="flex flex-wrap items-center justify-between gap-4"
+                    >
+                        <button
+                            id="millora-review-back"
+                            type="button"
+                            class="rounded-full border border-white/20 bg-white px-6 py-3 font-bold text-slate-800 transition hover:border-amber-300 hover:bg-amber-50 hover:text-slate-950"
+                        >
+                            ← {text.back}
+                        </button>
+
+                        <button
+                            id="millora-review-send"
+                            type="button"
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-8 py-3 font-bold text-slate-950 transition hover:bg-amber-300"
+                        >
+                            {text.send}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+
+                    <div
+                        id="millora-prototype-note"
+                        hidden
+                        class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-relaxed text-emerald-950"
+                    >
+                        {text.prototype}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+</div>
+
+<script>
+    import { initMilloraSubmissionFlow } from "../lib/milloraSubmissionFlow";
+
+    initMilloraSubmissionFlow();
+</script>
