@@ -15,57 +15,355 @@ if (!millora) {
         "No se recibió la mejora necesaria para generar la página.",
     );
 }
+
+const copy = {
+    ca: {
+        back: "Tornar a Millorem Pineda",
+        contribution: "Aportació ciutadana",
+        publishedBy: "Publicat per",
+        finalTitle: "Més idees per millorar Pineda",
+        finalText:
+            "Consulta altres incidències, qüestions de civisme i propostes compartides per la comunitat.",
+        finalButton: "Veure totes les aportacions",
+    },
+    es: {
+        back: "Volver a Mejoremos Pineda",
+        contribution: "Aportación ciudadana",
+        publishedBy: "Publicado por",
+        finalTitle: "Más ideas para mejorar Pineda",
+        finalText:
+            "Consulta otras incidencias, cuestiones de civismo y propuestas compartidas por la comunidad.",
+        finalButton: "Ver todas las aportaciones",
+    },
+    en: {
+        back: "Back to Improving Pineda",
+        contribution: "Community contribution",
+        publishedBy: "Published by",
+        finalTitle: "More ideas to improve Pineda",
+        finalText:
+            "Explore other issues, civic concerns and proposals shared by the community.",
+        finalButton: "View all contributions",
+    },
+} as const;
+
+const text = copy[lang as "ca" | "es" | "en"];
+
+const basePath =
+    lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
+
+const categoryLabel =
+    t.millores.categories[
+        millora.categoria as keyof typeof t.millores.categories
+    ] ?? millora.categoria;
+
+const zoneLabel =
+    t.millores.zones[
+        millora.zona as keyof typeof t.millores.zones
+    ] ?? millora.zona;
+
+const categoryTheme: Record<
+    string,
+    {
+        bar: string;
+        soft: string;
+        text: string;
+        border: string;
+    }
+> = {
+    incidencies: {
+        bar: "bg-amber-500",
+        soft: "bg-amber-50",
+        text: "text-amber-900",
+        border: "border-amber-200",
+    },
+    civisme: {
+        bar: "bg-emerald-500",
+        soft: "bg-emerald-50",
+        text: "text-emerald-900",
+        border: "border-emerald-200",
+    },
+    propostes: {
+        bar: "bg-violet-500",
+        soft: "bg-violet-50",
+        text: "text-violet-900",
+        border: "border-violet-200",
+    },
+};
+
+const theme =
+    categoryTheme[millora.categoria] ?? {
+        bar: "bg-sky-500",
+        soft: "bg-sky-50",
+        text: "text-sky-900",
+        border: "border-sky-200",
+    };
+
+const readingTime = getReadingTime(millora.contingut);
 ---
 
-<Layout lang={lang} title={`${millora.titol} | GUIAPINEDA`}>
-    <main>
+<Layout
+    lang={lang}
+    title={`${millora.titol} | GUIAPINEDA`}
+    description={millora.resum}
+>
+    <main class="bg-stone-50">
+        <!-- Navegación contextual -->
+        <div
+            class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-5 py-3 backdrop-blur sm:px-8"
+        >
+            <div class="mx-auto max-w-6xl">
+                <a
+                    href={basePath}
+                    class="inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-sky-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                >
+                    <span aria-hidden="true">←</span>
+                    {text.back}
+                </a>
+            </div>
+        </div>
+
+        <!-- Cabecera editorial -->
         <article>
-            <h1>{millora.titol}</h1>
+            <header class="bg-white px-5 pb-10 pt-10 sm:px-8 sm:pb-12 sm:pt-14">
+                <div class="mx-auto max-w-6xl">
+                    <div
+                        class="grid gap-8 lg:grid-cols-[0.15rem_minmax(0,1fr)_18rem] lg:gap-10"
+                    >
+                        <div
+                            aria-hidden="true"
+                            class={`hidden rounded-full lg:block ${theme.bar}`}
+                        ></div>
 
-            <p>
-                {millora.autor} —{" "}
-                {
-                    formatDate(
-                        millora.data_publicacio,
-                        lang as "ca" | "es" | "en",
-                    )
-                }
-            </p>
+                        <div class="min-w-0">
+                            <p
+                                class="text-xs font-black uppercase tracking-[0.2em] text-slate-500"
+                            >
+                                {text.contribution}
+                            </p>
 
-            <p>
-                {getReadingTime(millora.contingut)}{" "}
-                {t.millores.readingSuffix}
-            </p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span
+                                    class={`rounded-full border px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] ${theme.soft} ${theme.text} ${theme.border}`}
+                                >
+                                    {categoryLabel}
+                                </span>
 
+                                <span
+                                    class="rounded-full border border-slate-200 bg-stone-50 px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-slate-600"
+                                >
+                                    {zoneLabel}
+                                </span>
+                            </div>
+
+                            <h1
+                                class="mt-6 max-w-4xl text-4xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl"
+                            >
+                                {millora.titol}
+                            </h1>
+
+                            {
+                                millora.resum && (
+                                    <p class="mt-6 max-w-3xl text-xl font-semibold leading-8 text-slate-600 sm:text-2xl sm:leading-9">
+                                        {millora.resum}
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <aside
+                            class={`self-end rounded-[1.6rem] border p-5 ${theme.soft} ${theme.border}`}
+                        >
+                            <p
+                                class={`text-xs font-black uppercase tracking-[0.14em] ${theme.text}`}
+                            >
+                                {text.publishedBy}
+                            </p>
+
+                            <p class="mt-2 text-lg font-black text-slate-950">
+                                {millora.autor}
+                            </p>
+
+                            <div
+                                class="mt-4 border-t border-slate-900/10 pt-4 text-sm font-semibold leading-6 text-slate-600"
+                            >
+                                <p>
+                                    {
+                                        formatDate(
+                                            millora.data_publicacio,
+                                            lang as "ca" | "es" | "en",
+                                        )
+                                    }
+                                </p>
+
+                                <p>
+                                    {readingTime} {t.millores.readingSuffix}
+                                </p>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Acento de categoría -->
+            <div
+                aria-hidden="true"
+                class={`h-2 w-full ${theme.bar}`}
+            ></div>
+
+            <!-- Imagen -->
             {
                 millora.imatge?.url && (
-                    <img
-                        src={getStrapiMediaUrl(millora.imatge.url)}
-                        alt={millora.titol}
-                        width="800"
-                    />
+                    <section class="bg-white px-5 pt-10 sm:px-8 sm:pt-12">
+                        <div class="mx-auto max-w-5xl">
+                            <div
+                                class={`overflow-hidden rounded-[2rem] border bg-slate-100 shadow-sm ${theme.border}`}
+                            >
+                                <img
+                                    src={getStrapiMediaUrl(
+                                        millora.imatge.url,
+                                    )}
+                                    alt={millora.titol}
+                                    width="1400"
+                                    height="788"
+                                    class="aspect-[16/9] w-full object-cover"
+                                />
+                            </div>
+                        </div>
+                    </section>
                 )
             }
 
-            <p>
-                <strong>{t.millores.categoryLabel}:</strong>{" "}
-                {
-                    t.millores.categories[
-                        millora.categoria as keyof typeof t.millores.categories
-                    ]
-                }
-            </p>
-
-            <p>
-                <strong>{t.millores.zoneLabel}:</strong>{" "}
-                {
-                    t.millores.zones[
-                        millora.zona as keyof typeof t.millores.zones
-                    ]
-                }
-            </p>
-
-            <StrapiBlocks blocks={millora.contingut} />
+            <!-- Contenido -->
+            <section class="bg-white px-5 py-10 sm:px-8 sm:py-14">
+                <div class="mx-auto max-w-3xl">
+                    <div class="millora-body">
+                        <StrapiBlocks blocks={millora.contingut} />
+                    </div>
+                </div>
+            </section>
         </article>
+
+        <!-- Cierre -->
+        <section
+            class="border-t border-slate-200 bg-stone-100 px-5 py-10 sm:px-8 sm:py-12"
+        >
+            <div class="mx-auto max-w-5xl">
+                <div
+                    class={`overflow-hidden rounded-[2rem] border bg-white shadow-sm ${theme.border}`}
+                >
+                    <div class={`h-2 ${theme.bar}`}></div>
+
+                    <div
+                        class="flex flex-col gap-6 p-6 sm:p-8 md:flex-row md:items-center md:justify-between"
+                    >
+                        <div class="max-w-2xl">
+                            <h2
+                                class="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl"
+                            >
+                                {text.finalTitle}
+                            </h2>
+
+                            <p class="mt-2 leading-7 text-slate-600">
+                                {text.finalText}
+                            </p>
+                        </div>
+
+                        <a
+                            href={basePath}
+                            class="inline-flex min-h-12 shrink-0 items-center justify-center self-start rounded-full bg-slate-950 px-6 py-3 font-black text-white transition hover:bg-sky-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 md:self-auto"
+                        >
+                            {text.finalButton}
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 </Layout>
+
+<style is:global>
+    .millora-body {
+        color: rgb(51 65 85);
+        font-size: 1.075rem;
+        line-height: 1.9;
+    }
+
+    .millora-body > :first-child {
+        margin-top: 0;
+    }
+
+    .millora-body > :last-child {
+        margin-bottom: 0;
+    }
+
+    .millora-body p {
+        margin-block: 1.35rem;
+    }
+
+    .millora-body h2 {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        color: rgb(15 23 42);
+        font-size: 1.8rem;
+        font-weight: 900;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+    }
+
+    .millora-body h3 {
+        margin-top: 2.4rem;
+        margin-bottom: 0.8rem;
+        color: rgb(15 23 42);
+        font-size: 1.35rem;
+        font-weight: 900;
+        line-height: 1.3;
+    }
+
+    .millora-body ul,
+    .millora-body ol {
+        margin-block: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .millora-body ul {
+        list-style: disc;
+    }
+
+    .millora-body ol {
+        list-style: decimal;
+    }
+
+    .millora-body li {
+        margin-block: 0.55rem;
+        padding-left: 0.3rem;
+    }
+
+    .millora-body strong {
+        color: rgb(15 23 42);
+        font-weight: 800;
+    }
+
+    .millora-body a {
+        color: rgb(3 105 161);
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 0.18em;
+    }
+
+    .millora-body blockquote {
+        margin-block: 2rem;
+        border-left: 4px solid rgb(14 165 233);
+        background: rgb(240 249 255);
+        padding: 1.25rem 1.5rem;
+        color: rgb(51 65 85);
+        font-weight: 600;
+    }
+
+    @media (min-width: 640px) {
+        .millora-body {
+            font-size: 1.125rem;
+        }
+    }
+</style>
