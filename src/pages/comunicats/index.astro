@@ -42,35 +42,39 @@ const basePath =
     description={t.comunicats.introText}
 >
     <div class="bg-stone-50">
-        <!-- Hero breve: solo sitúa la sección -->
-        <section class="px-5 pb-8 pt-9 sm:px-8 sm:pb-10 sm:pt-11">
+        <!-- Hero editorial de sección -->
+        <section
+            class="relative overflow-hidden bg-violet-950 px-5 py-14 sm:px-8 sm:py-16 lg:py-20"
+        >
             <div class="mx-auto max-w-6xl">
                 <div
-                    class="grid gap-4 lg:grid-cols-[minmax(0,0.75fr)_minmax(20rem,0.8fr)] lg:items-end lg:gap-12"
+                    class="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.75fr)] lg:items-end lg:gap-16"
                 >
                     <div>
                         <p
-                            class="text-xs font-black uppercase tracking-[0.2em] text-sky-700"
+                            class="text-xs font-black uppercase tracking-[0.22em] text-fuchsia-300"
                         >
                             {t.comunicats.eyebrow}
                         </p>
 
                         <h1
-                            class="mt-3 text-4xl font-black leading-none tracking-tight text-slate-950 sm:text-5xl"
+                            class="mt-4 max-w-4xl text-5xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl"
                         >
                             {t.comunicats.title}
                         </h1>
                     </div>
 
-                    <div>
+                    <div
+                        class="border-l-4 border-fuchsia-400 pl-5 sm:pl-6"
+                    >
                         <h2
-                            class="text-xl font-black leading-tight text-slate-800"
+                            class="text-2xl font-black leading-tight text-white sm:text-3xl"
                         >
                             {t.comunicats.introTitle}
                         </h2>
 
                         <p
-                            class="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base"
+                            class="mt-4 max-w-2xl text-base leading-7 text-violet-100 sm:text-lg"
                         >
                             {t.comunicats.introText}
                         </p>
@@ -78,6 +82,18 @@ const basePath =
                 </div>
             </div>
         </section>
+
+        <div
+            aria-hidden="true"
+            class="grid h-2 grid-cols-6"
+        >
+            <span class="bg-sky-500"></span>
+            <span class="bg-fuchsia-500"></span>
+            <span class="bg-amber-400"></span>
+            <span class="bg-emerald-500"></span>
+            <span class="bg-violet-500"></span>
+            <span class="bg-cyan-500"></span>
+        </div>
 
         <!-- Los comunicados son el contenido principal -->
         <section
