@@ -377,7 +377,7 @@ const categoryClasses: Record<string, string> = {
                                             />
 
                                             <span
-                                                class={`flex min-h-16 items-center rounded-2xl border px-4 py-3 text-sm font-black transition ${categoryClasses[value] ?? "border-slate-200 bg-stone-50 text-slate-800 peer-checked:border-sky-500 peer-checked:bg-sky-50"}`}
+                                                class={`flex min-h-16 items-center rounded-2xl border px-4 py-3 text-sm font-black transition peer-focus-visible:ring-4 peer-focus-visible:ring-sky-200 ${categoryClasses[value] ?? "border-slate-200 bg-stone-50 text-slate-800 peer-checked:border-sky-500 peer-checked:bg-sky-50"}`}
                                             >
                                                 {label}
                                             </span>
@@ -427,7 +427,7 @@ const categoryClasses: Record<string, string> = {
                                 />
 
                                 <span
-                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950"
+                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950 peer-focus-visible:ring-4 peer-focus-visible:ring-sky-200"
                                 >
                                     {text.authorResident}
                                 </span>
@@ -443,7 +443,7 @@ const categoryClasses: Record<string, string> = {
                                 />
 
                                 <span
-                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950"
+                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950 peer-focus-visible:ring-4 peer-focus-visible:ring-sky-200"
                                 >
                                     {text.authorVisitor}
                                 </span>
@@ -459,7 +459,7 @@ const categoryClasses: Record<string, string> = {
                                 />
 
                                 <span
-                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950"
+                                    class="flex min-h-16 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 text-sm font-bold text-slate-700 transition peer-checked:border-sky-500 peer-checked:bg-sky-100 peer-checked:text-sky-950 peer-focus-visible:ring-4 peer-focus-visible:ring-sky-200"
                                 >
                                     {text.authorAlias}
                                 </span>
@@ -497,7 +497,7 @@ const categoryClasses: Record<string, string> = {
                             id="millora-context-continue"
                             type="button"
                             disabled
-                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                         >
                             {text.continue}
                             <span aria-hidden="true" class="ml-3">→</span>
@@ -683,9 +683,16 @@ const categoryClasses: Record<string, string> = {
                                 {text.imageHelp}
                             </p>
 
+                            <input
+                                id="millora-image-input"
+                                type="file"
+                                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                                class="peer sr-only"
+                            />
+
                             <div
                                 id="millora-image-empty"
-                                class="mt-4 flex min-h-44 flex-col items-center justify-center rounded-3xl border-2 border-dashed border-amber-200 bg-amber-50 p-6 text-center"
+                                class="mt-4 flex min-h-44 flex-col items-center justify-center rounded-3xl border-2 border-dashed border-amber-200 bg-amber-50 p-6 text-center transition peer-focus-visible:ring-4 peer-focus-visible:ring-amber-300 peer-focus-visible:ring-offset-2"
                             >
                                 <div
                                     aria-hidden="true"
@@ -705,7 +712,7 @@ const categoryClasses: Record<string, string> = {
                             <div
                                 id="millora-image-selected"
                                 hidden
-                                class="mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-stone-50"
+                                class="mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-stone-50 transition peer-focus-visible:ring-4 peer-focus-visible:ring-amber-300 peer-focus-visible:ring-offset-2"
                             >
                                 <img
                                     id="millora-image-preview"
@@ -731,12 +738,7 @@ const categoryClasses: Record<string, string> = {
                                 </div>
                             </div>
 
-                            <input
-                                id="millora-image-input"
-                                type="file"
-                                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                                class="sr-only"
-                            />
+
                         </section>
                     </div>
 
@@ -755,7 +757,7 @@ const categoryClasses: Record<string, string> = {
                             id="millora-content-continue"
                             type="button"
                             disabled
-                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-fuchsia-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-fuchsia-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-fuchsia-200 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                         >
                             {text.continue}
                             <span aria-hidden="true" class="ml-3">→</span>
@@ -1027,7 +1029,7 @@ const categoryClasses: Record<string, string> = {
                         <button
                             id="millora-review-send"
                             type="button"
-                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-8 py-3 font-bold text-slate-950 transition hover:bg-amber-300"
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-8 py-3 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-300"
                         >
                             {text.send}
                             <span aria-hidden="true" class="ml-3">→</span>
@@ -1036,6 +1038,9 @@ const categoryClasses: Record<string, string> = {
 
                     <div
                         id="millora-prototype-note"
+                        role="status"
+                        aria-live="polite"
+                        aria-atomic="true"
                         hidden
                         class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-relaxed text-emerald-950"
                     >
