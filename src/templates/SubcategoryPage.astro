@@ -1,5 +1,4 @@
 ---
-import Breadcrumbs from "../components/Breadcrumbs.astro";
 import chevronDownIcon from "../assets/icons/chevron-down.svg";
 import ComercioCard from "../components/ComercioCard.astro";
 import { getTranslations } from "../i18n/getTranslations";
@@ -26,6 +25,13 @@ type Subcategoria = {
 const { slug, categoriaSlug, lang = "ca" } = Astro.props;
 
 const t = getTranslations(lang);
+
+const businessSignupHref =
+    lang === "ca"
+        ? "/alta-comerc/"
+        : lang === "es"
+          ? "/es/alta-comercio/"
+          : null;
 const itemsPerPage = 24;
 
 const data = await fetchAPI(endpoints.comercios);
@@ -79,10 +85,6 @@ const description =
           ? `Find ${subcategoryName} in Pineda de Mar in the GUIAPINEDA guide.`
           : `Troba ${subcategoryName} a Pineda de Mar dins de la guia GUIAPINEDA.`;
 
-const subcategoryIntro = t.pages.subcategoryIntro
-    .replace("{subcategory}", subcategoryName)
-    .replace("{category}", categoryName);
-
 const resultCount =
     comercios.length === 1
         ? t.comercios.resultSingular.replace(
@@ -100,98 +102,100 @@ const resultCount =
     description={description}
     lang={lang}
 >
-    <header class="border-b border-stone-200 bg-stone-100">
-        <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-            <Breadcrumbs
-                label={t.common.breadcrumbLabel}
-                back={{
-                    label: t.pages.backToCategory.replace(
-                        "{category}",
-                        categoryName,
-                    ),
-                    href: categoryPath,
-                }}
-                items={[
-                    {
-                        label: t.common.home,
-                        href: homeUrl,
-                    },
-                    {
-                        label: categoryName,
-                        href: categoryPath,
-                    },
-                    {
-                        label: subcategoryName,
-                    },
-                ]}
-            />
-
-            <div class="mt-7 max-w-3xl">
-                <h1
-                    class="text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl"
-                >
-                    {subcategoryName}
-                </h1>
-
-                <p class="mt-4 text-lg leading-8 text-slate-600">
-                    {subcategoryIntro}
-                </p>
-            </div>
-        </div>
-    </header>
-
-    <div
-        class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
-    >
-        {
-            comercios.length > 0 ? (
-                <section aria-labelledby="comercios-results-title">
-                    <div class="flex flex-col gap-6 border-b border-slate-200 pb-7 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                            <h2
-                                id="comercios-results-title"
-                                tabindex="-1"
-                                class="scroll-mt-28 text-3xl font-black tracking-tight text-slate-950 outline-none"
-                            >
-                                {t.comercios.resultsHeading}
-                            </h2>
-
-                            <p class="mt-2 text-sm font-medium text-slate-600">
-                                {resultCount}
-                            </p>
-                        </div>
-
-                        <form
-                            id="comercios-controls"
-                            method="get"
-                            action={basePath}
-                            class="flex flex-col gap-3 sm:flex-row sm:items-end"
+    <!-- Breadcrumbs de subcategoría -->
+    <div class="bg-blue-950">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav
+                aria-label={t.common.breadcrumbLabel}
+                class="overflow-x-auto py-1.5 sm:py-2"
+            >
+                <ol class="flex min-w-max items-center text-sm font-bold">
+                    <li>
+                        <a
+                            href={homeUrl}
+                            class="inline-flex min-h-8 items-center text-white outline-none transition hover:text-sky-200 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                         >
-                            <label
-                                for="comercios-order"
-                                class="text-sm font-semibold text-slate-700"
-                            >
-                                <span class="mb-2 block">
-                                    {t.comercios.sortLabel}
-                                </span>
+                            {t.common.home}
+                        </a>
+                    </li>
 
-                                <div class="relative">
+                    <li aria-hidden="true" class="mx-2 text-slate-500">
+                        ›
+                    </li>
+
+                    <li>
+                        <a
+                            href={categoryPath}
+                            class="inline-flex min-h-8 items-center text-emerald-400 outline-none transition hover:text-emerald-300 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
+                        >
+                            {categoryName}
+                        </a>
+                    </li>
+
+                    <li aria-hidden="true" class="mx-2 text-slate-500">
+                        ›
+                    </li>
+
+                    <li>
+                        <span
+                            aria-current="page"
+                            class="text-amber-300"
+                        >
+                            {subcategoryName}
+                        </span>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+
+
+    <!-- Resultados y ordenación -->
+    <div class="bg-blue-900">
+        <div
+            class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8"
+        >
+            <p class="text-base font-black text-white">
+                {resultCount}
+            </p>
+
+            {
+                comercios.length > 0 && (
+                    <form
+                        id="comercios-controls"
+                        method="get"
+                        action={basePath}
+                        class="w-full sm:w-auto"
+                    >
+                        <label
+                            for="comercios-order"
+                            class="flex flex-col gap-2 text-sm font-semibold text-blue-100 sm:flex-row sm:items-center sm:gap-3"
+                        >
+                            <span>
+                                {t.comercios.sortLabel}
+                            </span>
+
+                            <div class="relative">
                                 <select
                                     name="orden"
                                     id="comercios-order"
-                                    class="min-h-12 min-w-52 rounded-xl border border-slate-300 bg-white pl-4 pr-12 text-sm text-slate-900 outline-none focus-visible:border-cyan-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 appearance-none"
-
-                                onchange="this.form.requestSubmit()">
+                                    class="min-h-12 w-full min-w-52 appearance-none rounded-xl border border-blue-200 bg-white pl-4 pr-12 text-sm font-semibold text-slate-900 outline-none focus-visible:border-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 sm:w-auto"
+                                    onchange="this.form.requestSubmit()"
+                                >
                                     <option value="recientes">
                                         {t.comercios.sortNewest}
                                     </option>
+
                                     <option value="az">
                                         {t.comercios.sortAZ}
                                     </option>
+
                                     <option value="za">
                                         {t.comercios.sortZA}
                                     </option>
                                 </select>
+
                                 <img
                                     src={chevronDownIcon.src}
                                     alt=""
@@ -199,15 +203,47 @@ const resultCount =
                                     class="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2"
                                 />
                             </div>
-                            </label>
+                        </label>
+                    </form>
+                )
+            }
+        </div>
+    </div>
+
+    <!-- Referencia de subcategoría -->
+    <section class="border-b border-amber-200 bg-amber-300/20">
+        <div
+            class="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-8 lg:px-8"
+        >
+            <h1
+                class="text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl"
+            >
+                {subcategoryName}
+            </h1>
+        </div>
+    </section>
 
 
-                        </form>
-                    </div>
+
+    <div
+        class="mx-auto max-w-7xl px-4 pb-12 pt-14 sm:px-6 sm:pb-16 sm:pt-16 lg:px-8"
+    >
+        {
+            comercios.length > 0 ? (
+                <section aria-labelledby="comercios-results-title">
+                    <h2
+                        id="comercios-results-title"
+                        tabindex="-1"
+                        class="sr-only scroll-mt-28 outline-none"
+                    >
+                        {t.comercios.resultsHeading}
+                    </h2>
+
+
 
                     <ul
                         id="comercios-list"
-                        class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+                        class="mt-0 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
                     >
                         {comercios.map((comercio: Comercio) => (
                             <ComercioCard
@@ -552,15 +588,17 @@ const resultCount =
                         {t.comercios.emptyText}
                     </p>
 
-                    <p class="mt-5 text-sm text-slate-600">
-                        {t.comercios.contactText}{" "}
-                        <a
-                            href="mailto:info@guiapineda.com"
-                            class="font-semibold text-cyan-700 underline underline-offset-4 outline-none hover:text-cyan-800 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-                        >
-                            info@guiapineda.com
-                        </a>
-                    </p>
+                    {
+                        businessSignupHref && (
+                            <a
+                                href={businessSignupHref}
+                                class="mt-6 inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-cyan-400 px-6 py-4 text-sm font-black text-slate-950 shadow-lg transition hover:bg-cyan-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300 sm:text-base"
+                            >
+                                {t.home.businessCtaButton}
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        )
+                    }
                 </section>
             )
         }

@@ -61,7 +61,7 @@
     "comercios": {
         "missingInfo": "GUIAPINEDA creix amb la participació dels comerços locals. Si no trobes un negoci, pot ser que encara no ens hagi enviat la seva informació.",
         "emptyTitle": "Sigues el primer",
-        "emptyText": "Encara no hi ha negocis publicats en aquesta secció. Si tens un comerç o servei i vols aparèixer a GUIAPINEDA, envia’ns la teva informació.",
+        "emptyText": "Encara no hi ha negocis publicats en aquesta secció. Si tens un comerç o servei, pots donar-lo d’alta a GUIAPINEDA des del formulari.",
         "contactText": "Contacta amb nosaltres a:",
         "sortLabel": "Ordenar per",
         "sortNewest": "Més recents",

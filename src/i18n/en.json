@@ -61,7 +61,7 @@
     "comercios": {
         "missingInfo": "GUIAPINEDA grows with the participation of local businesses. If you cannot find a business, it may simply not have sent us its information yet.",
         "emptyTitle": "Be the first",
-        "emptyText": "There are no businesses published in this section yet. If you own a business or service and want to appear on GUIAPINEDA, send us your information.",
+        "emptyText": "There are no businesses published in this section yet.",
         "contactText": "Contact us at:",
         "sortLabel": "Sort by",
         "sortNewest": "Newest",

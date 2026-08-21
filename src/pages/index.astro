@@ -6,6 +6,7 @@ import { getTranslations } from "../i18n/getTranslations";
 import Layout from "../layouts/Layout.astro";
 import { endpoints, fetchAPI } from "../lib/api";
 import { getLocalizedName } from "../lib/getLocalizedName";
+import { getCategoryColor } from "../lib/categoryColors";
 import { getStrapiMediaUrl } from "../lib/strapi";
 
 type Categoria = {
@@ -114,80 +115,6 @@ const categoryStyles = [
     },
 ];
 
-/* Colores base de las tarjetas de categorías */
-const categoryCardColors: Record<
-    string,
-    { background: string; foreground: string }
-> = {
-    alimentacio: {
-        background: "#F78A11",
-        foreground: "#0f172a",
-    },
-    allotjament: {
-        background: "#73AF4A",
-        foreground: "#0f172a",
-    },
-    bellesa: {
-        background: "#0DB9D6",
-        foreground: "#0f172a",
-    },
-    comercos: {
-        background: "#A062D1",
-        foreground: "#ffffff",
-    },
-    "comunitat-i-associacions": {
-        background: "#E35F8E",
-        foreground: "#0f172a",
-    },
-    construccio: {
-        background: "#F4AC0E",
-        foreground: "#0f172a",
-    },
-    educacio: {
-        background: "#1B7DD7",
-        foreground: "#ffffff",
-    },
-    "finances-legal": {
-        background: "#18BAA5",
-        foreground: "#0f172a",
-    },
-    moda: {
-        background: "#ED5D70",
-        foreground: "#0f172a",
-    },
-    oci: {
-        background: "#544EC5",
-        foreground: "#ffffff",
-    },
-    "partits-politics": {
-        background: "#5957D3",
-        foreground: "#ffffff",
-    },
-    "punts-de-interes": {
-        background: "#FC611E",
-        foreground: "#0f172a",
-    },
-    restauracio: {
-        background: "#DF4234",
-        foreground: "#ffffff",
-    },
-    "salut-i-benestar": {
-        background: "#67AE62",
-        foreground: "#0f172a",
-    },
-    "serveis-professionals": {
-        background: "#1B7DD7",
-        foreground: "#ffffff",
-    },
-    transport: {
-        background: "#0E6FBE",
-        foreground: "#ffffff",
-    },
-    vehicles: {
-        background: "#0BACC1",
-        foreground: "#0f172a",
-    },
-};
 ---
 
 <Layout
@@ -321,10 +248,7 @@ const categoryCardColors: Record<
                                 ];
 
                             const cardColor =
-                                categoryCardColors[categoria.slug] ?? {
-                                    background: "#ffffff",
-                                    foreground: "#0f172a",
-                                };
+                                getCategoryColor(categoria.slug);
 
                             const categoryName = getLocalizedName(
                                 categoria,
