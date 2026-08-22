@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import CommunicatCard from "../../components/CommunicatCard.astro";
+import SubmissionCta from "../../components/SubmissionCta.astro";
 import { fetchAPI, endpoints } from "../../lib/api";
 import { getTranslations } from "../../i18n/getTranslations";
 import { filterVisibleComunicats } from "../../lib/comunicats";
@@ -208,35 +209,14 @@ const basePath =
 
                 {
                     submitUrl && (
-                        <aside
-                            class="mt-10 border-t border-slate-200 pt-7"
-                        >
-                            <div
-                                class="flex flex-col gap-3 rounded-2xl bg-sky-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"
-                            >
-                                <div>
-                                    <p class="font-black text-slate-950">
-                                        {t.comunicats.ctaTitle}
-                                    </p>
-
-                                    <p
-                                        class="mt-1 max-w-2xl text-sm leading-6 text-slate-600"
-                                    >
-                                        {t.comunicats.ctaText}
-                                    </p>
-                                </div>
-
-                                <a
-                                    href={submitUrl}
-                                    class="inline-flex min-h-10 shrink-0 items-center justify-center self-start rounded-full bg-sky-950 px-5 py-2.5 text-sm font-black text-white transition hover:bg-sky-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 sm:self-auto"
-                                >
-                                    {t.comunicats.ctaButton}
-                                    <span aria-hidden="true" class="ml-2">
-                                        →
-                                    </span>
-                                </a>
-                            </div>
-                        </aside>
+                        <SubmissionCta
+                            title={t.comunicats.ctaTitle}
+                            text={t.comunicats.ctaText}
+                            note={t.comunicats.ctaNote}
+                            button={t.comunicats.ctaButton}
+                            href={submitUrl}
+                            variant="comunicats"
+                        />
                     )
                 }
             </div>
