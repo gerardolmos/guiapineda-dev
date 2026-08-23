@@ -195,7 +195,7 @@ const rules = [
 
         <p
             id="photo-month-modal-description"
-            class="mt-5 text-base leading-7 text-slate-600"
+            class="mt-5 text-lg leading-8 text-slate-700"
         >
             {t.fotoMes.modalIntro}
         </p>
@@ -204,7 +204,7 @@ const rules = [
             {
                 rules.map((rule: string) => (
                     <li
-                        class="flex gap-3 rounded-xl bg-stone-100 p-3 text-sm leading-6 text-slate-700"
+                        class="flex gap-3 rounded-xl bg-stone-100 p-3 text-base font-medium leading-7 text-slate-800"
                     >
                         <svg
                             aria-hidden="true"
@@ -225,32 +225,14 @@ const rules = [
             }
         </ul>
 
-        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+        <div class="mt-7">
             <a
                 href={formUrl}
-                class="inline-flex min-h-12 flex-1 items-center justify-center rounded-xl bg-cyan-700 px-5 py-3 text-center text-sm font-bold text-white outline-none transition-colors duration-200 hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+                class="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-cyan-700 px-5 py-3 text-center text-sm font-bold text-white outline-none transition-colors duration-200 hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
             >
                 {t.fotoMes.goToForm}
             </a>
-
-            <button
-                type="button"
-                data-close-photo-month-modal
-                class="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 outline-none transition-colors duration-200 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
-            >
-                {t.fotoMes.closeButton}
-            </button>
         </div>
-
-        <p class="mt-6 text-sm text-slate-600">
-            {t.fotoMes.emailText}{" "}
-            <a
-                href="mailto:info@guiapineda.com"
-                class="font-semibold text-cyan-700 underline underline-offset-4 outline-none hover:text-cyan-800 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-            >
-                info@guiapineda.com
-            </a>
-        </p>
     </div>
 </dialog>
 

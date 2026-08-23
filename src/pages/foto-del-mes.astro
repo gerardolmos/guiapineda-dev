@@ -1,92 +1,265 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import FotoMesIllustration from "../assets/images/fotomes.svg";
 import { getTranslations } from "../i18n/getTranslations";
 
 const { lang = "ca" } = Astro.props;
 const t = getTranslations(lang);
+
+const formFeedback =
+    lang === "ca"
+        ? {
+              sending: "Enviant...",
+              fileTooLarge: "La fotografia no pot superar els 5 MB.",
+              fileType:
+                  "Selecciona una fotografia en format JPG, PNG o WebP.",
+          }
+        : lang === "es"
+          ? {
+                sending: "Enviando...",
+                fileTooLarge: "La fotografía no puede superar los 5 MB.",
+                fileType:
+                    "Selecciona una fotografía en formato JPG, PNG o WebP.",
+            }
+          : {
+                sending: "Sending...",
+                fileTooLarge: "The photograph cannot exceed 5 MB.",
+                fileType:
+                    "Select a photograph in JPG, PNG or WebP format.",
+            };
 ---
 
-<Layout title={`${t.fotoMes.pageTitle} | GUIAPINEDA`} lang={lang}>
-    <main>
-        <h1>{t.fotoMes.pageTitle}</h1>
+<Layout
+    title={`${t.fotoMes.pageTitle} | GUIAPINEDA`}
+    description={t.fotoMes.pageIntro}
+    lang={lang}
+>
+    <main class="min-h-screen bg-black/[0.05]">
+        <section class="px-5 py-10 sm:px-8 sm:py-14">
+            <div class="mx-auto max-w-4xl">
+                <header
+                    class="mb-8 grid items-center gap-6 sm:grid-cols-[minmax(0,1fr)_16rem] sm:gap-8"
+                >
+                    <div>
+                        <p
+                            class="text-sm font-black uppercase tracking-[0.18em] text-cyan-700"
+                        >
+                            GUIAPINEDA
+                        </p>
 
-        <p>{t.fotoMes.pageIntro}</p>
+                        <h1
+                            class="mt-3 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                        >
+                            {t.fotoMes.pageTitle}
+                        </h1>
 
-        <form
-            name="foto-del-mes"
-            method="POST"
-            data-netlify="true"
-            enctype="multipart/form-data"
-            netlify-honeypot="bot-field"
-        >
-            <input type="hidden" name="form-name" value="foto-del-mes" />
+                        <p
+                            class="mt-4 max-w-xl text-lg leading-8 text-slate-600"
+                        >
+                            {
+                                lang === "ca" ? (
+                                    <>
+                                        Envia la teva fotografia de Pineda de Mar
+                                        <br />
+                                        per participar a la{" "}
+                                        <strong class="font-black uppercase text-slate-900">
+                                            Foto del mes
+                                        </strong>{" "}
+                                        de GUIAPINEDA.
+                                    </>
+                                ) : (
+                                    t.fotoMes.pageIntro
+                                )
+                            }
+                        </p>
+                    </div>
 
-            <p hidden>
-                <label>
-                    Don’t fill this out:
-                    <input name="bot-field" />
-                </label>
-            </p>
+                    <div
+                        aria-hidden="true"
+                        class="mx-auto hidden w-full max-w-64 sm:block"
+                    >
+                        <FotoMesIllustration
+                            class="h-auto w-full"
+                        />
+                    </div>
+                </header>
 
-            <div>
-                <label for="nom">
-                    {t.fotoMes.formName}
-                </label>
+                <form
+                    id="foto-del-mes-form"
+                    name="foto-del-mes"
+                    method="POST"
+                    data-netlify="true"
+                    data-netlify-recaptcha="true"
+                    enctype="multipart/form-data"
+                    netlify-honeypot="bot-field"
+                    data-sending-label={formFeedback.sending}
+                    data-file-size-error={formFeedback.fileTooLarge}
+                    data-file-type-error={formFeedback.fileType}
+                    class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+                >
+                    <input
+                        type="hidden"
+                        name="form-name"
+                        value="foto-del-mes"
+                    />
 
-                <input type="text" id="nom" name="nom" required />
+                    <input type="hidden" name="idioma" value={lang} />
+
+                    <div class="sr-only" aria-hidden="true">
+                        <label for="foto-mes-bot-field">
+                            No omplis aquest camp si ets una persona
+                        </label>
+                        <input
+                            id="foto-mes-bot-field"
+                            name="bot-field"
+                            type="text"
+                            tabindex="-1"
+                            autocomplete="off"
+                        />
+                    </div>
+
+                    <div
+                        class="grid gap-6 sm:grid-cols-2"
+                    >
+                        <label class="block" for="nom">
+                            <span class="font-black text-slate-950">
+                                {t.fotoMes.formName}
+                            </span>
+
+                            <input
+                                type="text"
+                                id="nom"
+                                name="nom"
+                                maxlength="120"
+                                autocomplete="name"
+                                required
+                                class="mt-2 min-h-12 w-full rounded-2xl border border-slate-400 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                            />
+                        </label>
+
+                        <label class="block" for="email">
+                            <span class="font-black text-slate-950">
+                                {t.fotoMes.formEmail}
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                maxlength="180"
+                                autocomplete="email"
+                                required
+                                class="mt-2 min-h-12 w-full rounded-2xl border border-slate-400 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                            />
+                        </label>
+                    </div>
+
+                    <div
+                        class="mt-7 grid gap-6 sm:grid-cols-2"
+                    >
+                        <label class="block" for="titol">
+                            <span class="font-black text-slate-950">
+                                {t.fotoMes.formTitle}
+                            </span>
+
+                            <input
+                                type="text"
+                                id="titol"
+                                name="titol"
+                                maxlength="140"
+                                class="mt-2 min-h-12 w-full rounded-2xl border border-slate-400 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                            />
+                        </label>
+
+                        <label class="block" for="lloc">
+                            <span class="font-black text-slate-950">
+                                {t.fotoMes.formPlace}
+                            </span>
+
+                            <input
+                                type="text"
+                                id="lloc"
+                                name="lloc"
+                                maxlength="140"
+                                class="mt-2 min-h-12 w-full rounded-2xl border border-slate-400 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                            />
+                        </label>
+                    </div>
+
+                    <div
+                        class="mt-9 rounded-3xl border border-cyan-300 bg-cyan-100 p-5 sm:p-6"
+                    >
+                        <label
+                            for="foto"
+                            class="block text-lg font-black text-slate-950"
+                        >
+                            {t.fotoMes.formPhoto}
+                        </label>
+
+                        <p class="mt-2 text-sm leading-6 text-slate-600">
+                            {t.fotoMes.formPhotoHelp}
+                        </p>
+
+                        <input
+                            type="file"
+                            id="foto"
+                            name="foto"
+                            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                            required
+                            class="mt-5 block w-full cursor-pointer rounded-2xl border border-cyan-300 bg-white text-sm font-semibold text-slate-700 file:mr-4 file:cursor-pointer file:border-0 file:bg-cyan-700 file:px-5 file:py-3.5 file:font-bold file:text-white hover:file:bg-cyan-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-200"
+                        />
+
+                        <p
+                            id="foto-mes-file-error"
+                            hidden
+                            role="alert"
+                            class="mt-3 text-sm font-bold leading-6 text-rose-700"
+                        ></p>
+                    </div>
+
+                    <label
+                        class="mt-7 flex cursor-pointer items-start gap-4 rounded-2xl border border-slate-300 bg-stone-50 p-5"
+                    >
+                        <input
+                            type="checkbox"
+                            name="acceptacio"
+                            required
+                            class="mt-1 size-5 shrink-0 accent-cyan-700"
+                        />
+
+                        <span
+                            class="text-sm font-medium leading-6 text-slate-700"
+                        >
+                            {t.fotoMes.formAccept}
+                        </span>
+                    </label>
+
+                    <div
+                        class="mt-7 flex justify-center"
+                        data-netlify-recaptcha="true"
+                    ></div>
+
+                    <div
+                        class="mt-8 flex justify-end border-t border-slate-100 pt-7"
+                    >
+                        <button
+                            id="foto-mes-submit"
+                            type="submit"
+                            class="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-cyan-700 px-8 py-3 font-black text-white transition hover:bg-cyan-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-200 sm:w-auto"
+                        >
+                            <span id="foto-mes-submit-label">
+                                {t.fotoMes.formSubmit}
+                            </span>
+                            <span aria-hidden="true" class="ml-3">→</span>
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div>
-                <label for="email">
-                    {t.fotoMes.formEmail}
-                </label>
-
-                <input type="email" id="email" name="email" required />
-            </div>
-
-            <div>
-                <label for="titol">
-                    {t.fotoMes.formTitle}
-                </label>
-
-                <input type="text" id="titol" name="titol" />
-            </div>
-
-            <div>
-                <label for="lloc">
-                    {t.fotoMes.formPlace}
-                </label>
-
-                <input type="text" id="lloc" name="lloc" />
-            </div>
-
-            <div>
-                <label for="foto">
-                    {t.fotoMes.formPhoto}
-                </label>
-
-                <input
-                    type="file"
-                    id="foto"
-                    name="foto"
-                    accept=".jpg,.jpeg,.png,.webp"
-                    required
-                />
-
-                <p>{t.fotoMes.formPhotoHelp}</p>
-            </div>
-
-            <div>
-                <label>
-                    <input type="checkbox" name="acceptacio" required />
-
-                    {t.fotoMes.formAccept}
-                </label>
-            </div>
-
-            <button type="submit">
-                {t.fotoMes.formSubmit}
-            </button>
-        </form>
+        </section>
     </main>
+    <script>
+        import { initFotoMesSubmission } from "../lib/fotoMesSubmission";
+
+        initFotoMesSubmission();
+    </script>
 </Layout>
