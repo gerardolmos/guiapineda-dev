@@ -1,3 +1,5 @@
+import { submitNetlifyForm } from "./netlifySubmission";
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const ALLOWED_MIME_TYPES = new Set([
@@ -31,6 +33,10 @@ export function initFotoMesSubmission() {
         "foto-mes-submit-label",
     );
 
+    const submitError = document.getElementById(
+        "foto-mes-submit-error",
+    );
+
     const idleLabel = submitLabel?.textContent?.trim() ?? "";
     const sendingLabel =
         form.dataset.sendingLabel ?? idleLabel;
@@ -42,6 +48,8 @@ export function initFotoMesSubmission() {
     const fileTypeError =
         form.dataset.fileTypeError ??
         "Invalid file type.";
+
+    let isSubmitting = false;
 
     function setFileError(message = "") {
         if (!fileInput || !fileError) return;
@@ -82,6 +90,8 @@ export function initFotoMesSubmission() {
     }
 
     function setSubmitting(submitting: boolean) {
+        isSubmitting = submitting;
+
         if (submitButton) {
             submitButton.disabled = submitting;
             submitButton.toggleAttribute(
@@ -105,24 +115,72 @@ export function initFotoMesSubmission() {
         }
     });
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (submitError) {
+            submitError.hidden = true;
+        }
+
         const fileIsValid = validateFile();
 
         if (!fileIsValid || !form.checkValidity()) {
-            event.preventDefault();
             form.reportValidity();
             setSubmitting(false);
             return;
         }
 
-        // El POST sigue siendo nativo.
-        // Netlify procesará el formulario en el entorno desplegado.
+        if (isSubmitting) {
+            return;
+        }
+
+        const successUrl =
+            form.dataset.successUrl;
+
+        if (!successUrl) {
+            console.error(
+                "Falta data-success-url en Foto del mes.",
+            );
+
+            if (submitError) {
+                submitError.hidden = false;
+            }
+
+            return;
+        }
+
         setSubmitting(true);
+
+        try {
+            await submitNetlifyForm(form, {
+                successUrl,
+                minimumDuration: 3200,
+            });
+        } catch (error) {
+            console.error(
+                "Error enviando Foto del mes:",
+                error,
+            );
+
+            setSubmitting(false);
+
+            if (submitError) {
+                submitError.hidden = false;
+                submitError.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+        }
     });
 
     // Safari/Chrome pueden restaurar la página desde bfcache
     // después de volver atrás. Restauramos el botón.
     window.addEventListener("pageshow", () => {
         setSubmitting(false);
+
+        if (submitError) {
+            submitError.hidden = true;
+        }
     });
 }

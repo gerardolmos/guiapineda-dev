@@ -1,0 +1,86 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const copy = {
+    ca: {
+        title: "Enviat correctament",
+        text: "Hem rebut la teva informació. GUIAPINEDA la revisarà abans de continuar amb el procés corresponent.",
+        home: "Tornar a GUIAPINEDA",
+    },
+    es: {
+        title: "Enviado correctamente",
+        text: "Hemos recibido tu información. GUIAPINEDA la revisará antes de continuar con el proceso correspondiente.",
+        home: "Volver a GUIAPINEDA",
+    },
+    en: {
+        title: "Sent successfully",
+        text: "We have received your information. GUIAPINEDA will review it before continuing with the corresponding process.",
+        home: "Back to GUIAPINEDA",
+    },
+} as const;
+
+const text = copy[lang];
+
+const homeUrl =
+    lang === "ca"
+        ? "/"
+        : `/${lang}/`;
+---
+
+<Layout
+    lang={lang}
+    title={`${text.title} | GUIAPINEDA`}
+    description={text.text}
+    showLanguageSwitcher={false}
+>
+    <main class="flex min-h-[70vh] items-center bg-stone-50 px-5 py-16 sm:px-8">
+        <div class="mx-auto w-full max-w-2xl">
+            <div
+                class="rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-12"
+            >
+                <div
+                    aria-hidden="true"
+                    class="mx-auto flex size-20 items-center justify-center rounded-full bg-emerald-100 text-4xl font-black text-emerald-700"
+                >
+                    ✓
+                </div>
+
+                <div
+                    aria-hidden="true"
+                    class="mx-auto mt-7 flex w-fit gap-2"
+                >
+                    <span class="size-3 rounded-full bg-[#ff53a5]"></span>
+                    <span class="size-3 rounded-full bg-[#29bcff]"></span>
+                    <span class="size-3 rounded-full bg-[#fff62f]"></span>
+                    <span class="size-3 rounded-full bg-[#93ce09]"></span>
+                </div>
+
+                <h1
+                    class="mt-6 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                >
+                    {text.title}
+                </h1>
+
+                <p
+                    class="mx-auto mt-5 max-w-xl text-lg leading-8 text-slate-600"
+                >
+                    {text.text}
+                </p>
+
+                <a
+                    href={homeUrl}
+                    class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-bold text-white transition hover:bg-sky-700"
+                >
+                    {text.home}
+                    <span aria-hidden="true" class="ml-3">→</span>
+                </a>
+            </div>
+        </div>
+    </main>
+</Layout>

@@ -1,5 +1,7 @@
+import { submitNetlifyForm } from "./netlifySubmission";
+
 export function initCommunicatSubmissionFlow() {
-    const root = document.querySelector<HTMLElement>(
+    const root = document.querySelector<HTMLFormElement>(
         "[data-comunicat-submission-flow]",
     );
 
@@ -21,7 +23,7 @@ export function initCommunicatSubmissionFlow() {
 
     const senderRadios = Array.from(
         document.querySelectorAll<HTMLInputElement>(
-            'input[name="comunicat-sender-type"]',
+            'input[name="tipus_remitent"]',
         ),
     );
     const authorInput = document.getElementById(
@@ -45,6 +47,10 @@ export function initCommunicatSubmissionFlow() {
     const summaryCount = document.getElementById("comunicat-summary-count");
     const contentCount = document.getElementById("comunicat-content-count");
 
+    const titleMeta = document.getElementById("comunicat-title-meta");
+    const summaryMeta = document.getElementById("comunicat-summary-meta");
+    const contentMeta = document.getElementById("comunicat-content-meta");
+
     const contentBack = document.getElementById(
         "comunicat-content-back",
     ) as HTMLButtonElement | null;
@@ -65,6 +71,10 @@ export function initCommunicatSubmissionFlow() {
     const imageRemove = document.getElementById(
         "comunicat-image-remove",
     ) as HTMLButtonElement | null;
+
+    const imageError = document.getElementById(
+        "comunicat-image-error",
+    );
 
     const liveAuthor = document.getElementById("comunicat-live-author");
     const liveTitle = document.getElementById("comunicat-live-title");
@@ -92,9 +102,6 @@ export function initCommunicatSubmissionFlow() {
         "comunicat-review-image",
     ) as HTMLImageElement | null;
 
-    const contactName = document.getElementById(
-        "comunicat-contact-name",
-    ) as HTMLInputElement | null;
     const contactEmail = document.getElementById(
         "comunicat-contact-email",
     ) as HTMLInputElement | null;
@@ -107,11 +114,41 @@ export function initCommunicatSubmissionFlow() {
     const reviewSend = document.getElementById(
         "comunicat-review-send",
     ) as HTMLButtonElement | null;
-    const prototypeNote = document.getElementById(
-        "comunicat-prototype-note",
+
+    const submitLabel = document.getElementById(
+        "comunicat-submit-label",
     );
 
+    const submitError = document.getElementById(
+        "comunicat-submit-error",
+    );
+
+    const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+    const ALLOWED_IMAGE_TYPES = new Set([
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+    ]);
+
+    const ALLOWED_IMAGE_EXTENSION = /\.(jpe?g|png|webp)$/i;
+
+    const idleSubmitLabel =
+        submitLabel?.textContent?.trim() ?? "";
+
+    const sendingLabel =
+        root.dataset.sendingLabel ?? idleSubmitLabel;
+
+    const fileSizeError =
+        root.dataset.fileSizeError ??
+        "The image is too large.";
+
+    const fileTypeError =
+        root.dataset.fileTypeError ??
+        "Invalid image type.";
+
     let imageUrl = "";
+    let isSubmitting = false;
 
     function selectedSender() {
         return senderRadios.find((radio) => radio.checked) ?? null;
@@ -154,13 +191,45 @@ export function initCommunicatSubmissionFlow() {
             contentCount.textContent = String(contentInput.value.length);
         }
 
-        const ready = Boolean(
-            titleInput?.value.trim() &&
-                summaryInput?.value.trim() &&
-                contentInput?.value.trim(),
+        const titleReady =
+            (titleInput?.value.trim().length ?? 0) >= 8;
+
+        const summaryReady =
+            (summaryInput?.value.trim().length ?? 0) >= 30;
+
+        const contentReady =
+            (contentInput?.value.trim().length ?? 0) >= 80;
+
+        [
+            [titleMeta, titleReady],
+            [summaryMeta, summaryReady],
+            [contentMeta, contentReady],
+        ].forEach(([element, valid]) => {
+            if (!(element instanceof HTMLElement)) return;
+
+            element.classList.toggle(
+                "text-slate-400",
+                !valid,
+            );
+
+            element.classList.toggle(
+                "text-emerald-700",
+                Boolean(valid),
+            );
+        });
+
+        // La imagen es opcional y nunca bloquea
+        // el avance del formulario.
+        const ready =
+            titleReady &&
+            summaryReady &&
+            contentReady;
+
+        contentContinue?.toggleAttribute(
+            "disabled",
+            !ready,
         );
 
-        contentContinue?.toggleAttribute("disabled", !ready);
         updateLivePreview();
     }
 
@@ -189,10 +258,77 @@ export function initCommunicatSubmissionFlow() {
         imageUrl = "";
     }
 
-    function setImage(file?: File) {
-        if (!file) return;
+    function setImageError(message = "") {
+        if (!imageInput || !imageError) return;
 
+        imageInput.setCustomValidity(message);
+        imageError.textContent = message;
+        imageError.hidden = !message;
+    }
+
+    function validateImage(file?: File) {
+        if (!file) {
+            // Sin imagen es un estado válido: la imagen es opcional.
+            // Limpiamos la validez nativa sin ocultar necesariamente
+            // el último aviso informativo mostrado al usuario.
+            imageInput?.setCustomValidity("");
+            return true;
+        }
+
+        if (file.size > MAX_IMAGE_SIZE) {
+            setImageError(fileSizeError);
+            return false;
+        }
+
+        const mimeIsValid =
+            !file.type || ALLOWED_IMAGE_TYPES.has(file.type);
+
+        const extensionIsValid =
+            ALLOWED_IMAGE_EXTENSION.test(file.name);
+
+        if (!mimeIsValid || !extensionIsValid) {
+            setImageError(fileTypeError);
+            return false;
+        }
+
+        setImageError("");
+        return true;
+    }
+
+    function resetImagePreview() {
         revokeImageUrl();
+
+        if (imagePreview) imagePreview.removeAttribute("src");
+        if (liveImage) liveImage.removeAttribute("src");
+
+        if (imageEmpty) imageEmpty.hidden = false;
+        if (imageSelected) imageSelected.hidden = true;
+        if (liveImageWrap) liveImageWrap.hidden = true;
+    }
+
+    function setImage(file?: File) {
+        if (!file) {
+            resetImagePreview();
+            setImageError("");
+            return;
+        }
+
+        if (!validateImage(file)) {
+            resetImagePreview();
+
+            // La imagen es opcional. Rechazamos el archivo,
+            // pero mantenemos visible el mensaje que explica
+            // por qué no se ha aceptado.
+            if (imageInput) {
+                imageInput.value = "";
+                imageInput.setCustomValidity("");
+            }
+
+            return;
+        }
+
+        resetImagePreview();
+
         imageUrl = URL.createObjectURL(file);
 
         if (imagePreview) imagePreview.src = imageUrl;
@@ -204,15 +340,13 @@ export function initCommunicatSubmissionFlow() {
     }
 
     function clearImage() {
-        revokeImageUrl();
+        resetImagePreview();
 
-        if (imageInput) imageInput.value = "";
-        if (imagePreview) imagePreview.removeAttribute("src");
-        if (liveImage) liveImage.removeAttribute("src");
+        if (imageInput) {
+            imageInput.value = "";
+        }
 
-        if (imageEmpty) imageEmpty.hidden = false;
-        if (imageSelected) imageSelected.hidden = true;
-        if (liveImageWrap) liveImageWrap.hidden = true;
+        setImageError("");
     }
 
     function renderReview() {
@@ -245,17 +379,34 @@ export function initCommunicatSubmissionFlow() {
 
     function updateReviewState() {
         const ready = Boolean(
-            contactName?.value.trim() &&
-                contactEmail?.value.trim() &&
+            contactEmail?.value.trim() &&
                 contactEmail.checkValidity() &&
                 privacy?.checked,
         );
 
-        reviewSend?.toggleAttribute("disabled", !ready);
+        reviewSend?.toggleAttribute(
+            "disabled",
+            !ready || isSubmitting,
+        );
+    }
 
-        if (prototypeNote) {
-            prototypeNote.hidden = true;
+    function setSubmitting(submitting: boolean) {
+        isSubmitting = submitting;
+
+        if (reviewSend) {
+            reviewSend.toggleAttribute(
+                "aria-busy",
+                submitting,
+            );
         }
+
+        if (submitLabel) {
+            submitLabel.textContent = submitting
+                ? sendingLabel
+                : idleSubmitLabel;
+        }
+
+        updateReviewState();
     }
 
     function showStep(
@@ -294,9 +445,13 @@ export function initCommunicatSubmissionFlow() {
 
     imageInput?.addEventListener("change", () => {
         setImage(imageInput.files?.[0]);
+        updateContentState();
     });
 
-    imageRemove?.addEventListener("click", clearImage);
+    imageRemove?.addEventListener("click", () => {
+        clearImage();
+        updateContentState();
+    });
 
     authorContinue?.addEventListener("click", () => {
         if (authorContinue.hasAttribute("disabled")) return;
@@ -334,25 +489,129 @@ export function initCommunicatSubmissionFlow() {
             });
         });
 
-    contactName?.addEventListener("input", updateReviewState);
     contactEmail?.addEventListener("input", updateReviewState);
     privacy?.addEventListener("change", updateReviewState);
 
-    reviewSend?.addEventListener("click", () => {
-        if (reviewSend.hasAttribute("disabled")) return;
+    root.addEventListener("submit", async (event) => {
+        // A partir de aquí el envío siempre lo controla
+        // nuestra capa AJAX.
+        event.preventDefault();
 
-        if (prototypeNote) {
-            prototypeNote.hidden = false;
-            prototypeNote.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
+        if (submitError) {
+            submitError.hidden = true;
+        }
+
+        // Un Enter accidental no debe enviar el formulario
+        // antes de llegar a la revisión.
+        if (reviewStep?.hidden) {
+            return;
+        }
+
+        const senderReady = Boolean(
+            selectedSender() &&
+                authorInput?.value.trim(),
+        );
+
+        const titleReady =
+            (titleInput?.value.trim().length ?? 0) >= 8;
+
+        const summaryReady =
+            (summaryInput?.value.trim().length ?? 0) >= 30;
+
+        const contentReady =
+            (contentInput?.value.trim().length ?? 0) >= 80;
+
+        const contactReady = Boolean(
+            contactEmail?.value.trim() &&
+                contactEmail.checkValidity() &&
+                privacy?.checked,
+        );
+
+        const imageIsValid = validateImage(
+            imageInput?.files?.[0],
+        );
+
+        if (
+            !senderReady ||
+            !titleReady ||
+            !summaryReady ||
+            !contentReady ||
+            !contactReady ||
+            !imageIsValid
+        ) {
+            setSubmitting(false);
+
+            if (
+                !titleReady ||
+                !summaryReady ||
+                !contentReady ||
+                !imageIsValid
+            ) {
+                showStep("content");
+                updateContentState();
+
+                if (!imageIsValid) {
+                    imageError?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                }
+            }
+
+            return;
+        }
+
+        if (isSubmitting) {
+            return;
+        }
+
+        const successUrl =
+            root.dataset.successUrl;
+
+        if (!successUrl) {
+            console.error(
+                "Falta data-success-url en el formulario.",
+            );
+
+            if (submitError) {
+                submitError.hidden = false;
+            }
+
+            return;
+        }
+
+        setSubmitting(true);
+
+        try {
+            await submitNetlifyForm(root, {
+                successUrl,
+                minimumDuration: 3200,
             });
+        } catch (error) {
+            console.error(
+                "Error enviando el comunicado:",
+                error,
+            );
+
+            setSubmitting(false);
+
+            if (submitError) {
+                submitError.hidden = false;
+                submitError.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
         }
     });
 
     updateAuthorState();
     updateContentState();
     updateReviewState();
+
+    window.addEventListener("pageshow", () => {
+        setSubmitting(false);
+    });
 
     window.addEventListener("beforeunload", revokeImageUrl);
 }

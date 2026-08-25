@@ -1,5 +1,6 @@
 ---
 import { getTranslations } from "../i18n/getTranslations";
+import SubmissionSendingOverlay from "./SubmissionSendingOverlay.astro";
 
 interface Props {
     lang: "ca" | "es" | "en";
@@ -7,6 +8,13 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = getTranslations(lang);
+
+const successUrl =
+    lang === "ca"
+        ? "/enviat/"
+        : lang === "es"
+          ? "/es/enviado/"
+          : "/en/sent/";
 
 const copy = {
     ca: {
@@ -54,7 +62,11 @@ const copy = {
             "Explica la situació amb les teves paraules. Pots indicar punts concrets, moments del dia, freqüència, conseqüències i una possible millora...",
         imageTitle: "Vols afegir una imatge?",
         imageHelp:
-            "Opcional. Pots afegir una única imatge en JPG, PNG o WebP. Evita fotografies que mostrin dades personals de terceres persones.",
+            "Opcional. Pots afegir una única imatge en JPG, PNG o WebP, amb un màxim de 5 MB. Evita fotografies que mostrin dades personals de terceres persones.",
+        imageFileTooLarge:
+            "La imatge supera el límit de 5 MB. Tria una imatge més petita.",
+        imageFileType:
+            "El format de la imatge no és vàlid. Utilitza JPG, PNG o WebP.",
         chooseImage: "Afegir imatge",
         changeImage: "Canviar imatge",
         removeImage: "Eliminar imatge",
@@ -62,7 +74,6 @@ const copy = {
         previewEmptyTitle: "El títol apareixerà aquí",
         previewEmptySummary: "El resum apareixerà aquí.",
         readingSuffix: "min de lectura",
-        minLabel: "mín.",
         minLabel: "mín.",
         step3Title: "Revisa la teva aportació",
         step3Intro:
@@ -79,8 +90,9 @@ const copy = {
             "GUIAPINEDA revisarà l'aportació abans de decidir si es publica.",
         ],
         send: "Enviar a GUIAPINEDA",
-        prototype:
-            "Perfecte. L'aportació està preparada. Encara no s'ha enviat res: connectarem aquest formulari amb el sistema de recepció i revisió quan activem la infraestructura corresponent.",
+        sending: "Enviant...",
+        sendError:
+            "No hem pogut enviar l'aportació. Torna-ho a provar d'aquí a uns instants.",
         publicLabel: "Contingut públic",
     },
 
@@ -129,7 +141,11 @@ const copy = {
             "Explica la situación con tus propias palabras. Puedes indicar puntos concretos, momentos del día, frecuencia, consecuencias y una posible mejora...",
         imageTitle: "¿Quieres añadir una imagen?",
         imageHelp:
-            "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP. Evita fotografías que muestren datos personales de terceras personas.",
+            "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP, con un máximo de 5 MB. Evita fotografías que muestren datos personales de terceras personas.",
+        imageFileTooLarge:
+            "La imagen supera el límite de 5 MB. Elige una imagen más pequeña.",
+        imageFileType:
+            "El formato de la imagen no es válido. Utiliza JPG, PNG o WebP.",
         chooseImage: "Añadir imagen",
         changeImage: "Cambiar imagen",
         removeImage: "Eliminar imagen",
@@ -137,6 +153,7 @@ const copy = {
         previewEmptyTitle: "El título aparecerá aquí",
         previewEmptySummary: "El resumen aparecerá aquí.",
         readingSuffix: "min de lectura",
+        minLabel: "mín.",
         step3Title: "Revisa tu aportación",
         step3Intro:
             "Esto es lo que recibirá GUIAPINEDA. Revísalo antes de enviarlo.",
@@ -152,8 +169,9 @@ const copy = {
             "GUIAPINEDA revisará la aportación antes de decidir si se publica.",
         ],
         send: "Enviar a GUIAPINEDA",
-        prototype:
-            "Perfecto. La aportación está preparada. Todavía no se ha enviado nada: conectaremos este formulario con el sistema de recepción y revisión cuando activemos la infraestructura correspondiente.",
+        sending: "Enviando...",
+        sendError:
+            "No hemos podido enviar la aportación. Vuelve a intentarlo en unos instantes.",
         publicLabel: "Contenido público",
     },
 
@@ -202,7 +220,11 @@ const copy = {
             "Describe the situation in your own words. You can mention specific locations, times of day, frequency, consequences and a possible improvement...",
         imageTitle: "Would you like to add an image?",
         imageHelp:
-            "Optional. You can add one JPG, PNG or WebP image. Avoid photographs containing other people's personal information.",
+            "Optional. You can add one JPG, PNG or WebP image, up to 5 MB. Avoid photographs containing other people's personal information.",
+        imageFileTooLarge:
+            "The image exceeds the 5 MB limit. Choose a smaller image.",
+        imageFileType:
+            "The image format is not valid. Use JPG, PNG or WebP.",
         chooseImage: "Add image",
         changeImage: "Change image",
         removeImage: "Remove image",
@@ -226,8 +248,9 @@ const copy = {
             "GUIAPINEDA will review the contribution before deciding whether to publish it.",
         ],
         send: "Send to GUIAPINEDA",
-        prototype:
-            "Perfect. Your contribution is ready. Nothing has been sent yet: we will connect this form to the submission and review system when the corresponding infrastructure is activated.",
+        sending: "Sending...",
+        sendError:
+            "We could not send your contribution. Please try again in a moment.",
         publicLabel: "Public content",
     },
 } as const;
@@ -250,10 +273,31 @@ const categoryClasses: Record<string, string> = {
 };
 ---
 
-<div
+<form
+    id="millora-submission-form"
+    name="millora"
+    method="POST"
+    data-netlify="true"
+    data-netlify-recaptcha="true"
+    netlify-honeypot="bot-field"
+    enctype="multipart/form-data"
+    novalidate
     data-millora-submission-flow
+    data-success-url={successUrl}
+    data-sending-label={text.sending}
+    data-file-size-error={text.imageFileTooLarge}
+    data-file-type-error={text.imageFileType}
     class="min-h-screen bg-stone-50"
 >
+    <input type="hidden" name="form-name" value="millora" />
+    <input type="hidden" name="idioma" value={lang} />
+
+    <p hidden>
+        <label>
+            No omplis aquest camp:
+            <input name="bot-field" />
+        </label>
+    </p>
     <div class="border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
         <div
             class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4"
@@ -371,6 +415,7 @@ const categoryClasses: Record<string, string> = {
                                             <input
                                                 type="radio"
                                                 name="millora-category"
+                                                required
                                                 value={value}
                                                 data-label={label}
                                                 class="peer sr-only"
@@ -395,6 +440,8 @@ const categoryClasses: Record<string, string> = {
 
                         <select
                             id="millora-zone"
+                            required
+                            name="millora-zone"
                             class="mt-2 min-h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
                         >
                             <option value="">
@@ -421,6 +468,7 @@ const categoryClasses: Record<string, string> = {
                                 <input
                                     type="radio"
                                     name="millora-author-type"
+                                    required
                                     value="resident"
                                     data-label={text.authorResident}
                                     class="peer sr-only"
@@ -437,6 +485,7 @@ const categoryClasses: Record<string, string> = {
                                 <input
                                     type="radio"
                                     name="millora-author-type"
+                                    required
                                     value="visitor"
                                     data-label={text.authorVisitor}
                                     class="peer sr-only"
@@ -453,6 +502,7 @@ const categoryClasses: Record<string, string> = {
                                 <input
                                     type="radio"
                                     name="millora-author-type"
+                                    required
                                     value="alias"
                                     data-label={text.authorAlias}
                                     class="peer sr-only"
@@ -479,6 +529,7 @@ const categoryClasses: Record<string, string> = {
 
                         <input
                             id="millora-alias"
+                            name="millora-alias"
                             type="text"
                             maxlength="100"
                             placeholder={text.aliasPlaceholder}
@@ -612,6 +663,8 @@ const categoryClasses: Record<string, string> = {
 
                             <input
                                 id="millora-title"
+                                required
+                                name="millora-title"
                                 type="text"
                                 minlength="8"
                                 maxlength="120"
@@ -641,6 +694,8 @@ const categoryClasses: Record<string, string> = {
 
                             <textarea
                                 id="millora-summary"
+                                required
+                                name="millora-summary"
                                 minlength="30"
                                 maxlength="280"
                                 rows="4"
@@ -666,6 +721,8 @@ const categoryClasses: Record<string, string> = {
 
                             <textarea
                                 id="millora-content"
+                                required
+                                name="millora-content"
                                 minlength="80"
                                 maxlength="6000"
                                 rows="12"
@@ -685,10 +742,19 @@ const categoryClasses: Record<string, string> = {
 
                             <input
                                 id="millora-image-input"
+                                aria-describedby="millora-image-error"
+                                name="millora-image"
                                 type="file"
                                 accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                 class="peer sr-only"
                             />
+
+                            <p
+                                id="millora-image-error"
+                                hidden
+                                role="alert"
+                                class="mt-3 text-sm font-bold leading-6 text-rose-700"
+                            ></p>
 
                             <div
                                 id="millora-image-empty"
@@ -1013,6 +1079,24 @@ const categoryClasses: Record<string, string> = {
                 </div>
 
                 <div
+                    class="px-6 pb-6 sm:px-8"
+                >
+                    <div
+                        class="flex justify-center"
+                        data-netlify-recaptcha="true"
+                    ></div>
+
+                    <p
+                        id="millora-submit-error"
+                        hidden
+                        role="alert"
+                        class="mt-5 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-bold leading-6 text-rose-800"
+                    >
+                        {text.sendError}
+                    </p>
+                </div>
+
+                <div
                     class="border-t border-slate-200 bg-slate-950 px-6 py-5 sm:px-8"
                 >
                     <div
@@ -1028,29 +1112,22 @@ const categoryClasses: Record<string, string> = {
 
                         <button
                             id="millora-review-send"
-                            type="button"
+                            type="submit"
                             class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-8 py-3 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-300"
                         >
-                            {text.send}
+                            <span id="millora-submit-label">
+                                {text.send}
+                            </span>
                             <span aria-hidden="true" class="ml-3">→</span>
                         </button>
-                    </div>
-
-                    <div
-                        id="millora-prototype-note"
-                        role="status"
-                        aria-live="polite"
-                        aria-atomic="true"
-                        hidden
-                        class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-relaxed text-emerald-950"
-                    >
-                        {text.prototype}
                     </div>
                 </div>
             </section>
         </div>
     </section>
-</div>
+</form>
+
+<SubmissionSendingOverlay lang={lang} />
 
 <script>
     import { initMilloraSubmissionFlow } from "../lib/milloraSubmissionFlow";

@@ -1,0 +1,131 @@
+---
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const copy = {
+    ca: {
+        title: "Enviant...",
+        text: "Estem enviant la informació a GUIAPINEDA.",
+    },
+    es: {
+        title: "Enviando...",
+        text: "Estamos enviando la información a GUIAPINEDA.",
+    },
+    en: {
+        title: "Sending...",
+        text: "We are sending the information to GUIAPINEDA.",
+    },
+} as const;
+
+const text = copy[lang];
+---
+
+<div
+    id="submission-sending-overlay"
+    hidden
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-white/95 px-5 backdrop-blur-sm"
+>
+    <div class="w-full max-w-md text-center">
+        <div
+            class="submission-ellipsis mx-auto"
+            aria-hidden="true"
+        >
+            <div class="submission-ellipsis__inner">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <h2 class="mt-2 text-3xl font-black tracking-tight text-slate-950">
+            {text.title}
+        </h2>
+
+        <p class="mx-auto mt-3 max-w-sm text-base leading-7 text-slate-600">
+            {text.text}
+        </p>
+    </div>
+</div>
+
+<style>
+    @keyframes submission-ellipsis-dot {
+        0%,
+        100% {
+            transform: translateY(0) scale(0.72);
+            opacity: 0.45;
+        }
+
+        35% {
+            transform: translateY(-8px) scale(1.08);
+            opacity: 1;
+        }
+
+        65% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+
+    .submission-ellipsis {
+        width: 200px;
+        height: 92px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .submission-ellipsis__inner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+    }
+
+    .submission-ellipsis__inner span {
+        display: block;
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+        border-radius: 9999px;
+        animation:
+            submission-ellipsis-dot
+            1.15s
+            infinite
+            ease-in-out;
+    }
+
+    .submission-ellipsis__inner span:nth-child(1) {
+        background: #ff53a5;
+        animation-delay: 0s;
+    }
+
+    .submission-ellipsis__inner span:nth-child(2) {
+        background: #29bcff;
+        animation-delay: 0.14s;
+    }
+
+    .submission-ellipsis__inner span:nth-child(3) {
+        background: #fff62f;
+        animation-delay: 0.28s;
+    }
+
+    .submission-ellipsis__inner span:nth-child(4) {
+        background: #93ce09;
+        animation-delay: 0.42s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .submission-ellipsis__inner span {
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+    }
+</style>

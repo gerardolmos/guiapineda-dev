@@ -1,10 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import FotoMesIllustration from "../assets/images/fotomes.svg";
+import SubmissionSendingOverlay from "../components/SubmissionSendingOverlay.astro";
 import { getTranslations } from "../i18n/getTranslations";
 
 const { lang = "ca" } = Astro.props;
 const t = getTranslations(lang);
+
+const successUrl =
+    lang === "ca"
+        ? "/enviat/"
+        : lang === "es"
+          ? "/es/enviado/"
+          : "/en/sent/";
 
 const formFeedback =
     lang === "ca"
@@ -13,6 +21,8 @@ const formFeedback =
               fileTooLarge: "La fotografia no pot superar els 5 MB.",
               fileType:
                   "Selecciona una fotografia en format JPG, PNG o WebP.",
+              sendError:
+                  "No hem pogut enviar la fotografia. Torna-ho a provar d'aquí a uns instants.",
           }
         : lang === "es"
           ? {
@@ -20,12 +30,16 @@ const formFeedback =
                 fileTooLarge: "La fotografía no puede superar los 5 MB.",
                 fileType:
                     "Selecciona una fotografía en formato JPG, PNG o WebP.",
+                sendError:
+                    "No hemos podido enviar la fotografía. Vuelve a intentarlo en unos instantes.",
             }
           : {
                 sending: "Sending...",
                 fileTooLarge: "The photograph cannot exceed 5 MB.",
                 fileType:
                     "Select a photograph in JPG, PNG or WebP format.",
+                sendError:
+                    "We could not send the photograph. Please try again in a moment.",
             };
 ---
 
@@ -92,6 +106,7 @@ const formFeedback =
                     data-netlify-recaptcha="true"
                     enctype="multipart/form-data"
                     netlify-honeypot="bot-field"
+                    data-success-url={successUrl}
                     data-sending-label={formFeedback.sending}
                     data-file-size-error={formFeedback.fileTooLarge}
                     data-file-type-error={formFeedback.fileType}
@@ -239,6 +254,16 @@ const formFeedback =
                         data-netlify-recaptcha="true"
                     ></div>
 
+                    <p
+                        id="foto-mes-submit-error"
+                        hidden
+                        role="alert"
+                        aria-live="polite"
+                        class="mt-5 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-bold leading-6 text-rose-800"
+                    >
+                        {formFeedback.sendError}
+                    </p>
+
                     <div
                         class="mt-8 flex justify-end border-t border-slate-100 pt-7"
                     >
@@ -257,6 +282,9 @@ const formFeedback =
             </div>
         </section>
     </main>
+
+    <SubmissionSendingOverlay lang={lang} />
+
     <script>
         import { initFotoMesSubmission } from "../lib/fotoMesSubmission";
 

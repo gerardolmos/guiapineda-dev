@@ -1,9 +1,16 @@
 ---
+import SubmissionSendingOverlay from "./SubmissionSendingOverlay.astro";
+
 interface Props {
     lang: "ca" | "es";
 }
 
 const { lang } = Astro.props;
+
+const successUrl =
+    lang === "ca"
+        ? "/enviat/"
+        : "/es/enviado/";
 
 const text =
     lang === "ca"
@@ -12,7 +19,7 @@ const text =
               section1: "Qui ho envia",
               section2: "El comunicat",
               section3: "Revisió",
-              step1Title: "Comencem per qui signa el comunicat",
+              step1Title: "Qui signa públicament el comunicat?",
               step1Intro:
                   "Pot ser una entitat, un club, un comerç o una persona particular. Només necessitem saber qui apareixerà com a autor.",
               senderType: "Quin tipus de remitent sou?",
@@ -36,6 +43,7 @@ const text =
               titleLabel: "Títol",
               titlePlaceholder: "Un títol clar que expliqui què passa",
               summaryLabel: "Resum",
+              minLabel: "mín.",
               summaryHelp:
                   "És el text breu que la gent veurà al llistat de Comunicats.",
               summaryPlaceholder:
@@ -45,7 +53,7 @@ const text =
                   "Explica aquí tota la informació: què passarà, quan, on, per a qui és, com participar-hi...",
               imageTitle: "Imatge del comunicat",
               imageHelp:
-                  "Opcional. Pots afegir una única imatge en JPG, PNG o WebP.",
+                  "Opcional. Pots afegir una única imatge en JPG, PNG o WebP de fins a 5 MB.",
               chooseImage: "Afegir imatge",
               changeImage: "Canviar imatge",
               removeImage: "Eliminar imatge",
@@ -59,27 +67,30 @@ const text =
               editAuthor: "Editar autor",
               editContent: "Editar comunicat",
               noImage: "Sense imatge",
-              contactTitle: "Qui ens envia aquest comunicat?",
+              contactTitle: "Contacte per a la revisió",
               contactIntro:
-                  "Aquestes dades són privades. Només les utilitzarem si necessitem contactar amb tu durant la revisió.",
-              contactName: "Nom i cognoms",
-              contactEmail: "Email",
-              contactPhone: "Telèfon",
+                  "Aquestes dades no es publicaran. Només les utilitzarem si necessitem confirmar o aclarir alguna informació del comunicat.",
+              contactName: "Nom de contacte",
+              contactEmail: "Email de contacte",
+              sendError:
+                  "No hem pogut enviar el comunicat. Torna-ho a provar d'aquí a uns instants.",
               optional: "opcional",
               privacy:
-                  "Accepto que GUIAPINEDA utilitzi aquestes dades per gestionar i revisar aquest comunicat.",
+                  "Accepto que GUIAPINEDA utilitzi aquestes dades de contacte per gestionar i revisar aquest comunicat.",
               send: "Enviar a GUIAPINEDA",
-              prototype:
-                  "Perfecte. El comunicat està preparat. Encara no s'ha enviat res: activarem la recepció real quan configurem la infraestructura de producció.",
+              sending: "Enviant...",
+               fileTooLarge: "La imatge no pot superar els 5 MB.",
+               fileType:
+                   "Selecciona una imatge en format JPG, PNG o WebP.",
               publicLabel: "Contingut públic",
-              privateLabel: "Dades privades",
+              privateLabel: "Contacte privat",
           }
         : {
               eyebrow: "Compártelo con Pineda",
               section1: "Quién lo envía",
               section2: "El comunicado",
               section3: "Revisión",
-              step1Title: "Empecemos por quién firma el comunicado",
+              step1Title: "¿Quién firma públicamente el comunicado?",
               step1Intro:
                   "Puede ser una entidad, un club, un comercio o una persona particular. Solo necesitamos saber quién aparecerá como autor.",
               senderType: "¿Qué tipo de remitente sois?",
@@ -104,6 +115,7 @@ const text =
               titleLabel: "Título",
               titlePlaceholder: "Un título claro que explique qué ocurre",
               summaryLabel: "Resumen",
+              minLabel: "mín.",
               summaryHelp:
                   "Es el texto breve que la gente verá en el listado de Comunicados.",
               summaryPlaceholder:
@@ -113,7 +125,7 @@ const text =
                   "Explica aquí toda la información: qué ocurrirá, cuándo, dónde, para quién es, cómo participar...",
               imageTitle: "Imagen del comunicado",
               imageHelp:
-                  "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP.",
+                  "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP de hasta 5 MB.",
               chooseImage: "Añadir imagen",
               changeImage: "Cambiar imagen",
               removeImage: "Eliminar imagen",
@@ -127,28 +139,58 @@ const text =
               editAuthor: "Editar autor",
               editContent: "Editar comunicado",
               noImage: "Sin imagen",
-              contactTitle: "¿Quién nos envía este comunicado?",
+              contactTitle: "Contacto para la revisión",
               contactIntro:
-                  "Estos datos son privados. Solo los utilizaremos si necesitamos contactar contigo durante la revisión.",
-              contactName: "Nombre y apellidos",
-              contactEmail: "Email",
-              contactPhone: "Teléfono",
+                  "Estos datos no se publicarán. Solo los utilizaremos si necesitamos confirmar o aclarar alguna información del comunicado.",
+              contactName: "Nombre de contacto",
+              contactEmail: "Email de contacto",
+              sendError:
+                  "No hemos podido enviar el comunicado. Vuelve a intentarlo en unos instantes.",
               optional: "opcional",
               privacy:
-                  "Acepto que GUIAPINEDA utilice estos datos para gestionar y revisar este comunicado.",
+                  "Acepto que GUIAPINEDA utilice estos datos de contacto para gestionar y revisar este comunicado.",
               send: "Enviar a GUIAPINEDA",
-              prototype:
-                  "Perfecto. El comunicado está preparado. Todavía no se ha enviado nada: activaremos la recepción real cuando configuremos la infraestructura de producción.",
+              sending: "Enviando...",
+               fileTooLarge: "La imagen no puede superar los 5 MB.",
+               fileType:
+                   "Selecciona una imagen en formato JPG, PNG o WebP.",
               publicLabel: "Contenido público",
-              privateLabel: "Datos privados",
+              privateLabel: "Contacto privado",
           };
 ---
 
-<div
+<form
+    id="comunicat-submission-form"
+    name="comunicat"
+    method="POST"
+    data-netlify="true"
+    data-netlify-recaptcha="true"
+    netlify-honeypot="bot-field"
+    enctype="multipart/form-data"
+    novalidate
     data-comunicat-submission-flow
     data-reading-suffix={text.readingSuffix}
+    data-sending-label={text.sending}
+    data-file-size-error={text.fileTooLarge}
+    data-file-type-error={text.fileType}
+    data-success-url={successUrl}
     class="bg-stone-50"
 >
+    <input type="hidden" name="form-name" value="comunicat" />
+    <input type="hidden" name="idioma" value={lang} />
+
+    <div class="sr-only" aria-hidden="true">
+        <label for="comunicat-bot-field">
+            No omplis aquest camp si ets una persona
+        </label>
+        <input
+            id="comunicat-bot-field"
+            name="bot-field"
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+        />
+    </div>
     <section
         id="comunicat-step-author"
         class="px-5 py-10 sm:px-8 sm:py-14"
@@ -195,9 +237,10 @@ const text =
                                         <input
                                             class="sr-only"
                                             type="radio"
-                                            name="comunicat-sender-type"
-                                            value={String(index)}
+                                            name="tipus_remitent"
+                                            value={label}
                                             data-label={label}
+                                            required
                                         />
                                         <span
                                             class="comunicat-sender-choice flex min-h-14 items-center rounded-2xl border border-slate-200 bg-stone-50 px-4 py-3 font-bold text-slate-700"
@@ -216,10 +259,12 @@ const text =
                         </span>
                         <input
                             id="comunicat-author"
+                            name="autor"
                             type="text"
                             maxlength="140"
                             autocomplete="organization"
                             placeholder={text.authorPlaceholder}
+                            required
                             class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
                         />
                         <span class="mt-2 block text-sm text-slate-500">
@@ -307,15 +352,21 @@ const text =
                         <label class="block" for="comunicat-title">
                             <span class="flex items-center justify-between gap-4 font-black text-slate-950">
                                 <span>{text.titleLabel}</span>
-                                <span class="text-xs font-bold text-slate-400">
+                                <span
+                                    id="comunicat-title-meta"
+                                    class="text-xs font-bold text-slate-400"
+                                >
                                     <span id="comunicat-title-count">0</span>/120
+                                    · {text.minLabel} 8
                                 </span>
                             </span>
                             <input
                                 id="comunicat-title"
+                                name="titol"
                                 type="text"
                                 maxlength="120"
                                 placeholder={text.titlePlaceholder}
+                                required
                                 class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
                             />
                         </label>
@@ -323,8 +374,12 @@ const text =
                         <label class="block" for="comunicat-summary">
                             <span class="flex items-center justify-between gap-4 font-black text-slate-950">
                                 <span>{text.summaryLabel}</span>
-                                <span class="text-xs font-bold text-slate-400">
+                                <span
+                                    id="comunicat-summary-meta"
+                                    class="text-xs font-bold text-slate-400"
+                                >
                                     <span id="comunicat-summary-count">0</span>/280
+                                    · {text.minLabel} 30
                                 </span>
                             </span>
                             <span class="mt-1 block text-sm text-slate-500">
@@ -332,9 +387,11 @@ const text =
                             </span>
                             <textarea
                                 id="comunicat-summary"
+                                name="resum"
                                 maxlength="280"
                                 rows="4"
                                 placeholder={text.summaryPlaceholder}
+                                required
                                 class="mt-2 w-full resize-y rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
                             ></textarea>
                         </label>
@@ -342,15 +399,21 @@ const text =
                         <label class="block" for="comunicat-content">
                             <span class="flex items-center justify-between gap-4 font-black text-slate-950">
                                 <span>{text.contentLabel}</span>
-                                <span class="text-xs font-bold text-slate-400">
+                                <span
+                                    id="comunicat-content-meta"
+                                    class="text-xs font-bold text-slate-400"
+                                >
                                     <span id="comunicat-content-count">0</span>/8000
+                                    · {text.minLabel} 80
                                 </span>
                             </span>
                             <textarea
                                 id="comunicat-content"
+                                name="contingut"
                                 maxlength="8000"
                                 rows="12"
                                 placeholder={text.contentPlaceholder}
+                                required
                                 class="mt-2 w-full resize-y rounded-2xl border border-slate-300 px-4 py-3.5 leading-7 outline-none transition placeholder:text-slate-400 focus:border-fuchsia-500 focus:ring-4 focus:ring-fuchsia-100"
                             ></textarea>
                         </label>
@@ -410,10 +473,19 @@ const text =
 
                             <input
                                 id="comunicat-image-input"
+                                name="imatge"
                                 type="file"
                                 accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                                aria-describedby="comunicat-image-error"
                                 class="sr-only"
                             />
+
+                            <p
+                                id="comunicat-image-error"
+                                hidden
+                                role="alert"
+                                class="mt-3 text-sm font-bold leading-6 text-rose-700"
+                            ></p>
                         </section>
                     </div>
 
@@ -594,47 +666,34 @@ const text =
                 </p>
 
                 <div class="mt-7 grid gap-5 sm:grid-cols-2">
-                    <label class="block" for="comunicat-contact-name">
-                        <span class="font-bold text-slate-950">
-                            {text.contactName}
-                        </span>
-                        <input
-                            id="comunicat-contact-name"
-                            type="text"
-                            maxlength="120"
-                            autocomplete="name"
-                            class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
-                        />
-                    </label>
-
                     <label class="block" for="comunicat-contact-email">
                         <span class="font-bold text-slate-950">
                             {text.contactEmail}
                         </span>
                         <input
                             id="comunicat-contact-email"
+                            name="email_contacte"
                             type="email"
                             maxlength="180"
                             autocomplete="email"
+                            required
                             class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
                         />
                     </label>
 
-                    <label
-                        class="block sm:col-span-2 sm:max-w-[calc(50%-0.625rem)]"
-                        for="comunicat-contact-phone"
-                    >
+                    <label class="block" for="comunicat-contact-name">
                         <span class="font-bold text-slate-950">
-                            {text.contactPhone}
+                            {text.contactName}
                             <span class="font-medium text-slate-400">
                                 ({text.optional})
                             </span>
                         </span>
                         <input
-                            id="comunicat-contact-phone"
-                            type="tel"
-                            maxlength="40"
-                            autocomplete="tel"
+                            id="comunicat-contact-name"
+                            name="nom_contacte"
+                            type="text"
+                            maxlength="120"
+                            autocomplete="name"
                             class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3.5 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
                         />
                     </label>
@@ -643,13 +702,30 @@ const text =
                 <label class="mt-7 flex cursor-pointer items-start gap-3 rounded-2xl bg-stone-50 p-4">
                     <input
                         id="comunicat-privacy"
+                        name="acceptacio"
+                        value="acceptada"
                         type="checkbox"
+                        required
                         class="mt-1 size-5 shrink-0 accent-slate-950"
                     />
                     <span class="text-sm leading-6 text-slate-700">
                         {text.privacy}
                     </span>
                 </label>
+
+                <div
+                    class="mt-7 flex justify-center"
+                    data-netlify-recaptcha="true"
+                ></div>
+
+                <p
+                    id="comunicat-submit-error"
+                    hidden
+                    role="alert"
+                    class="mt-5 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-bold leading-6 text-rose-800"
+                >
+                    {text.sendError}
+                </p>
 
                 <div class="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-6">
                     <button
@@ -662,26 +738,22 @@ const text =
 
                     <button
                         id="comunicat-review-send"
-                        type="button"
+                        type="submit"
                         disabled
                         class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-8 py-3 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                     >
-                        {text.send}
+                        <span id="comunicat-submit-label">
+                            {text.send}
+                        </span>
                         <span aria-hidden="true" class="ml-3">→</span>
                     </button>
-                </div>
-
-                <div
-                    id="comunicat-prototype-note"
-                    hidden
-                    class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-relaxed text-emerald-950"
-                >
-                    {text.prototype}
                 </div>
             </section>
         </div>
     </section>
-</div>
+</form>
+
+<SubmissionSendingOverlay lang={lang} />
 
 <style>
     .comunicat-sender-choice {

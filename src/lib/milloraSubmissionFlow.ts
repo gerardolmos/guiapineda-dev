@@ -1,5 +1,7 @@
+import { submitNetlifyForm } from "./netlifySubmission";
+
 export function initMilloraSubmissionFlow() {
-    const root = document.querySelector<HTMLElement>(
+    const root = document.querySelector<HTMLFormElement>(
         "[data-millora-submission-flow]",
     );
 
@@ -135,11 +137,37 @@ export function initMilloraSubmissionFlow() {
         "millora-review-send",
     ) as HTMLButtonElement | null;
 
-    const prototypeNote = document.getElementById(
-        "millora-prototype-note",
+    const submitLabel = document.getElementById(
+        "millora-submit-label",
     );
 
+    const submitError = document.getElementById(
+        "millora-submit-error",
+    );
+
+    const imageError = document.getElementById(
+        "millora-image-error",
+    );
+
+    const sendingLabel =
+        root.dataset.sendingLabel ?? "Sending...";
+
+    const defaultSubmitLabel =
+        submitLabel?.textContent?.trim() ?? "";
+
+    const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+    const ALLOWED_IMAGE_TYPES = new Set([
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+    ]);
+
+    const ALLOWED_IMAGE_EXTENSION =
+        /\.(?:jpe?g|png|webp)$/i;
+
     let imageUrl = "";
+    let isSubmitting = false;
 
     function selectedCategory() {
         return categoryRadios.find((radio) => radio.checked) ?? null;
@@ -278,31 +306,133 @@ export function initMilloraSubmissionFlow() {
         imageUrl = "";
     }
 
+    function showImageError(message = "") {
+        if (!imageError) return;
+
+        imageError.textContent = message;
+        imageError.hidden = !message;
+    }
+
+    function resetImagePreview() {
+        revokeImageUrl();
+
+        if (imagePreview) {
+            imagePreview.removeAttribute("src");
+        }
+
+        if (liveImage) {
+            liveImage.removeAttribute("src");
+        }
+
+        if (imageEmpty) {
+            imageEmpty.hidden = false;
+        }
+
+        if (imageSelected) {
+            imageSelected.hidden = true;
+        }
+
+        if (liveImageWrap) {
+            liveImageWrap.hidden = true;
+        }
+    }
+
+    function validateImage(file?: File) {
+        if (!file) {
+            imageInput?.setCustomValidity("");
+            return true;
+        }
+
+        const typeIsValid =
+            ALLOWED_IMAGE_TYPES.has(file.type) ||
+            (
+                !file.type &&
+                ALLOWED_IMAGE_EXTENSION.test(file.name)
+            );
+
+        if (!typeIsValid) {
+            showImageError(
+                root.dataset.fileTypeError ??
+                    "Invalid image format.",
+            );
+
+            imageInput?.setCustomValidity(
+                "Invalid image format.",
+            );
+
+            return false;
+        }
+
+        if (file.size > MAX_IMAGE_SIZE) {
+            showImageError(
+                root.dataset.fileSizeError ??
+                    "Image is too large.",
+            );
+
+            imageInput?.setCustomValidity(
+                "Image is too large.",
+            );
+
+            return false;
+        }
+
+        imageInput?.setCustomValidity("");
+        showImageError();
+
+        return true;
+    }
+
     function setImage(file?: File) {
-        if (!file) return;
+        if (!file) {
+            imageInput?.setCustomValidity("");
+            showImageError();
+            return;
+        }
+
+        if (!validateImage(file)) {
+            resetImagePreview();
+
+            if (imageInput) {
+                imageInput.value = "";
+                imageInput.setCustomValidity("");
+            }
+
+            return;
+        }
 
         revokeImageUrl();
 
         imageUrl = URL.createObjectURL(file);
 
-        if (imagePreview) imagePreview.src = imageUrl;
-        if (liveImage) liveImage.src = imageUrl;
+        if (imagePreview) {
+            imagePreview.src = imageUrl;
+        }
 
-        if (imageEmpty) imageEmpty.hidden = true;
-        if (imageSelected) imageSelected.hidden = false;
-        if (liveImageWrap) liveImageWrap.hidden = false;
+        if (liveImage) {
+            liveImage.src = imageUrl;
+        }
+
+        if (imageEmpty) {
+            imageEmpty.hidden = true;
+        }
+
+        if (imageSelected) {
+            imageSelected.hidden = false;
+        }
+
+        if (liveImageWrap) {
+            liveImageWrap.hidden = false;
+        }
     }
 
     function clearImage() {
-        revokeImageUrl();
+        if (imageInput) {
+            imageInput.value = "";
+            imageInput.setCustomValidity("");
+        }
 
-        if (imageInput) imageInput.value = "";
-        if (imagePreview) imagePreview.removeAttribute("src");
-        if (liveImage) liveImage.removeAttribute("src");
-
-        if (imageEmpty) imageEmpty.hidden = false;
-        if (imageSelected) imageSelected.hidden = true;
-        if (liveImageWrap) liveImageWrap.hidden = true;
+        showImageError();
+        resetImagePreview();
     }
 
     function renderReview() {
@@ -339,6 +469,24 @@ export function initMilloraSubmissionFlow() {
             reviewImageWrap.hidden = false;
         } else if (reviewImageWrap) {
             reviewImageWrap.hidden = true;
+        }
+    }
+
+    function setSubmitting(submitting: boolean) {
+        isSubmitting = submitting;
+
+        if (reviewSend) {
+            reviewSend.disabled = submitting;
+            reviewSend.setAttribute(
+                "aria-busy",
+                String(submitting),
+            );
+        }
+
+        if (submitLabel) {
+            submitLabel.textContent = submitting
+                ? sendingLabel
+                : defaultSubmitLabel;
         }
     }
 
@@ -425,14 +573,122 @@ export function initMilloraSubmissionFlow() {
             });
         });
 
-    reviewSend?.addEventListener("click", () => {
-        if (prototypeNote) {
-            prototypeNote.hidden = false;
+    root.addEventListener("submit", async (event) => {
+        event.preventDefault();
 
-            prototypeNote.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
+        if (submitError) {
+            submitError.hidden = true;
+        }
+
+        // Un Enter accidental en pasos anteriores
+        // no debe disparar el envío final.
+        if (stepReview?.hidden) {
+            return;
+        }
+
+        const authorType = selectedAuthorType();
+
+        const authorReady =
+            authorType?.value === "alias"
+                ? Boolean(aliasInput?.value.trim())
+                : Boolean(authorType);
+
+        const contextReady = Boolean(
+            selectedCategory() &&
+                zoneSelect?.value &&
+                authorReady,
+        );
+
+        const titleReady =
+            (titleInput?.value.trim().length ?? 0) >= 8;
+
+        const summaryReady =
+            (summaryInput?.value.trim().length ?? 0) >= 30;
+
+        const contentReady =
+            (contentInput?.value.trim().length ?? 0) >= 80;
+
+        const imageIsValid = validateImage(
+            imageInput?.files?.[0],
+        );
+
+        if (
+            !contextReady ||
+            !titleReady ||
+            !summaryReady ||
+            !contentReady ||
+            !imageIsValid
+        ) {
+            setSubmitting(false);
+
+            if (!contextReady) {
+                showStep("context");
+                updateContextState();
+                return;
+            }
+
+            showStep("content");
+            updateContentState();
+
+            if (!imageIsValid) {
+                imageError?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+
+            return;
+        }
+
+        if (isSubmitting) {
+            return;
+        }
+
+        const successUrl =
+            root.dataset.successUrl;
+
+        if (!successUrl) {
+            console.error(
+                "Falta data-success-url en Millorem.",
+            );
+
+            if (submitError) {
+                submitError.hidden = false;
+            }
+
+            return;
+        }
+
+        setSubmitting(true);
+
+        try {
+            await submitNetlifyForm(root, {
+                successUrl,
+                minimumDuration: 3200,
             });
+        } catch (error) {
+            console.error(
+                "Error enviando Millorem:",
+                error,
+            );
+
+            setSubmitting(false);
+
+            if (submitError) {
+                submitError.hidden = false;
+                submitError.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+        }
+    });
+
+    window.addEventListener("pageshow", () => {
+        setSubmitting(false);
+
+        if (submitError) {
+            submitError.hidden = true;
         }
     });
 
