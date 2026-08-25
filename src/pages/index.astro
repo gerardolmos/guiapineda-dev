@@ -117,42 +117,128 @@ const categoryStyles = [
 
 ---
 
+<style is:global>
+    @import url("https://fonts.googleapis.com/css2?family=Petit+Formal+Script&display=swap");
+
+    .hero-manuscript {
+        font-family: "Petit Formal Script", cursive;
+    }
+
+    @keyframes hero-arrow-bounce {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(6px);
+        }
+    }
+
+    .hero-arrow-bounce {
+        animation: hero-arrow-bounce 1.5s ease-in-out infinite;
+    }
+</style>
+
 <Layout
     title="GUIAPINEDA"
     description={heroSubtitulo}
     lang={lang}
 >
     <section
-        class="relative overflow-hidden border-b border-stone-200 bg-stone-100"
+        class="relative isolate h-[700px] overflow-hidden border-b border-white/10 bg-slate-950"
     >
+        <div class="absolute inset-0 -z-30">
+            {
+                heroVideoUrl ? (
+                    <video
+                        data-home-hero-video
+                        src={heroVideoUrl}
+                        poster={heroImageUrl || undefined}
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                        aria-hidden="true"
+                        tabindex="-1"
+                        width="1920"
+                        height="1080"
+                        class="size-full object-cover"
+                    />
+                ) : heroImageUrl ? (
+                    <img
+                        src={heroImageUrl}
+                        alt=""
+                        width="1920"
+                        height="1080"
+                        loading="eager"
+                        fetchpriority="high"
+                        class="size-full object-cover"
+                    />
+                ) : (
+                    <div
+                        aria-hidden="true"
+                        class="size-full bg-slate-900"
+                    ></div>
+                )
+            }
+        </div>
+
         <div
-            class="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-14 lg:px-8 lg:py-20"
+            aria-hidden="true"
+            class="absolute inset-0 -z-20 bg-slate-950/35"
+        ></div>
+
+        <div
+            aria-hidden="true"
+            class="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/15 via-slate-950/20 to-slate-950/60"
+        ></div>
+
+        <div
+            aria-hidden="true"
+            class="absolute inset-0 -z-10 bg-gradient-to-t from-slate-950/55 via-transparent to-slate-950/20"
+        ></div>
+
+        <div
+            class="mx-auto flex h-full max-w-7xl items-center justify-center px-4 py-16 sm:px-6 lg:px-8"
         >
-            <div class="order-2 max-w-2xl lg:order-1">
-                <h1 class="max-w-lg">
+            <div class="mx-auto max-w-5xl text-center">
+                <h1 class="mx-auto max-w-xl">
                     <img
                         src={heroLogo}
                         alt={heroTitulo}
                         width="807"
                         height="147"
                         decoding="async"
-                        class="block h-auto w-full"
+                        class="mx-auto block h-auto w-full drop-shadow-lg"
                     />
                 </h1>
 
                 <p
-                    class="mt-5 max-w-xl text-xl font-semibold leading-8 text-slate-700 sm:text-2xl"
+                    class="hero-manuscript mt-4 text-2xl leading-none text-white sm:mt-5 sm:text-4xl"
                 >
                     {heroSubtitulo}
                 </p>
 
-                <p class="mt-6 max-w-xl text-base leading-7 text-slate-600">
-                    {t.home.welcomeText}
-                </p>
+                <div
+                    class="mx-auto mt-7 max-w-5xl text-center text-white/95"
+                >
+                    <p
+                        class="text-2xl font-black leading-tight sm:text-3xl"
+                    >
+                        {t.home.welcomeText}
+                    </p>
+
+                    <p
+                        class="mt-2 text-xl font-semibold leading-tight sm:text-2xl"
+                    >
+                        {t.home.welcomeTextSecondary}
+                    </p>
+                </div>
 
                 <a
                     href="#categories"
-                    class="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-sm outline-none transition-colors duration-200 hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-500"
+                    class="mt-10 inline-flex flex-col items-center justify-center gap-1.5 text-xl font-black text-white outline-none transition-opacity duration-200 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                 >
                     {t.home.exploreCategories}
 
@@ -164,55 +250,12 @@ const categoryStyles = [
                         stroke-width="2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="size-5"
+                        class="hero-arrow-bounce size-6"
                     >
-                        <path d="M12 5v14"></path>
-                        <path d="m19 12-7 7-7-7"></path>
+                        <path d="M12 4v16"></path>
+                        <path d="m18 14-6 6-6-6"></path>
                     </svg>
                 </a>
-            </div>
-
-            <div class="relative order-1 lg:order-2">
-                <div
-                    class="overflow-hidden rounded-3xl border border-slate-200 bg-slate-200 shadow-xl"
-                >
-                    <div class="aspect-[4/3] overflow-hidden">
-                        {
-                            heroVideoUrl ? (
-                                <video
-                                    data-home-hero-video
-                                    src={heroVideoUrl}
-                                    poster={heroImageUrl || undefined}
-                                    autoplay
-                                    muted
-                                    loop
-                                    playsinline
-                                    preload="metadata"
-                                    aria-hidden="true"
-                                    tabindex="-1"
-                                    width="1200"
-                                    height="900"
-                                    class="size-full object-cover"
-                                />
-                            ) : heroImageUrl ? (
-                                <img
-                                    src={heroImageUrl}
-                                    alt=""
-                                    width="1200"
-                                    height="900"
-                                    loading="eager"
-                                    fetchpriority="high"
-                                    class="size-full object-cover"
-                                />
-                            ) : (
-                                <div
-                                    aria-hidden="true"
-                                    class="size-full bg-stone-200"
-                                ></div>
-                            )
-                        }
-                    </div>
-                </div>
             </div>
         </div>
     </section>
