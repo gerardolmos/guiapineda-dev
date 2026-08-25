@@ -27,8 +27,16 @@ const communicatsUrl =
 const milloresUrl =
     lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
 
+const aboutUrl =
+    lang === "ca"
+        ? "/sobre-guiapineda"
+        : lang === "es"
+          ? "/es/sobre-guiapineda"
+          : "/en/about-guiapineda";
+
 const navigationItems = [
     { label: t.nav.guide, href: homeUrl },
+    { label: t.about.navLabel, href: aboutUrl },
     { label: t.comunicats.title, href: communicatsUrl },
     { label: t.millores.title, href: milloresUrl },
 ];

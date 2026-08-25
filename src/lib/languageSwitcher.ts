@@ -17,6 +17,23 @@ export function getLanguageLinks(pathname: string) {
         };
     }
 
+    const aboutLinks: Record<Lang, string> = {
+        ca: "/sobre-guiapineda",
+        es: "/es/sobre-guiapineda",
+        en: "/en/about-guiapineda",
+    };
+
+    const aboutEntry = Object.entries(aboutLinks).find(
+        ([, path]) => path === cleanPath,
+    );
+
+    if (aboutEntry) {
+        return {
+            currentLang: aboutEntry[0] as Lang,
+            links: aboutLinks,
+        };
+    }
+
     let currentLang: Lang = "ca";
     let pathWithoutLang = cleanPath;
 

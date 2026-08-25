@@ -1,0 +1,382 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getTranslations } from "../i18n/getTranslations";
+import type { Lang } from "../lib/languageSwitcher";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getTranslations(lang);
+const about = t.about;
+
+const comunicatsUrl =
+    lang === "ca"
+        ? "/comunicats/"
+        : `/${lang}/comunicats/`;
+
+const milloremUrl =
+    lang === "ca"
+        ? "/millorem-pineda/"
+        : `/${lang}/millorem-pineda/`;
+
+const fotoMesUrl =
+    lang === "ca"
+        ? "/foto-del-mes/"
+        : `/${lang}/foto-del-mes/`;
+
+const participationLinks = [
+    {
+        title: about.participationComunicatsTitle,
+        text: about.participationComunicatsText,
+        href: comunicatsUrl,
+        accent: "border-violet-400",
+        arrow: "text-violet-700",
+    },
+    {
+        title: about.participationMilloremTitle,
+        text: about.participationMilloremText,
+        href: milloremUrl,
+        accent: "border-emerald-400",
+        arrow: "text-emerald-700",
+    },
+    {
+        title: about.participationFotoTitle,
+        text: about.participationFotoText,
+        href: fotoMesUrl,
+        accent: "border-cyan-400",
+        arrow: "text-cyan-700",
+    },
+];
+
+const pillars = [
+    {
+        number: "01",
+        title: about.pillarUsefulTitle,
+        text: about.pillarUsefulText,
+        accent: "bg-sky-500",
+    },
+    {
+        number: "02",
+        title: about.pillarVisibilityTitle,
+        text: about.pillarVisibilityText,
+        accent: "bg-fuchsia-500",
+    },
+    {
+        number: "03",
+        title: about.pillarParticipationTitle,
+        text: about.pillarParticipationText,
+        accent: "bg-amber-400",
+    },
+    {
+        number: "04",
+        title: about.pillarLocalTitle,
+        text: about.pillarLocalText,
+        accent: "bg-emerald-500",
+    },
+];
+
+const principles = [
+    {
+        title: about.principleUtilityTitle,
+        text: about.principleUtilityText,
+    },
+    {
+        title: about.principleProximityTitle,
+        text: about.principleProximityText,
+    },
+    {
+        title: about.principleClarityTitle,
+        text: about.principleClarityText,
+    },
+    {
+        title: about.principleParticipationTitle,
+        text: about.principleParticipationText,
+    },
+    {
+        title: about.principleEvolutionTitle,
+        text: about.principleEvolutionText,
+    },
+];
+---
+
+<Layout
+    lang={lang}
+    title={`${about.pageTitle} | GUIAPINEDA`}
+    description={about.metaDescription}
+>
+    <div class="bg-stone-50">
+        <section
+            class="relative overflow-hidden bg-slate-950 px-5 py-16 sm:px-8 sm:py-20 lg:py-24"
+        >
+            <div
+                aria-hidden="true"
+                class="absolute -right-24 -top-32 size-96 rounded-full bg-sky-500/10 blur-3xl"
+            ></div>
+
+            <div
+                aria-hidden="true"
+                class="absolute -bottom-40 left-1/3 size-96 rounded-full bg-fuchsia-500/10 blur-3xl"
+            ></div>
+
+            <div class="relative mx-auto max-w-6xl">
+                <p
+                    class="text-sm font-black uppercase tracking-[0.2em] text-cyan-300"
+                >
+                    GUIAPINEDA · {about.eyebrow}
+                </p>
+
+                <h1
+                    class="mt-5 max-w-5xl text-5xl font-black leading-[0.96] tracking-tight text-white sm:text-6xl lg:text-7xl"
+                >
+                    {about.heroTitle}
+                </h1>
+
+                <p
+                    class="mt-7 max-w-3xl text-xl font-semibold leading-8 text-slate-200 sm:text-2xl sm:leading-10"
+                >
+                    {about.heroLead}
+                </p>
+            </div>
+        </section>
+
+        <div
+            aria-hidden="true"
+            class="grid h-2 grid-cols-6"
+        >
+            <span class="bg-sky-500"></span>
+            <span class="bg-fuchsia-500"></span>
+            <span class="bg-amber-400"></span>
+            <span class="bg-emerald-500"></span>
+            <span class="bg-violet-500"></span>
+            <span class="bg-cyan-500"></span>
+        </div>
+
+        <section class="bg-white px-5 py-14 sm:px-8 sm:py-20">
+            <div
+                class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20"
+            >
+                <div>
+                    <p
+                        class="text-sm font-black uppercase tracking-[0.18em] text-sky-700"
+                    >
+                        {about.introEyebrow}
+                    </p>
+
+                    <h2
+                        class="mt-3 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                    >
+                        {about.introTitle}
+                    </h2>
+                </div>
+
+                <div
+                    class="space-y-6 text-lg font-medium leading-8 text-slate-700 sm:text-xl sm:leading-9"
+                >
+                    <p>{about.introText1}</p>
+                    <p>{about.introText2}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="border-y border-slate-200 bg-stone-50 px-5 py-14 sm:px-8 sm:py-20">
+            <div class="mx-auto max-w-6xl">
+                <div class="max-w-3xl">
+                    <p
+                        class="text-sm font-black uppercase tracking-[0.18em] text-fuchsia-700"
+                    >
+                        {about.pillarsEyebrow}
+                    </p>
+
+                    <h2
+                        class="mt-3 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                    >
+                        {about.pillarsTitle}
+                    </h2>
+                </div>
+
+                <div class="mt-10 grid gap-5 md:grid-cols-2">
+                    {
+                        pillars.map((pillar) => (
+                            <article
+                                class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+                            >
+                                <div class={`h-2 ${pillar.accent}`}></div>
+
+                                <div class="p-6 sm:p-8">
+                                    <p
+                                        class="text-sm font-black tracking-[0.16em] text-slate-400"
+                                    >
+                                        {pillar.number}
+                                    </p>
+
+                                    <h3
+                                        class="mt-4 text-2xl font-black tracking-tight text-slate-950"
+                                    >
+                                        {pillar.title}
+                                    </h3>
+
+                                    <p
+                                        class="mt-3 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8"
+                                    >
+                                        {pillar.text}
+                                    </p>
+                                </div>
+                            </article>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-950 px-5 py-14 text-white sm:px-8 sm:py-20">
+            <div class="mx-auto max-w-6xl">
+                <div
+                    class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16"
+                >
+                    <div>
+                        <p
+                            class="text-sm font-black uppercase tracking-[0.18em] text-amber-300"
+                        >
+                            {about.participationEyebrow}
+                        </p>
+
+                        <h2
+                            class="mt-3 text-4xl font-black tracking-tight sm:text-5xl"
+                        >
+                            {about.participationTitle}
+                        </h2>
+                    </div>
+
+                    <p
+                        class="max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl sm:leading-9"
+                    >
+                        {about.participationText}
+                    </p>
+                </div>
+
+                <div class="mt-10 grid gap-5 lg:grid-cols-3">
+                    {
+                        participationLinks.map((item) => (
+                            <a
+                                href={item.href}
+                                class:list={[
+                                    "group rounded-3xl border-t-4 bg-white p-6 text-slate-950 outline-none transition duration-200 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white",
+                                    item.accent,
+                                ]}
+                            >
+                                <h3 class="text-xl font-black">
+                                    {item.title}
+                                </h3>
+
+                                <p
+                                    class="mt-3 text-sm leading-6 text-slate-600"
+                                >
+                                    {item.text}
+                                </p>
+
+                                <span
+                                    class:list={[
+                                        "mt-5 inline-flex items-center gap-2 text-sm font-black",
+                                        item.arrow,
+                                    ]}
+                                >
+                                    {about.discover}
+                                    <span
+                                        aria-hidden="true"
+                                        class="transition-transform group-hover:translate-x-1"
+                                    >
+                                        →
+                                    </span>
+                                </span>
+                            </a>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white px-5 py-14 sm:px-8 sm:py-20">
+            <div class="mx-auto max-w-6xl">
+                <div
+                    class="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20"
+                >
+                    <div>
+                        <p
+                            class="text-sm font-black uppercase tracking-[0.18em] text-emerald-700"
+                        >
+                            {about.principlesEyebrow}
+                        </p>
+
+                        <h2
+                            class="mt-3 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                        >
+                            {about.principlesTitle}
+                        </h2>
+                    </div>
+
+                    <div class="divide-y divide-slate-200">
+                        {
+                            principles.map((principle, index) => (
+                                <article
+                                    class="grid gap-3 py-6 first:pt-0 sm:grid-cols-[3rem_1fr]"
+                                >
+                                    <span
+                                        class="text-sm font-black text-slate-400"
+                                    >
+                                        {String(index + 1).padStart(2, "0")}
+                                    </span>
+
+                                    <div>
+                                        <h3
+                                            class="text-xl font-black text-slate-950"
+                                        >
+                                            {principle.title}
+                                        </h3>
+
+                                        <p
+                                            class="mt-2 text-base leading-7 text-slate-600"
+                                        >
+                                            {principle.text}
+                                        </p>
+                                    </div>
+                                </article>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="border-t border-slate-200 bg-amber-50 px-5 py-14 sm:px-8 sm:py-20"
+        >
+            <div class="mx-auto max-w-5xl text-center">
+                <p
+                    class="text-sm font-black uppercase tracking-[0.18em] text-amber-800"
+                >
+                    {about.futureEyebrow}
+                </p>
+
+                <h2
+                    class="mx-auto mt-3 max-w-4xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                >
+                    {about.futureTitle}
+                </h2>
+
+                <p
+                    class="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-700 sm:text-xl sm:leading-9"
+                >
+                    {about.futureText}
+                </p>
+
+                <p
+                    class="mx-auto mt-8 max-w-4xl text-2xl font-black leading-tight text-slate-950 sm:text-3xl"
+                >
+                    {about.closing}
+                </p>
+            </div>
+        </section>
+    </div>
+</Layout>
