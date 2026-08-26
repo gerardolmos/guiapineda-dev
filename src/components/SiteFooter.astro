@@ -59,13 +59,13 @@ const navigationItems = [
                 {t.footer.navigation}
             </h2>
 
-            <ul class="mt-4 space-y-2">
+            <ul class="mt-4 space-y-1">
                 {
                     navigationItems.map((item) => (
                         <li>
                             <a
                                 href={item.href}
-                                class="inline-flex min-h-11 items-center rounded-lg text-sm font-medium text-slate-300 underline-offset-4 outline-none transition-colors duration-200 hover:text-white hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-400"
+                                class="inline-flex min-h-11 items-center rounded-lg text-sm font-medium text-slate-300 underline-offset-4 outline-none transition-colors duration-200 hover:text-white hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-400 lg:min-h-8"
                             >
                                 {item.label}
                             </a>
