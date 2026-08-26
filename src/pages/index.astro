@@ -118,12 +118,6 @@ const categoryStyles = [
 ---
 
 <style is:global>
-    @import url("https://fonts.googleapis.com/css2?family=Petit+Formal+Script&display=swap");
-
-    .hero-manuscript {
-        font-family: "Petit Formal Script", cursive;
-    }
-
     @keyframes hero-arrow-bounce {
         0%,
         100% {
@@ -186,17 +180,17 @@ const categoryStyles = [
 
         <div
             aria-hidden="true"
-            class="absolute inset-0 -z-20 bg-slate-950/35"
+            class="absolute inset-0 -z-20 bg-sky-100/5"
         ></div>
 
         <div
             aria-hidden="true"
-            class="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/15 via-slate-950/20 to-slate-950/60"
+            class="absolute inset-0 -z-10 bg-gradient-to-b from-sky-50/50 via-sky-100/25 to-sky-200/15"
         ></div>
 
         <div
             aria-hidden="true"
-            class="absolute inset-0 -z-10 bg-gradient-to-t from-slate-950/55 via-transparent to-slate-950/20"
+            class="absolute inset-0 -z-10 bg-gradient-to-t from-slate-200/5 via-transparent to-cyan-50/5"
         ></div>
 
         <div
@@ -210,27 +204,27 @@ const categoryStyles = [
                         width="807"
                         height="147"
                         decoding="async"
-                        class="mx-auto block h-auto w-full drop-shadow-lg"
+                        class="mx-auto block h-auto w-full"
                     />
                 </h1>
 
                 <p
-                    class="hero-manuscript mt-4 text-2xl leading-none text-white sm:mt-5 sm:text-4xl"
+                    class="mt-1 text-xl font-medium tracking-[0.025em] text-slate-700 sm:text-2xl"
                 >
                     {heroSubtitulo}
                 </p>
 
                 <div
-                    class="mx-auto mt-7 max-w-5xl text-center text-white/95"
+                    class="mx-auto mt-10 max-w-5xl text-center"
                 >
                     <p
-                        class="text-2xl font-black leading-tight sm:text-3xl"
+                        class="text-3xl font-extrabold leading-tight tracking-tight text-slate-800 sm:text-4xl"
                     >
                         {t.home.welcomeText}
                     </p>
 
                     <p
-                        class="mt-2 text-xl font-semibold leading-tight sm:text-2xl"
+                        class="mt-3 text-xl font-semibold leading-tight text-slate-700 sm:text-2xl"
                     >
                         {t.home.welcomeTextSecondary}
                     </p>
@@ -238,7 +232,7 @@ const categoryStyles = [
 
                 <a
                     href="#categories"
-                    class="mt-10 inline-flex flex-col items-center justify-center gap-1.5 text-xl font-black text-white outline-none transition-opacity duration-200 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                    class="mt-10 inline-flex flex-col items-center justify-center gap-1.5 text-lg font-extrabold text-slate-800 outline-none transition-all duration-200 hover:text-sky-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-800 sm:text-xl"
                 >
                     {t.home.exploreCategories}
 
@@ -259,6 +253,19 @@ const categoryStyles = [
             </div>
         </div>
     </section>
+
+        <!-- Transición cromática hero → guía -->
+        <div
+            aria-hidden="true"
+            class="grid h-1.5 grid-cols-6"
+        >
+            <span class="bg-sky-500"></span>
+            <span class="bg-fuchsia-500"></span>
+            <span class="bg-amber-400"></span>
+            <span class="bg-emerald-500"></span>
+            <span class="bg-violet-500"></span>
+            <span class="bg-cyan-500"></span>
+        </div>
 
     <section
         id="categories"
