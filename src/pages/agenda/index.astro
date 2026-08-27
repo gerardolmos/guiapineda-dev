@@ -155,7 +155,12 @@ function getImageUrl(image: unknown): string | null {
                                             <h2
                                                 class="mt-2 text-2xl font-black leading-tight tracking-tight text-slate-950"
                                             >
-                                                {event.titol}
+                                                <a
+                                                    href={`/agenda/${event.slug}`}
+                                                    class="outline-none transition-colors hover:text-emerald-700 focus-visible:text-emerald-700"
+                                                >
+                                                    {event.titol}
+                                                </a>
                                             </h2>
 
                                             <p
@@ -187,6 +192,13 @@ function getImageUrl(image: unknown): string | null {
                                                     }
                                                 </p>
                                             </div>
+
+                                            <a
+                                                href={`/agenda/${event.slug}`}
+                                                class="mt-5 inline-flex text-sm font-black text-emerald-700 underline-offset-4 hover:underline"
+                                            >
+                                                Veure activitat →
+                                            </a>
                                         </div>
                                     </article>
                                 );

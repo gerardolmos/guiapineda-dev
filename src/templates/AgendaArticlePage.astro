@@ -1,0 +1,371 @@
+---
+import Layout from "../layouts/Layout.astro";
+import StrapiBlocks from "../components/StrapiBlocks.astro";
+import { getStrapiMediaUrl } from "../lib/strapi";
+
+const { event } = Astro.props;
+
+if (!event) {
+    throw new Error(
+        "No se recibió el evento necesario para generar la página.",
+    );
+}
+
+const backUrl = "/agenda/";
+
+function formatDate(value: string): string {
+    const [year, month, day] =
+        value.split("-").map(Number);
+
+    return new Intl.DateTimeFormat("ca-ES", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "Europe/Madrid",
+    }).format(
+        new Date(
+            Date.UTC(year, month - 1, day, 12),
+        ),
+    );
+}
+
+function formatTime(value: unknown): string | null {
+    if (typeof value !== "string") {
+        return null;
+    }
+
+    const match = /^(\d{2}):(\d{2})/.exec(value);
+
+    return match
+        ? `${match[1]}:${match[2]}`
+        : null;
+}
+
+function getSafeExternalUrl(
+    value: unknown,
+): string | null {
+    if (typeof value !== "string") {
+        return null;
+    }
+
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+        return null;
+    }
+
+    try {
+        const url = new URL(trimmed);
+
+        if (
+            url.protocol !== "http:" &&
+            url.protocol !== "https:"
+        ) {
+            return null;
+        }
+
+        return url.toString();
+    } catch {
+        return null;
+    }
+}
+
+const startTime = formatTime(event.hora_inici);
+const endTime = formatTime(event.hora_final);
+
+const hasDifferentEndDate =
+    typeof event.data_final === "string" &&
+    event.data_final &&
+    event.data_final !== event.data_inici;
+
+const officialUrl =
+    getSafeExternalUrl(event.enllac_oficial);
+
+const imageAlt =
+    event.imatge?.alternativeText ||
+    event.titol ||
+    "";
+---
+
+<Layout
+    lang="ca"
+    title={`${event.titol} | Agenda Oberta | GUIAPINEDA`}
+    description={event.resum}
+>
+    <main class="bg-stone-50">
+        <nav
+            aria-label="Agenda Oberta"
+            class="sticky top-16 z-40 border-b border-slate-200 bg-white/95 px-5 backdrop-blur sm:px-8 lg:top-20"
+        >
+            <div
+                class="mx-auto flex min-h-12 max-w-6xl items-center"
+            >
+                <a
+                    href={backUrl}
+                    class="inline-flex items-center gap-2 text-sm font-black text-emerald-800 transition hover:text-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                >
+                    <span aria-hidden="true">←</span>
+                    <span>Tornar a Agenda Oberta</span>
+                </a>
+            </div>
+        </nav>
+
+        <article>
+            <header
+                class="bg-white px-5 pb-10 pt-10 sm:px-8 sm:pb-12 sm:pt-14"
+            >
+                <div class="mx-auto max-w-6xl">
+                    <div
+                        class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12"
+                    >
+                        <div>
+                            <p
+                                class="text-xs font-black uppercase tracking-[0.2em] text-emerald-700"
+                            >
+                                Agenda Oberta
+                            </p>
+
+                            <h1
+                                class="mt-4 max-w-4xl text-4xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl"
+                            >
+                                {event.titol}
+                            </h1>
+
+                            {
+                                event.resum && (
+                                    <p
+                                        class="mt-6 max-w-3xl text-xl font-semibold leading-8 text-slate-600 sm:text-2xl sm:leading-9"
+                                    >
+                                        {event.resum}
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <aside
+                            class="self-end rounded-[1.6rem] border border-emerald-200 bg-emerald-50 p-5"
+                        >
+                            <p
+                                class="text-xs font-black uppercase tracking-[0.14em] text-emerald-800"
+                            >
+                                Quan
+                            </p>
+
+                            <p
+                                class="mt-2 font-black leading-6 text-slate-950"
+                            >
+                                {formatDate(event.data_inici)}
+                            </p>
+
+                            {
+                                hasDifferentEndDate && (
+                                    <p
+                                        class="mt-1 font-bold leading-6 text-slate-700"
+                                    >
+                                        fins al{" "}
+                                        {
+                                            formatDate(
+                                                event.data_final,
+                                            )
+                                        }
+                                    </p>
+                                )
+                            }
+
+                            {
+                                startTime && (
+                                    <p
+                                        class="mt-2 text-sm font-semibold text-slate-600"
+                                    >
+                                        {startTime}
+                                        {
+                                            endTime &&
+                                                ` – ${endTime}`
+                                        }
+                                    </p>
+                                )
+                            }
+
+                            <div
+                                class="mt-5 border-t border-emerald-200 pt-4"
+                            >
+                                <p
+                                    class="text-xs font-black uppercase tracking-[0.14em] text-emerald-800"
+                                >
+                                    On
+                                </p>
+
+                                <p
+                                    class="mt-2 font-black text-slate-950"
+                                >
+                                    {event.lloc}
+                                </p>
+
+                                {
+                                    event.adreca && (
+                                        <p
+                                            class="mt-1 text-sm leading-6 text-slate-600"
+                                        >
+                                            {event.adreca}
+                                        </p>
+                                    )
+                                }
+                            </div>
+
+                            <div
+                                class="mt-5 border-t border-emerald-200 pt-4"
+                            >
+                                <p
+                                    class="text-xs font-black uppercase tracking-[0.14em] text-emerald-800"
+                                >
+                                    Organitza
+                                </p>
+
+                                <p
+                                    class="mt-2 font-black text-slate-950"
+                                >
+                                    {event.organitzador}
+                                </p>
+                            </div>
+
+                            {
+                                officialUrl && (
+                                    <a
+                                        href={officialUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-emerald-800 px-5 py-2 text-sm font-black text-white transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                                    >
+                                        Web oficial →
+                                    </a>
+                                )
+                            }
+                        </aside>
+                    </div>
+                </div>
+            </header>
+
+            <div
+                aria-hidden="true"
+                class="h-2 bg-emerald-500"
+            ></div>
+
+            {
+                event.imatge?.url && (
+                    <section
+                        class="bg-white px-5 pt-10 sm:px-8 sm:pt-12"
+                    >
+                        <div class="mx-auto max-w-5xl">
+                            <div
+                                class="overflow-hidden rounded-[2rem] border border-emerald-200 bg-slate-100 shadow-sm"
+                            >
+                                <img
+                                    src={getStrapiMediaUrl(
+                                        event.imatge.url,
+                                    )}
+                                    alt={imageAlt}
+                                    width={
+                                        event.imatge.width ||
+                                        1400
+                                    }
+                                    height={
+                                        event.imatge.height ||
+                                        788
+                                    }
+                                    class="aspect-[16/9] w-full object-cover"
+                                />
+                            </div>
+                        </div>
+                    </section>
+                )
+            }
+
+            <section
+                class="bg-white px-5 py-10 sm:px-8 sm:py-14"
+            >
+                <div class="mx-auto max-w-3xl">
+                    <StrapiBlocks
+                        blocks={event.contingut}
+                        class="agenda-body"
+                    />
+                </div>
+            </section>
+        </article>
+    </main>
+</Layout>
+
+<style is:global>
+    .agenda-body {
+        color: rgb(51 65 85);
+        font-size: 1.075rem;
+        line-height: 1.9;
+    }
+
+    .agenda-body > :first-child {
+        margin-top: 0;
+    }
+
+    .agenda-body > :last-child {
+        margin-bottom: 0;
+    }
+
+    .agenda-body p {
+        margin-block: 1.35rem;
+    }
+
+    .agenda-body h2 {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        color: rgb(15 23 42);
+        font-size: 1.8rem;
+        font-weight: 900;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+    }
+
+    .agenda-body h3 {
+        margin-top: 2.4rem;
+        margin-bottom: 0.8rem;
+        color: rgb(15 23 42);
+        font-size: 1.35rem;
+        font-weight: 900;
+        line-height: 1.3;
+    }
+
+    .agenda-body ul,
+    .agenda-body ol {
+        margin-block: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .agenda-body ul {
+        list-style: disc;
+    }
+
+    .agenda-body ol {
+        list-style: decimal;
+    }
+
+    .agenda-body li {
+        margin-block: 0.55rem;
+    }
+
+    .agenda-body strong {
+        color: rgb(15 23 42);
+        font-weight: 800;
+    }
+
+    .agenda-body a {
+        color: rgb(4 120 87);
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+    }
+
+    @media (min-width: 640px) {
+        .agenda-body {
+            font-size: 1.125rem;
+        }
+    }
+</style>
