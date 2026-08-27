@@ -1,6 +1,6 @@
 ---
-import { fetchAPI, endpoints } from "../../lib/api";
-import AgendaArticlePage from "../../templates/AgendaArticlePage.astro";
+import { fetchAPI, endpoints } from "../../../lib/api";
+import AgendaArticlePage from "../../../templates/AgendaArticlePage.astro";
 
 export async function getStaticPaths() {
     const agendaData = await fetchAPI(
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
             },
             props: {
                 event,
-                lang: "ca",
+                lang: "es",
             },
         }));
 }

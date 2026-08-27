@@ -2,8 +2,15 @@
 import Layout from "../layouts/Layout.astro";
 import StrapiBlocks from "../components/StrapiBlocks.astro";
 import { getStrapiMediaUrl } from "../lib/strapi";
+import type { Lang } from "../lib/languageSwitcher";
 
-const { event } = Astro.props;
+const {
+    event,
+    lang = "ca",
+} = Astro.props as {
+    event: any;
+    lang?: Lang;
+};
 
 if (!event) {
     throw new Error(
@@ -11,13 +18,49 @@ if (!event) {
     );
 }
 
-const backUrl = "/agenda/";
+const copy = {
+    ca: {
+        section: "Agenda Oberta",
+        back: "Tornar a Agenda Oberta",
+        when: "Quan",
+        until: "fins al",
+        where: "On",
+        organiser: "Organitza",
+        official: "Web oficial",
+        locale: "ca-ES",
+    },
+    es: {
+        section: "Agenda Abierta",
+        back: "Volver a Agenda Abierta",
+        when: "Cuándo",
+        until: "hasta el",
+        where: "Dónde",
+        organiser: "Organiza",
+        official: "Web oficial",
+        locale: "es-ES",
+    },
+    en: {
+        section: "Open Agenda",
+        back: "Back to Open Agenda",
+        when: "When",
+        until: "until",
+        where: "Where",
+        organiser: "Organised by",
+        official: "Official website",
+        locale: "en-GB",
+    },
+}[lang];
+
+const backUrl =
+    lang === "ca"
+        ? "/agenda/"
+        : `/${lang}/agenda/`;
 
 function formatDate(value: string): string {
     const [year, month, day] =
         value.split("-").map(Number);
 
-    return new Intl.DateTimeFormat("ca-ES", {
+    return new Intl.DateTimeFormat(copy.locale, {
         weekday: "long",
         day: "numeric",
         month: "long",
@@ -89,13 +132,13 @@ const imageAlt =
 ---
 
 <Layout
-    lang="ca"
-    title={`${event.titol} | Agenda Oberta | GUIAPINEDA`}
+    lang={lang}
+    title={`${event.titol} | ${copy.section} | GUIAPINEDA`}
     description={event.resum}
 >
     <main class="bg-stone-50">
         <nav
-            aria-label="Agenda Oberta"
+            aria-label={copy.section}
             class="sticky top-16 z-40 border-b border-slate-200 bg-white/95 px-5 backdrop-blur sm:px-8 lg:top-20"
         >
             <div
@@ -106,7 +149,7 @@ const imageAlt =
                     class="inline-flex items-center gap-2 text-sm font-black text-emerald-800 transition hover:text-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                     <span aria-hidden="true">←</span>
-                    <span>Tornar a Agenda Oberta</span>
+                    <span>{copy.back}</span>
                 </a>
             </div>
         </nav>
@@ -123,7 +166,7 @@ const imageAlt =
                             <p
                                 class="text-xs font-black uppercase tracking-[0.2em] text-emerald-700"
                             >
-                                Agenda Oberta
+                                {copy.section}
                             </p>
 
                             <h1
@@ -149,7 +192,7 @@ const imageAlt =
                             <p
                                 class="text-xs font-black uppercase tracking-[0.14em] text-emerald-800"
                             >
-                                Quan
+                                {copy.when}
                             </p>
 
                             <p
@@ -163,7 +206,7 @@ const imageAlt =
                                     <p
                                         class="mt-1 font-bold leading-6 text-slate-700"
                                     >
-                                        fins al{" "}
+                                        {copy.until}{" "}
                                         {
                                             formatDate(
                                                 event.data_final,
@@ -193,7 +236,7 @@ const imageAlt =
                                 <p
                                     class="text-xs font-black uppercase tracking-[0.14em] text-emerald-800"
                                 >
-                                    On
+                                    {copy.where}
                                 </p>
 
                                 <p
@@ -219,7 +262,7 @@ const imageAlt =
                                 <p
                                     class="text-xs font-black uppercase tracking-[0.14em] text-emerald-800"
                                 >
-                                    Organitza
+                                    {copy.organiser}
                                 </p>
 
                                 <p
@@ -237,7 +280,7 @@ const imageAlt =
                                         rel="noopener noreferrer"
                                         class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-emerald-800 px-5 py-2 text-sm font-black text-white transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
                                     >
-                                        Web oficial →
+                                        {copy.official} →
                                     </a>
                                 )
                             }
