@@ -22,6 +22,8 @@ const {
 } = Astro.props;
 
 const homeUrl = lang === "ca" ? "/" : `/${lang}`;
+const taulerUrl =
+    lang === "ca" ? "/tauler" : `/${lang}/tauler`;
 const communicatsUrl =
     lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
 const milloresUrl =
@@ -31,16 +33,23 @@ const normalizedPath = pathname.replace(/\/+$/, "") || "/";
 const pathWithoutLanguage =
     normalizedPath.replace(/^\/(?:es|en)(?=\/|$)/, "") || "/";
 
-const activeSection = pathWithoutLanguage.startsWith("/comunicats")
-    ? "comunicats"
-    : pathWithoutLanguage.startsWith("/millorem-pineda")
-      ? "millores"
-      : pathWithoutLanguage.startsWith("/foto-del-mes") ||
-          pathWithoutLanguage === "/404"
-        ? null
-        : "guide";
+const activeSection = pathWithoutLanguage.startsWith("/tauler")
+    ? "tauler"
+    : pathWithoutLanguage.startsWith("/comunicats")
+      ? "comunicats"
+      : pathWithoutLanguage.startsWith("/millorem-pineda")
+        ? "millores"
+        : pathWithoutLanguage.startsWith("/foto-del-mes") ||
+            pathWithoutLanguage === "/404"
+          ? null
+          : "guide";
 
 const navigationItems = [
+    {
+        id: "tauler",
+        label: t.nav.tauler,
+        href: taulerUrl,
+    },
     {
         id: "guide",
         label: t.nav.guide,

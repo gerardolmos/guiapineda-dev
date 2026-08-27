@@ -22,6 +22,8 @@ const {
 const year = new Date().getFullYear();
 
 const homeUrl = lang === "ca" ? "/" : `/${lang}`;
+const taulerUrl =
+    lang === "ca" ? "/tauler" : `/${lang}/tauler`;
 const communicatsUrl =
     lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
 const milloresUrl =
@@ -35,6 +37,7 @@ const aboutUrl =
           : "/en/about-guiapineda";
 
 const navigationItems = [
+    { label: t.nav.tauler, href: taulerUrl },
     { label: t.nav.guide, href: homeUrl },
     { label: t.about.navLabel, href: aboutUrl },
     { label: t.comunicats.title, href: communicatsUrl },
