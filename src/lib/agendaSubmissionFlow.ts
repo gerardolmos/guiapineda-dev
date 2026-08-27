@@ -68,6 +68,51 @@ export function initAgendaSubmissionFlow() {
             "agenda-privacy",
         ) as HTMLInputElement | null;
 
+    const imageInput =
+        document.getElementById(
+            "agenda-image-input",
+        ) as HTMLInputElement | null;
+
+    const imageEmpty =
+        document.getElementById(
+            "agenda-image-empty",
+        );
+
+    const imageSelected =
+        document.getElementById(
+            "agenda-image-selected",
+        );
+
+    const imagePreview =
+        document.getElementById(
+            "agenda-image-preview",
+        ) as HTMLImageElement | null;
+
+    const imageName =
+        document.getElementById(
+            "agenda-image-name",
+        );
+
+    const imageRemove =
+        document.getElementById(
+            "agenda-image-remove",
+        ) as HTMLButtonElement | null;
+
+    const imageError =
+        document.getElementById(
+            "agenda-image-error",
+        );
+
+    const reviewImageCard =
+        document.getElementById(
+            "agenda-review-image-card",
+        );
+
+    const reviewImage =
+        document.getElementById(
+            "agenda-review-image",
+        ) as HTMLImageElement | null;
+
     const reviewFields =
         Array.from(
             document.querySelectorAll<HTMLElement>(
@@ -99,6 +144,20 @@ export function initAgendaSubmissionFlow() {
         submitLabel?.textContent?.trim() ??
         "";
 
+    const MAX_IMAGE_SIZE =
+        2 * 1024 * 1024;
+
+    const ALLOWED_IMAGE_TYPES =
+        new Set([
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+        ]);
+
+    const ALLOWED_IMAGE_EXTENSION =
+        /\.(?:jpe?g|png|webp)$/i;
+
+    let imageObjectUrl = "";
     let submitting = false;
 
     function todayLocal(): string {
@@ -114,6 +173,207 @@ export function initAgendaSubmissionFlow() {
         ).padStart(2, "0");
 
         return `${year}-${month}-${day}`;
+    }
+
+    function clearImageError() {
+        if (imageInput) {
+            imageInput.setCustomValidity("");
+        }
+
+        if (imageError) {
+            imageError.hidden = true;
+            imageError.textContent = "";
+        }
+    }
+
+    function showImageError(
+        message: string,
+    ) {
+        if (imageInput) {
+            imageInput.setCustomValidity(
+                message,
+            );
+        }
+
+        if (imageError) {
+            imageError.textContent =
+                message;
+            imageError.hidden = false;
+        }
+    }
+
+    function revokeImageObjectUrl() {
+        if (!imageObjectUrl) return;
+
+        URL.revokeObjectURL(
+            imageObjectUrl,
+        );
+
+        imageObjectUrl = "";
+    }
+
+    function clearImagePreview() {
+        revokeImageObjectUrl();
+
+        if (imagePreview) {
+            imagePreview.removeAttribute(
+                "src",
+            );
+        }
+
+        if (imageName) {
+            imageName.textContent = "";
+        }
+
+        if (imageSelected) {
+            imageSelected.hidden = true;
+        }
+
+        if (imageEmpty) {
+            imageEmpty.hidden = false;
+        }
+
+        if (reviewImageCard) {
+            reviewImageCard.hidden = true;
+        }
+
+        if (reviewImage) {
+            reviewImage.removeAttribute(
+                "src",
+            );
+        }
+    }
+
+    function imageValidationMessage(
+        file: File,
+    ): string {
+        if (
+            file.size > MAX_IMAGE_SIZE
+        ) {
+            return (
+                form.dataset
+                    .imageSizeError ??
+                "The image is too large."
+            );
+        }
+
+        if (
+            !ALLOWED_IMAGE_TYPES.has(
+                file.type,
+            ) ||
+            !ALLOWED_IMAGE_EXTENSION.test(
+                file.name,
+            )
+        ) {
+            return (
+                form.dataset
+                    .imageTypeError ??
+                "Invalid image type."
+            );
+        }
+
+        return "";
+    }
+
+    function validateImage(
+        report = false,
+    ): boolean {
+        clearImageError();
+
+        const file =
+            imageInput?.files?.[0];
+
+        if (!file) {
+            return true;
+        }
+
+        const message =
+            imageValidationMessage(
+                file,
+            );
+
+        if (!message) {
+            return true;
+        }
+
+        showImageError(message);
+
+        if (report) {
+            imageInput?.reportValidity();
+            imageInput?.focus();
+        }
+
+        return false;
+    }
+
+    function updateImagePreview() {
+        clearImagePreview();
+
+        const file =
+            imageInput?.files?.[0];
+
+        if (!file) {
+            clearImageError();
+            return;
+        }
+
+        if (!validateImage(true)) {
+            return;
+        }
+
+        imageObjectUrl =
+            URL.createObjectURL(file);
+
+        if (imagePreview) {
+            imagePreview.src =
+                imageObjectUrl;
+        }
+
+        if (imageName) {
+            imageName.textContent =
+                file.name;
+        }
+
+        if (imageEmpty) {
+            imageEmpty.hidden = true;
+        }
+
+        if (imageSelected) {
+            imageSelected.hidden = false;
+        }
+    }
+
+    function removeImage() {
+        if (imageInput) {
+            imageInput.value = "";
+        }
+
+        clearImageError();
+        clearImagePreview();
+    }
+
+    function renderReviewImage() {
+        const file =
+            imageInput?.files?.[0];
+
+        if (
+            !file ||
+            !imageObjectUrl ||
+            !reviewImage ||
+            !reviewImageCard
+        ) {
+            if (reviewImageCard) {
+                reviewImageCard.hidden =
+                    true;
+            }
+
+            return;
+        }
+
+        reviewImage.src =
+            imageObjectUrl;
+
+        reviewImageCard.hidden = false;
     }
 
     function validateDates(): boolean {
@@ -182,6 +442,10 @@ export function initAgendaSubmissionFlow() {
 
     function validateForm(): boolean {
         if (!validateDates()) {
+            return false;
+        }
+
+        if (!validateImage(true)) {
             return false;
         }
 
@@ -343,6 +607,8 @@ export function initAgendaSubmissionFlow() {
                 }
             },
         );
+
+        renderReviewImage();
     }
 
     function showStep(
@@ -435,6 +701,16 @@ export function initAgendaSubmissionFlow() {
     endTime?.addEventListener(
         "change",
         validateDates,
+    );
+
+    imageInput?.addEventListener(
+        "change",
+        updateImagePreview,
+    );
+
+    imageRemove?.addEventListener(
+        "click",
+        removeImage,
     );
 
     privacy?.addEventListener(
@@ -561,6 +837,11 @@ export function initAgendaSubmissionFlow() {
                     true;
             }
         },
+    );
+
+    window.addEventListener(
+        "pagehide",
+        revokeImageObjectUrl,
     );
 
     updateCharacterCounters();
