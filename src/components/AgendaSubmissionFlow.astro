@@ -1,0 +1,760 @@
+---
+import SubmissionSendingOverlay from "./SubmissionSendingOverlay.astro";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const copy = {
+    ca: {
+        eyebrow: "Agenda Oberta",
+        title: "Envia una activitat",
+        intro:
+            "Comparteix una activitat o esdeveniment que tingui lloc a Pineda de Mar. GUIAPINEDA revisarà la proposta abans de publicar-la.",
+        eventSection: "Dades de l’activitat",
+        titleLabel: "Títol",
+        summaryLabel: "Resum breu",
+        descriptionLabel: "Descripció",
+        organiserLabel: "Organitza",
+        startDateLabel: "Data d’inici",
+        startTimeLabel: "Hora d’inici",
+        endDateLabel: "Data final",
+        endTimeLabel: "Hora final",
+        placeLabel: "Lloc",
+        addressLabel: "Adreça",
+        officialLabel: "Enllaç oficial",
+        optional: "opcional",
+        minimum: "mínim",
+        contactSection: "Contacte privat",
+        contactIntro:
+            "Aquestes dades no es publicaran. Només les utilitzarem si necessitem aclarir o confirmar la proposta.",
+        contactNameLabel: "Nom de contacte",
+        contactEmailLabel: "Email de contacte",
+        continue: "Revisar abans d’enviar",
+        reviewTitle: "Revisa la proposta",
+        edit: "Editar",
+        privacy:
+            "Accepto que GUIAPINEDA utilitzi les meves dades de contacte per gestionar i revisar aquesta proposta.",
+        send: "Enviar a GUIAPINEDA",
+        sending: "Enviant...",
+        sendError:
+            "No hem pogut enviar la proposta. Torna-ho a provar d’aquí a uns instants.",
+        back: "Tornar a Agenda Oberta",
+        pastDate:
+            "La data de l’activitat no pot ser anterior a avui.",
+        dateOrder:
+            "La data final no pot ser anterior a la data d’inici.",
+        endTime:
+            "Indica primer una hora d’inici.",
+        timeOrder:
+            "L’hora final ha de ser posterior a l’hora d’inici.",
+    },
+    es: {
+        eyebrow: "Agenda Abierta",
+        title: "Envía una actividad",
+        intro:
+            "Comparte una actividad o evento que tenga lugar en Pineda de Mar. GUIAPINEDA revisará la propuesta antes de publicarla.",
+        eventSection: "Datos de la actividad",
+        titleLabel: "Título",
+        summaryLabel: "Resumen breve",
+        descriptionLabel: "Descripción",
+        organiserLabel: "Organiza",
+        startDateLabel: "Fecha de inicio",
+        startTimeLabel: "Hora de inicio",
+        endDateLabel: "Fecha final",
+        endTimeLabel: "Hora final",
+        placeLabel: "Lugar",
+        addressLabel: "Dirección",
+        officialLabel: "Enlace oficial",
+        optional: "opcional",
+        minimum: "mínimo",
+        contactSection: "Contacto privado",
+        contactIntro:
+            "Estos datos no se publicarán. Sólo los utilizaremos si necesitamos aclarar o confirmar la propuesta.",
+        contactNameLabel: "Nombre de contacto",
+        contactEmailLabel: "Email de contacto",
+        continue: "Revisar antes de enviar",
+        reviewTitle: "Revisa la propuesta",
+        edit: "Editar",
+        privacy:
+            "Acepto que GUIAPINEDA utilice mis datos de contacto para gestionar y revisar esta propuesta.",
+        send: "Enviar a GUIAPINEDA",
+        sending: "Enviando...",
+        sendError:
+            "No hemos podido enviar la propuesta. Vuelve a intentarlo en unos instantes.",
+        back: "Volver a Agenda Abierta",
+        pastDate:
+            "La fecha de la actividad no puede ser anterior a hoy.",
+        dateOrder:
+            "La fecha final no puede ser anterior a la fecha de inicio.",
+        endTime:
+            "Indica primero una hora de inicio.",
+        timeOrder:
+            "La hora final debe ser posterior a la hora de inicio.",
+    },
+    en: {
+        eyebrow: "Open Agenda",
+        title: "Send an activity",
+        intro:
+            "Share an activity or event taking place in Pineda de Mar. GUIAPINEDA will review the proposal before publishing it.",
+        eventSection: "Activity details",
+        titleLabel: "Title",
+        summaryLabel: "Short summary",
+        descriptionLabel: "Description",
+        organiserLabel: "Organised by",
+        startDateLabel: "Start date",
+        startTimeLabel: "Start time",
+        endDateLabel: "End date",
+        endTimeLabel: "End time",
+        placeLabel: "Place",
+        addressLabel: "Address",
+        officialLabel: "Official link",
+        optional: "optional",
+        minimum: "minimum",
+        contactSection: "Private contact",
+        contactIntro:
+            "These details will not be published. We will only use them if we need to clarify or confirm the proposal.",
+        contactNameLabel: "Contact name",
+        contactEmailLabel: "Contact email",
+        continue: "Review before sending",
+        reviewTitle: "Review the proposal",
+        edit: "Edit",
+        privacy:
+            "I agree that GUIAPINEDA may use my contact details to manage and review this proposal.",
+        send: "Send to GUIAPINEDA",
+        sending: "Sending...",
+        sendError:
+            "We could not send the proposal. Please try again in a moment.",
+        back: "Back to Open Agenda",
+        pastDate:
+            "The activity date cannot be earlier than today.",
+        dateOrder:
+            "The end date cannot be earlier than the start date.",
+        endTime:
+            "Enter a start time first.",
+        timeOrder:
+            "The end time must be later than the start time.",
+    },
+} as const;
+
+const text = copy[lang];
+
+const routes = {
+    ca: "/agenda/envia-una-activitat/",
+    es: "/es/agenda/enviar-una-actividad/",
+    en: "/en/agenda/send-an-activity/",
+} as const;
+
+const successUrl =
+    lang === "ca"
+        ? "/enviat/"
+        : lang === "es"
+          ? "/es/enviado/"
+          : "/en/sent/";
+
+const agendaUrl =
+    lang === "ca"
+        ? "/agenda/"
+        : `/${lang}/agenda/`;
+
+const fieldClass =
+    "mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100";
+---
+
+<form
+    name="agenda"
+    method="POST"
+    data-netlify="true"
+    data-netlify-recaptcha="true"
+    netlify-honeypot="bot-field"
+    novalidate
+    data-agenda-submission-flow
+    data-success-url={successUrl}
+    data-sending-label={text.sending}
+    data-past-date-error={text.pastDate}
+    data-date-order-error={text.dateOrder}
+    data-end-time-error={text.endTime}
+    data-time-order-error={text.timeOrder}
+    class="min-h-screen bg-stone-50"
+>
+    <input
+        type="hidden"
+        name="form-name"
+        value="agenda"
+    />
+
+    <input
+        type="hidden"
+        name="idioma_solicitud"
+        value={lang}
+    />
+
+    <div class="sr-only" aria-hidden="true">
+        <label>
+            No omplis aquest camp
+            <input
+                name="bot-field"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+            />
+        </label>
+    </div>
+
+    <div
+        class="border-b border-slate-200 bg-white px-5 py-4 sm:px-8"
+    >
+        <div
+            class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4"
+        >
+            <a
+                href={agendaUrl}
+                class="text-sm font-black text-slate-600 transition hover:text-emerald-800"
+            >
+                ← {text.back}
+            </a>
+
+            <nav
+                aria-label="Language"
+                class="inline-flex rounded-full border border-slate-200 bg-stone-50 p-1 text-sm"
+            >
+                {
+                    (
+                        Object.entries(
+                            routes,
+                        ) as [
+                            "ca" | "es" | "en",
+                            string,
+                        ][]
+                    ).map(
+                        ([code, href]) => (
+                            <a
+                                href={href}
+                                aria-current={
+                                    lang === code
+                                        ? "page"
+                                        : undefined
+                                }
+                                class:list={[
+                                    "rounded-full px-3.5 py-2 font-bold transition",
+                                    lang === code
+                                        ? "bg-slate-950 text-white"
+                                        : "text-slate-600 hover:text-slate-950",
+                                ]}
+                            >
+                                {code.toUpperCase()}
+                            </a>
+                        ),
+                    )
+                }
+            </nav>
+        </div>
+    </div>
+
+    <section
+        id="agenda-step-form"
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-5xl">
+            <p
+                class="text-sm font-black uppercase tracking-[0.18em] text-emerald-700"
+            >
+                {text.eyebrow}
+            </p>
+
+            <h1
+                class="mt-3 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+            >
+                {text.title}
+            </h1>
+
+            <p
+                class="mt-4 max-w-3xl text-lg leading-8 text-slate-600"
+            >
+                {text.intro}
+            </p>
+
+            <div
+                class="mt-10 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+            >
+                <h2
+                    class="text-2xl font-black text-slate-950"
+                >
+                    {text.eventSection}
+                </h2>
+
+                <div
+                    class="mt-7 grid gap-6 md:grid-cols-2"
+                >
+                    <label
+                        class="md:col-span-2 font-bold text-slate-800"
+                    >
+                        {text.titleLabel}
+                        <input
+                            name="titol"
+                            type="text"
+                            required
+                            minlength="8"
+                            maxlength="140"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="md:col-span-2 font-bold text-slate-800"
+                    >
+                        {text.summaryLabel}
+                        <textarea
+                            name="resum"
+                            required
+                            minlength="30"
+                            maxlength="400"
+                            rows="3"
+                            class={fieldClass}
+                        ></textarea>
+
+                        <span
+                            data-agenda-counter="resum"
+                            data-min="30"
+                            data-max="400"
+                            data-minimum-label={text.minimum}
+                            class="mt-2 block text-right text-xs font-bold text-slate-400"
+                        >
+                            0 / 400 · {text.minimum} 30
+                        </span>
+                    </label>
+
+                    <label
+                        class="md:col-span-2 font-bold text-slate-800"
+                    >
+                        {text.descriptionLabel}
+                        <textarea
+                            name="descripcio"
+                            required
+                            minlength="80"
+                            maxlength="3500"
+                            rows="8"
+                            class={fieldClass}
+                        ></textarea>
+
+                        <span
+                            data-agenda-counter="descripcio"
+                            data-min="80"
+                            data-max="3500"
+                            data-minimum-label={text.minimum}
+                            class="mt-2 block text-right text-xs font-bold text-slate-400"
+                        >
+                            0 / 3500 · {text.minimum} 80
+                        </span>
+                    </label>
+
+                    <label
+                        class="md:col-span-2 font-bold text-slate-800"
+                    >
+                        {text.organiserLabel}
+                        <input
+                            name="organitzador"
+                            type="text"
+                            required
+                            minlength="2"
+                            maxlength="160"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="font-bold text-slate-800"
+                    >
+                        {text.startDateLabel}
+                        <input
+                            id="agenda-start-date"
+                            name="data_inici"
+                            type="date"
+                            required
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="font-bold text-slate-800"
+                    >
+                        {text.startTimeLabel}
+                        <span
+                            class="ml-1 text-sm font-medium text-slate-400"
+                        >
+                            ({text.optional})
+                        </span>
+                        <input
+                            id="agenda-start-time"
+                            name="hora_inici"
+                            type="time"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="font-bold text-slate-800"
+                    >
+                        {text.endDateLabel}
+                        <span
+                            class="ml-1 text-sm font-medium text-slate-400"
+                        >
+                            ({text.optional})
+                        </span>
+                        <input
+                            id="agenda-end-date"
+                            name="data_final"
+                            type="date"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="font-bold text-slate-800"
+                    >
+                        {text.endTimeLabel}
+                        <span
+                            class="ml-1 text-sm font-medium text-slate-400"
+                        >
+                            ({text.optional})
+                        </span>
+                        <input
+                            id="agenda-end-time"
+                            name="hora_final"
+                            type="time"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="md:col-span-2 font-bold text-slate-800"
+                    >
+                        {text.placeLabel}
+                        <input
+                            name="lloc"
+                            type="text"
+                            required
+                            minlength="2"
+                            maxlength="180"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="font-bold text-slate-800"
+                    >
+                        {text.addressLabel}
+                        <span
+                            class="ml-1 text-sm font-medium text-slate-400"
+                        >
+                            ({text.optional})
+                        </span>
+                        <input
+                            name="adreca"
+                            type="text"
+                            maxlength="250"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label
+                        class="font-bold text-slate-800"
+                    >
+                        {text.officialLabel}
+                        <span
+                            class="ml-1 text-sm font-medium text-slate-400"
+                        >
+                            ({text.optional})
+                        </span>
+                        <input
+                            name="enllac_oficial"
+                            type="url"
+                            maxlength="500"
+                            placeholder="https://"
+                            class={fieldClass}
+                        />
+                    </label>
+                </div>
+
+                <div
+                    class="mt-10 border-t border-slate-200 pt-8"
+                >
+                    <h2
+                        class="text-2xl font-black text-slate-950"
+                    >
+                        {text.contactSection}
+                    </h2>
+
+                    <p
+                        class="mt-2 max-w-2xl leading-7 text-slate-600"
+                    >
+                        {text.contactIntro}
+                    </p>
+
+                    <div
+                        class="mt-6 grid gap-6 md:grid-cols-2"
+                    >
+                        <label
+                            class="font-bold text-slate-800"
+                        >
+                            {text.contactNameLabel}
+                            <input
+                                name="nombre_contacto"
+                                type="text"
+                                required
+                                minlength="2"
+                                maxlength="120"
+                                class={fieldClass}
+                            />
+                        </label>
+
+                        <label
+                            class="font-bold text-slate-800"
+                        >
+                            {text.contactEmailLabel}
+                            <input
+                                name="email_contacto"
+                                type="email"
+                                required
+                                maxlength="254"
+                                class={fieldClass}
+                            />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-9 flex justify-end">
+                    <button
+                        id="agenda-continue"
+                        type="button"
+                        class="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-800 px-7 py-3 font-black text-white transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                    >
+                        {text.continue}
+                        <span
+                            aria-hidden="true"
+                            class="ml-3"
+                        >
+                            →
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="agenda-step-review"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-5xl">
+            <p
+                class="text-sm font-black uppercase tracking-[0.18em] text-emerald-700"
+            >
+                {text.eyebrow}
+            </p>
+
+            <div
+                class="mt-3 flex flex-wrap items-center justify-between gap-4"
+            >
+                <h1
+                    class="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                >
+                    {text.reviewTitle}
+                </h1>
+
+                <button
+                    id="agenda-review-back"
+                    type="button"
+                    class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-black text-slate-700"
+                >
+                    ← {text.edit}
+                </button>
+            </div>
+
+            <div
+                class="mt-8 grid gap-5 md:grid-cols-2"
+            >
+                <article
+                    class="md:col-span-2 rounded-2xl border border-slate-200 bg-white p-6"
+                >
+                    <h2
+                        data-agenda-review="titol"
+                        class="text-2xl font-black text-slate-950"
+                    ></h2>
+
+                    <p
+                        data-agenda-review="resum"
+                        class="mt-3 leading-7 text-slate-600"
+                    ></p>
+
+                    <p
+                        data-agenda-review="descripcio"
+                        class="mt-5 whitespace-pre-line leading-7 text-slate-700"
+                    ></p>
+                </article>
+
+                <article
+                    class="rounded-2xl border border-slate-200 bg-white p-6"
+                >
+                    <p class="text-sm font-black text-emerald-700">
+                        {text.startDateLabel}
+                    </p>
+                    <p
+                        data-agenda-review="data_inici"
+                        class="mt-1 font-bold"
+                    ></p>
+
+                    <p class="mt-4 text-sm font-black text-emerald-700">
+                        {text.startTimeLabel}
+                    </p>
+                    <p
+                        data-agenda-review="hora_inici"
+                        class="mt-1"
+                    ></p>
+
+                    <p class="mt-4 text-sm font-black text-emerald-700">
+                        {text.endDateLabel}
+                    </p>
+                    <p
+                        data-agenda-review="data_final"
+                        class="mt-1"
+                    ></p>
+
+                    <p class="mt-4 text-sm font-black text-emerald-700">
+                        {text.endTimeLabel}
+                    </p>
+                    <p
+                        data-agenda-review="hora_final"
+                        class="mt-1"
+                    ></p>
+                </article>
+
+                <article
+                    class="rounded-2xl border border-slate-200 bg-white p-6"
+                >
+                    <p class="text-sm font-black text-emerald-700">
+                        {text.organiserLabel}
+                    </p>
+                    <p
+                        data-agenda-review="organitzador"
+                        class="mt-1 font-bold"
+                    ></p>
+
+                    <p class="mt-4 text-sm font-black text-emerald-700">
+                        {text.placeLabel}
+                    </p>
+                    <p
+                        data-agenda-review="lloc"
+                        class="mt-1 font-bold"
+                    ></p>
+
+                    <p class="mt-4 text-sm font-black text-emerald-700">
+                        {text.addressLabel}
+                    </p>
+                    <p
+                        data-agenda-review="adreca"
+                        class="mt-1"
+                    ></p>
+
+                    <p class="mt-4 text-sm font-black text-emerald-700">
+                        {text.officialLabel}
+                    </p>
+                    <p
+                        data-agenda-review="enllac_oficial"
+                        class="mt-1 break-all"
+                    ></p>
+                </article>
+
+                <article
+                    class="md:col-span-2 rounded-2xl border border-sky-200 bg-sky-50 p-6"
+                >
+                    <h2
+                        class="text-lg font-black text-slate-950"
+                    >
+                        {text.contactSection}
+                    </h2>
+
+                    <p
+                        data-agenda-review="nombre_contacto"
+                        class="mt-3 font-bold"
+                    ></p>
+
+                    <p
+                        data-agenda-review="email_contacto"
+                        class="mt-1 text-slate-700"
+                    ></p>
+                </article>
+            </div>
+
+            <div
+                class="mt-6 rounded-2xl border border-slate-200 bg-white p-5"
+            >
+                <label
+                    class="flex cursor-pointer items-start gap-3"
+                >
+                    <input
+                        id="agenda-privacy"
+                        name="aceptacion_privacidad"
+                        value="true"
+                        type="checkbox"
+                        required
+                        class="mt-1 size-5"
+                    />
+
+                    <span
+                        class="text-sm font-medium leading-6 text-slate-700"
+                    >
+                        {text.privacy}
+                    </span>
+                </label>
+            </div>
+
+            <div
+                data-netlify-recaptcha="true"
+                class="mt-6"
+            ></div>
+
+            <p
+                id="agenda-submit-error"
+                hidden
+                class="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 font-bold text-red-800"
+            >
+                {text.sendError}
+            </p>
+
+            <div
+                class="mt-8 flex justify-end"
+            >
+                <button
+                    id="agenda-submit"
+                    type="submit"
+                    disabled
+                    class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                    <span id="agenda-submit-label">
+                        {text.send}
+                    </span>
+                    <span
+                        aria-hidden="true"
+                        class="ml-3"
+                    >
+                        →
+                    </span>
+                </button>
+            </div>
+        </div>
+    </section>
+</form>
+
+<SubmissionSendingOverlay lang={lang} />
+
+<script>
+    import {
+        initAgendaSubmissionFlow,
+    } from "../lib/agendaSubmissionFlow";
+
+    initAgendaSubmissionFlow();
+</script>

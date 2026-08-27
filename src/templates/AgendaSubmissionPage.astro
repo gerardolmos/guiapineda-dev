@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AgendaSubmissionFlow from "../components/AgendaSubmissionFlow.astro";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const titles = {
+    ca: "Envia una activitat",
+    es: "Envía una actividad",
+    en: "Send an activity",
+};
+
+const descriptions = {
+    ca: "Envia una proposta d’activitat per a l’Agenda Oberta de GUIAPINEDA.",
+    es: "Envía una propuesta de actividad para la Agenda Abierta de GUIAPINEDA.",
+    en: "Submit an activity proposal for GUIAPINEDA's Open Agenda.",
+};
+---
+
+<Layout
+    lang={lang}
+    title={`${titles[lang]} | GUIAPINEDA`}
+    description={descriptions[lang]}
+    showLanguageSwitcher={false}
+>
+    <AgendaSubmissionFlow lang={lang} />
+</Layout>

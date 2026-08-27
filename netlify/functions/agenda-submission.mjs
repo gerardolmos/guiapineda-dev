@@ -228,7 +228,7 @@ export function buildAgendaPayload(
         {
             required: true,
             min: 80,
-            max: 6000,
+            max: 3500,
         },
     );
 

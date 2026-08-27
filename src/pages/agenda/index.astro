@@ -131,6 +131,26 @@ function getEventUrl(slug: string): string {
                 >
                     {copy.description}
                 </p>
+
+                <a
+                    href={
+                        lang === "ca"
+                            ? "/agenda/envia-una-activitat/"
+                            : lang === "es"
+                              ? "/es/agenda/enviar-una-actividad/"
+                              : "/en/agenda/send-an-activity/"
+                    }
+                    class="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 py-3 font-black text-emerald-950 transition hover:bg-emerald-100"
+                >
+                    {
+                        lang === "ca"
+                            ? "Envia una activitat"
+                            : lang === "es"
+                              ? "Envía una actividad"
+                              : "Send an activity"
+                    }
+                    <span aria-hidden="true" class="ml-3">→</span>
+                </a>
             </div>
         </section>
 
