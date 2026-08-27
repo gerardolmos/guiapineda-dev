@@ -21,6 +21,7 @@ const copy = {
         view: "Veure aportació",
         comunicat: "Comunicats",
         millora: "Millorem Pineda",
+        agenda: "Agenda Oberta",
         locale: "ca-ES",
         filterLabel: "Filtra el tauler",
         all: "Tot",
@@ -35,6 +36,7 @@ const copy = {
         view: "Ver aportación",
         comunicat: "Comunicados",
         millora: "Mejoremos Pineda",
+        agenda: "Agenda Abierta",
         locale: "es-ES",
         filterLabel: "Filtra el tablón",
         all: "Todo",
@@ -49,6 +51,7 @@ const copy = {
         view: "View contribution",
         comunicat: "Notices",
         millora: "Improve Pineda",
+        agenda: "Open Agenda",
         locale: "en-GB",
         filterLabel: "Filter the board",
         all: "All",
@@ -57,25 +60,33 @@ const copy = {
     },
 }[lang];
 
-const [comunicatsData, milloresData] = await Promise.all([
+const [
+    comunicatsData,
+    milloresData,
+    agendasData,
+] = await Promise.all([
     fetchAPI(endpoints.comunicats),
     fetchAPI(endpoints.millores),
+    fetchAPI(endpoints.agendas),
 ]);
 
 const items = buildTaulerItems({
     comunicats: comunicatsData.data || [],
     millores: milloresData.data || [],
+    agendas: agendasData.data || [],
     lang,
 });
 
 const typeLabels: Record<TaulerItemType, string> = {
     comunicat: copy.comunicat,
     millora: copy.millora,
+    agenda: copy.agenda,
 };
 
 const typeClasses: Record<TaulerItemType, string> = {
     comunicat: "bg-violet-100 text-violet-800",
     millora: "bg-sky-100 text-sky-800",
+    agenda: "bg-emerald-100 text-emerald-800",
 };
 
 function formatDate(value: string): string {
@@ -221,6 +232,15 @@ function getItemImageAlt(
                                 class="tauler-filter rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-black text-slate-700 outline-none transition hover:border-sky-300 hover:text-sky-800 focus-visible:ring-4 focus-visible:ring-sky-100"
                             >
                                 {copy.millora}
+                            </button>
+
+                            <button
+                                type="button"
+                                data-tauler-filter="agenda"
+                                aria-pressed="false"
+                                class="tauler-filter rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-black text-slate-700 outline-none transition hover:border-emerald-300 hover:text-emerald-800 focus-visible:ring-4 focus-visible:ring-emerald-100"
+                            >
+                                {copy.agenda}
                             </button>
                         </div>
                     )

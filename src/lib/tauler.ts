@@ -1,10 +1,12 @@
 import { filterVisibleComunicats } from "./comunicats";
+import { getUpcomingAgendaItems } from "./agenda";
 
 export type TaulerLang = "ca" | "es" | "en";
 
 export type TaulerItemType =
     | "comunicat"
-    | "millora";
+    | "millora"
+    | "agenda";
 
 export type TaulerItem = {
     key: string;
@@ -28,9 +30,13 @@ type SourceItem = {
     data_publicacio?: unknown;
     imatge?: unknown;
     autor?: unknown;
+    organitzador?: unknown;
     categoria?: unknown;
     zona?: unknown;
     data_caducitat?: unknown;
+    data_inici?: unknown;
+    data_final?: unknown;
+    hora_inici?: unknown;
 };
 
 function readRequiredString(
@@ -74,7 +80,9 @@ function buildUrl(
     const section =
         type === "comunicat"
             ? "comunicats"
-            : "millorem-pineda";
+            : type === "millora"
+              ? "millorem-pineda"
+              : "agenda";
 
     return lang === "ca"
         ? `/${section}/${slug}`
@@ -105,7 +113,10 @@ function normalizeItem(
         date,
         url: buildUrl(type, slug, lang),
         image: item.imatge ?? null,
-        author: readOptionalString(item.autor),
+        author:
+            type === "agenda"
+                ? readOptionalString(item.organitzador)
+                : readOptionalString(item.autor),
         category:
             type === "millora"
                 ? readOptionalString(item.categoria)
@@ -120,10 +131,12 @@ function normalizeItem(
 export function buildTaulerItems({
     comunicats,
     millores,
+    agendas,
     lang = "ca",
 }: {
     comunicats: SourceItem[];
     millores: SourceItem[];
+    agendas: SourceItem[];
     lang?: TaulerLang;
 }): TaulerItem[] {
     const normalizedComunicats =
@@ -145,9 +158,20 @@ export function buildTaulerItems({
             ),
         );
 
+    const normalizedAgendas =
+        getUpcomingAgendaItems(agendas)
+            .map((item) =>
+                normalizeItem(
+                    item,
+                    "agenda",
+                    lang,
+                ),
+            );
+
     return [
         ...normalizedComunicats,
         ...normalizedMillores,
+        ...normalizedAgendas,
     ]
         .filter(
             (item): item is TaulerItem =>
