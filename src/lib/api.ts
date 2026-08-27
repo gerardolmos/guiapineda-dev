@@ -37,6 +37,7 @@ export const endpoints = {
     comercios: comerciosEndpoint,
     comunicats: "/api/comunicats?populate=*",
     millores: "/api/millores?populate=*",
+    agendas: "/api/agendas?populate=*",
 };
 
 export async function fetchAPI(endpoint: string) {
