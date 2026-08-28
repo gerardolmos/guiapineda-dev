@@ -1,0 +1,35 @@
+---
+import { fetchAPI, endpoints } from "../../../lib/api";
+import VeuArticlePage from "../../../templates/VeuArticlePage.astro";
+
+export async function getStaticPaths() {
+    const veusData = await fetchAPI(
+        endpoints.veus,
+    );
+
+    const veus = veusData.data || [];
+
+    return veus
+        .filter(
+            (veu: any) =>
+                typeof veu.slug === "string" &&
+                veu.slug.trim().length > 0,
+        )
+        .map((veu: any) => ({
+            params: {
+                slug: veu.slug,
+            },
+            props: {
+                veu,
+                lang: "en",
+            },
+        }));
+}
+
+const { veu, lang } = Astro.props;
+---
+
+<VeuArticlePage
+    veu={veu}
+    lang={lang}
+/>

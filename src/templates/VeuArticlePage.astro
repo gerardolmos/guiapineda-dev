@@ -1,0 +1,283 @@
+---
+import Layout from "../layouts/Layout.astro";
+import StrapiBlocks from "../components/StrapiBlocks.astro";
+import { formatDate } from "../lib/formatDate";
+import { getReadingTime } from "../lib/readingTime";
+import { getStrapiMediaUrl } from "../lib/strapi";
+import type { Lang } from "../lib/languageSwitcher";
+
+const {
+    veu,
+    lang = "ca",
+} = Astro.props as {
+    veu: any;
+    lang?: Lang;
+};
+
+if (!veu) {
+    throw new Error(
+        "No se recibió la Veu necesaria para generar la página.",
+    );
+}
+
+const copy = {
+    ca: {
+        section: "Veus de Pineda",
+        back: "Tornar a Veus de Pineda",
+        readingSuffix: "min de lectura",
+    },
+    es: {
+        section: "Voces de Pineda",
+        back: "Volver a Voces de Pineda",
+        readingSuffix: "min de lectura",
+    },
+    en: {
+        section: "Voices of Pineda",
+        back: "Back to Voices of Pineda",
+        readingSuffix: "min read",
+    },
+}[lang];
+
+const backUrl =
+    lang === "ca"
+        ? "/veus/"
+        : `/${lang}/veus/`;
+
+const imageAlt =
+    veu.imatge?.alternativeText ||
+    veu.titol ||
+    "";
+
+const readingTime = getReadingTime(
+    veu.contingut,
+);
+---
+
+<Layout
+    lang={lang}
+    title={`${veu.titol} | ${copy.section} | GUIAPINEDA`}
+    description={veu.resum}
+>
+    <article class="bg-white">
+        <nav
+            aria-label={copy.section}
+            class="sticky top-16 z-40 border-b border-slate-200 bg-white/95 px-5 backdrop-blur sm:px-8 lg:top-20"
+        >
+            <div
+                class="mx-auto flex min-h-12 max-w-5xl items-center"
+            >
+                <a
+                    href={backUrl}
+                    class="inline-flex items-center gap-2 text-sm font-black text-violet-800 transition hover:text-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+                >
+                    <span aria-hidden="true">←</span>
+                    <span>{copy.back}</span>
+                </a>
+            </div>
+        </nav>
+
+        <header
+            class="bg-white px-5 pb-10 pt-8 sm:px-8 sm:pb-14 sm:pt-10"
+        >
+            <div class="mx-auto max-w-5xl">
+                <div class="max-w-4xl">
+                    <p
+                        class="text-xs font-black uppercase tracking-[0.2em] text-violet-700"
+                    >
+                        {copy.section}
+                    </p>
+
+                    <h1
+                        class="mt-4 text-4xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-[3.5rem]"
+                    >
+                        {veu.titol}
+                    </h1>
+
+                    {
+                        veu.resum && (
+                            <p
+                                class="mt-6 max-w-3xl text-xl font-medium leading-8 text-slate-600 sm:text-[1.35rem] sm:leading-9"
+                            >
+                                {veu.resum}
+                            </p>
+                        )
+                    }
+
+                    <div
+                        class="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-slate-200 pt-5 text-sm font-bold"
+                    >
+                        <span class="text-violet-800">
+                            {veu.autor_public}
+                        </span>
+
+                        <span
+                            aria-hidden="true"
+                            class="text-slate-300"
+                        >
+                            ·
+                        </span>
+
+                        <span class="text-slate-600">
+                            {
+                                formatDate(
+                                    veu.data_publicacio,
+                                    lang,
+                                )
+                            }
+                        </span>
+
+                        <span
+                            aria-hidden="true"
+                            class="text-slate-300"
+                        >
+                            ·
+                        </span>
+
+                        <span class="text-slate-600">
+                            {readingTime}{" "}
+                            {copy.readingSuffix}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="px-5 sm:px-8">
+            <div
+                aria-hidden="true"
+                class="mx-auto grid h-2 max-w-5xl grid-cols-6"
+            >
+                <span class="bg-sky-500"></span>
+                <span class="bg-fuchsia-500"></span>
+                <span class="bg-amber-400"></span>
+                <span class="bg-emerald-500"></span>
+                <span class="bg-violet-500"></span>
+                <span class="bg-cyan-500"></span>
+            </div>
+        </div>
+
+        {
+            veu.imatge?.url && (
+                <div
+                    class="bg-slate-100 px-5 pt-8 sm:px-8 sm:pt-10"
+                >
+                    <div class="mx-auto max-w-5xl">
+                        <figure
+                            class="overflow-hidden rounded-[1.5rem] bg-slate-100 sm:rounded-[2rem]"
+                        >
+                            <img
+                                src={getStrapiMediaUrl(
+                                    veu.imatge.url,
+                                )}
+                                alt={imageAlt}
+                                width={
+                                    veu.imatge.width ||
+                                    1200
+                                }
+                                height={
+                                    veu.imatge.height ||
+                                    750
+                                }
+                                class="max-h-[38rem] w-full object-cover"
+                            />
+                        </figure>
+                    </div>
+                </div>
+            )
+        }
+
+        <div class="bg-slate-100 px-5 pt-0 sm:px-8">
+            <div
+                class="mx-auto max-w-5xl bg-white px-6 py-10 sm:px-10 sm:py-14 lg:px-16"
+            >
+                <StrapiBlocks
+                    blocks={veu.contingut}
+                    class="veu-body"
+                />
+            </div>
+        </div>
+    </article>
+</Layout>
+
+<style is:global>
+    .veu-body {
+        color: rgb(30 41 59);
+        font-size: 1.075rem;
+        line-height: 1.9;
+    }
+
+    .veu-body > :first-child {
+        margin-top: 0;
+    }
+
+    .veu-body > :last-child {
+        margin-bottom: 0;
+    }
+
+    .veu-body p {
+        margin-block: 1.35rem;
+    }
+
+    .veu-body h2 {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        color: rgb(15 23 42);
+        font-size: 1.8rem;
+        font-weight: 900;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+    }
+
+    .veu-body h3 {
+        margin-top: 2.4rem;
+        margin-bottom: 0.8rem;
+        color: rgb(15 23 42);
+        font-size: 1.35rem;
+        font-weight: 900;
+        line-height: 1.3;
+    }
+
+    .veu-body ul,
+    .veu-body ol {
+        margin-block: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .veu-body ul {
+        list-style: disc;
+    }
+
+    .veu-body ol {
+        list-style: decimal;
+    }
+
+    .veu-body li {
+        margin-block: 0.55rem;
+    }
+
+    .veu-body strong {
+        color: rgb(15 23 42);
+        font-weight: 800;
+    }
+
+    .veu-body a {
+        color: rgb(109 40 217);
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+    }
+
+    .veu-body blockquote {
+        margin-block: 2rem;
+        border-left: 4px solid rgb(196 181 253);
+        padding-left: 1.5rem;
+        color: rgb(71 85 105);
+        font-style: italic;
+    }
+
+    @media (min-width: 640px) {
+        .veu-body {
+            font-size: 1.125rem;
+        }
+    }
+</style>

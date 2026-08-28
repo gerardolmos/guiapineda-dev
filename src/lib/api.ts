@@ -38,6 +38,7 @@ export const endpoints = {
     comunicats: "/api/comunicats?populate=*",
     millores: "/api/millores?populate=*",
     agendas: "/api/agendas?populate=*",
+    veus: "/api/veus?populate=*",
 };
 
 export async function fetchAPI(endpoint: string) {
