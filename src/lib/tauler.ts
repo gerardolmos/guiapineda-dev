@@ -6,7 +6,8 @@ export type TaulerLang = "ca" | "es" | "en";
 export type TaulerItemType =
     | "comunicat"
     | "millora"
-    | "agenda";
+    | "agenda"
+    | "veu";
 
 export type TaulerItem = {
     key: string;
@@ -30,6 +31,7 @@ type SourceItem = {
     data_publicacio?: unknown;
     imatge?: unknown;
     autor?: unknown;
+    autor_public?: unknown;
     organitzador?: unknown;
     categoria?: unknown;
     zona?: unknown;
@@ -82,7 +84,9 @@ function buildUrl(
             ? "comunicats"
             : type === "millora"
               ? "millorem-pineda"
-              : "agenda";
+              : type === "agenda"
+                ? "agenda"
+                : "veus";
 
     return lang === "ca"
         ? `/${section}/${slug}`
@@ -116,7 +120,9 @@ function normalizeItem(
         author:
             type === "agenda"
                 ? readOptionalString(item.organitzador)
-                : readOptionalString(item.autor),
+                : type === "veu"
+                  ? readOptionalString(item.autor_public)
+                  : readOptionalString(item.autor),
         category:
             type === "millora"
                 ? readOptionalString(item.categoria)
@@ -132,11 +138,13 @@ export function buildTaulerItems({
     comunicats,
     millores,
     agendas,
+    veus,
     lang = "ca",
 }: {
     comunicats: SourceItem[];
     millores: SourceItem[];
     agendas: SourceItem[];
+    veus: SourceItem[];
     lang?: TaulerLang;
 }): TaulerItem[] {
     const normalizedComunicats =
@@ -168,10 +176,20 @@ export function buildTaulerItems({
                 ),
             );
 
+    const normalizedVeus =
+        veus.map((item) =>
+            normalizeItem(
+                item,
+                "veu",
+                lang,
+            ),
+        );
+
     return [
         ...normalizedComunicats,
         ...normalizedMillores,
         ...normalizedAgendas,
+        ...normalizedVeus,
     ]
         .filter(
             (item): item is TaulerItem =>

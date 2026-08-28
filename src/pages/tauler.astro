@@ -22,6 +22,7 @@ const copy = {
         comunicat: "Comunicats",
         millora: "Millorem Pineda",
         agenda: "Agenda Oberta",
+        veu: "Veus de Pineda",
         locale: "ca-ES",
         filterLabel: "Filtra el tauler",
         all: "Tot",
@@ -37,6 +38,7 @@ const copy = {
         comunicat: "Comunicados",
         millora: "Mejoremos Pineda",
         agenda: "Agenda Abierta",
+        veu: "Voces de Pineda",
         locale: "es-ES",
         filterLabel: "Filtra el tablón",
         all: "Todo",
@@ -52,6 +54,7 @@ const copy = {
         comunicat: "Notices",
         millora: "Improve Pineda",
         agenda: "Open Agenda",
+        veu: "Voices of Pineda",
         locale: "en-GB",
         filterLabel: "Filter the board",
         all: "All",
@@ -64,16 +67,19 @@ const [
     comunicatsData,
     milloresData,
     agendasData,
+    veusData,
 ] = await Promise.all([
     fetchAPI(endpoints.comunicats),
     fetchAPI(endpoints.millores),
     fetchAPI(endpoints.agendas),
+    fetchAPI(endpoints.veus),
 ]);
 
 const items = buildTaulerItems({
     comunicats: comunicatsData.data || [],
     millores: milloresData.data || [],
     agendas: agendasData.data || [],
+    veus: veusData.data || [],
     lang,
 });
 
@@ -81,12 +87,14 @@ const typeLabels: Record<TaulerItemType, string> = {
     comunicat: copy.comunicat,
     millora: copy.millora,
     agenda: copy.agenda,
+    veu: copy.veu,
 };
 
 const typeClasses: Record<TaulerItemType, string> = {
     comunicat: "bg-violet-100 text-violet-800",
     millora: "bg-sky-100 text-sky-800",
     agenda: "bg-emerald-100 text-emerald-800",
+    veu: "bg-fuchsia-100 text-fuchsia-800",
 };
 
 function formatDate(value: string): string {
@@ -242,6 +250,15 @@ function getItemImageAlt(
                             >
                                 {copy.agenda}
                             </button>
+
+                            <button
+                                type="button"
+                                data-tauler-filter="veu"
+                                aria-pressed="false"
+                                class="tauler-filter rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-black text-slate-700 outline-none transition hover:border-fuchsia-300 hover:text-fuchsia-800 focus-visible:ring-4 focus-visible:ring-fuchsia-100"
+                            >
+                                {copy.veu}
+                            </button>
                         </div>
                     )
                 }
@@ -353,6 +370,17 @@ function getItemImageAlt(
                                                         }
                                                     </a>
                                                 </h2>
+
+                                            {
+                                                item.type === "veu" &&
+                                                    item.author && (
+                                                        <p
+                                                            class="mt-1 text-xs font-bold text-fuchsia-700"
+                                                        >
+                                                            {item.author}
+                                                        </p>
+                                                    )
+                                            }
 
                                                 <p
                                                     class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600"
