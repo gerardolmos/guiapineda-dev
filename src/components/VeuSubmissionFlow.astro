@@ -1,0 +1,743 @@
+---
+import SubmissionSendingOverlay from "./SubmissionSendingOverlay.astro";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const copy = {
+    ca: {
+        eyebrow: "Veus de Pineda",
+        title: "Envia la teva veu",
+        intro:
+            "Comparteix una opinió, reflexió o experiència personal vinculada a Pineda de Mar. GUIAPINEDA revisarà la proposta abans de publicar-la.",
+        contentSection: "La teva aportació",
+        titleLabel: "Títol",
+        summaryLabel: "Resum breu",
+        contentLabel: "Text",
+        minimum: "mínim",
+        authorshipSection: "Com vols aparèixer públicament?",
+        authorshipIntro:
+            "El nom públic pot ser diferent del teu nom real de contacte.",
+        authorshipLabel: "Tipus d’autoria",
+        authorshipFull: "Nom complet",
+        authorshipName: "Nom",
+        authorshipPseudo: "Pseudònim",
+        publicAuthorLabel: "Nom que es publicarà",
+        publicAuthorHelp:
+            "Aquest és el nom que apareixerà al costat de la teva aportació.",
+        imageTitle: "Imatge",
+        imageHelp:
+            "Opcional. Una sola imatge JPG, PNG o WebP de màxim 2 MB.",
+        chooseImage: "Seleccionar imatge",
+        changeImage: "Canviar imatge",
+        removeImage: "Eliminar",
+        imageSizeError:
+            "La imatge no pot superar els 2 MB.",
+        imageTypeError:
+            "La imatge ha de ser JPG, PNG o WebP.",
+        imageAlt:
+            "Previsualització de la imatge de la proposta",
+        contactSection: "Contacte privat",
+        contactIntro:
+            "Aquestes dades no es publicaran. Les utilitzarem només per gestionar o verificar la proposta.",
+        contactNameLabel: "Nom real de contacte",
+        contactEmailLabel: "Email de contacte",
+        continue: "Revisar abans d’enviar",
+        reviewTitle: "Revisa la teva aportació",
+        edit: "Editar",
+        publicAuthorReview: "Autoria pública",
+        privateContactReview: "Contacte privat",
+        privacy:
+            "Accepto que GUIAPINEDA utilitzi les meves dades de contacte per gestionar i revisar aquesta aportació.",
+        send: "Enviar a GUIAPINEDA",
+        sending: "Enviant...",
+        sendError:
+            "No hem pogut enviar l’aportació. Torna-ho a provar d’aquí a uns instants.",
+        back: "Tornar a Veus de Pineda",
+    },
+    es: {
+        eyebrow: "Voces de Pineda",
+        title: "Envía tu voz",
+        intro:
+            "Comparte una opinión, reflexión o experiencia personal vinculada a Pineda de Mar. GUIAPINEDA revisará la propuesta antes de publicarla.",
+        contentSection: "Tu aportación",
+        titleLabel: "Título",
+        summaryLabel: "Resumen breve",
+        contentLabel: "Texto",
+        minimum: "mínimo",
+        authorshipSection: "¿Cómo quieres aparecer públicamente?",
+        authorshipIntro:
+            "El nombre público puede ser diferente de tu nombre real de contacto.",
+        authorshipLabel: "Tipo de autoría",
+        authorshipFull: "Nombre completo",
+        authorshipName: "Nombre",
+        authorshipPseudo: "Pseudónimo",
+        publicAuthorLabel: "Nombre que se publicará",
+        publicAuthorHelp:
+            "Este es el nombre que aparecerá junto a tu aportación.",
+        imageTitle: "Imagen",
+        imageHelp:
+            "Opcional. Una sola imagen JPG, PNG o WebP de máximo 2 MB.",
+        chooseImage: "Seleccionar imagen",
+        changeImage: "Cambiar imagen",
+        removeImage: "Eliminar",
+        imageSizeError:
+            "La imagen no puede superar los 2 MB.",
+        imageTypeError:
+            "La imagen debe ser JPG, PNG o WebP.",
+        imageAlt:
+            "Vista previa de la imagen de la propuesta",
+        contactSection: "Contacto privado",
+        contactIntro:
+            "Estos datos no se publicarán. Los utilizaremos únicamente para gestionar o verificar la propuesta.",
+        contactNameLabel: "Nombre real de contacto",
+        contactEmailLabel: "Email de contacto",
+        continue: "Revisar antes de enviar",
+        reviewTitle: "Revisa tu aportación",
+        edit: "Editar",
+        publicAuthorReview: "Autoría pública",
+        privateContactReview: "Contacto privado",
+        privacy:
+            "Acepto que GUIAPINEDA utilice mis datos de contacto para gestionar y revisar esta aportación.",
+        send: "Enviar a GUIAPINEDA",
+        sending: "Enviando...",
+        sendError:
+            "No hemos podido enviar la aportación. Vuelve a intentarlo en unos instantes.",
+        back: "Volver a Voces de Pineda",
+    },
+    en: {
+        eyebrow: "Voices of Pineda",
+        title: "Send your voice",
+        intro:
+            "Share an opinion, reflection or personal experience connected to Pineda de Mar. GUIAPINEDA will review it before publication.",
+        contentSection: "Your contribution",
+        titleLabel: "Title",
+        summaryLabel: "Short summary",
+        contentLabel: "Text",
+        minimum: "minimum",
+        authorshipSection: "How do you want to appear publicly?",
+        authorshipIntro:
+            "Your public name can be different from your real contact name.",
+        authorshipLabel: "Authorship type",
+        authorshipFull: "Full name",
+        authorshipName: "First name",
+        authorshipPseudo: "Pseudonym",
+        publicAuthorLabel: "Name to be published",
+        publicAuthorHelp:
+            "This is the name that will appear alongside your contribution.",
+        imageTitle: "Image",
+        imageHelp:
+            "Optional. One JPG, PNG or WebP image, maximum 2 MB.",
+        chooseImage: "Select image",
+        changeImage: "Change image",
+        removeImage: "Remove",
+        imageSizeError:
+            "The image cannot be larger than 2 MB.",
+        imageTypeError:
+            "The image must be JPG, PNG or WebP.",
+        imageAlt:
+            "Contribution image preview",
+        contactSection: "Private contact",
+        contactIntro:
+            "These details will not be published. We will only use them to manage or verify the contribution.",
+        contactNameLabel: "Real contact name",
+        contactEmailLabel: "Contact email",
+        continue: "Review before sending",
+        reviewTitle: "Review your contribution",
+        edit: "Edit",
+        publicAuthorReview: "Public authorship",
+        privateContactReview: "Private contact",
+        privacy:
+            "I agree that GUIAPINEDA may use my contact details to manage and review this contribution.",
+        send: "Send to GUIAPINEDA",
+        sending: "Sending...",
+        sendError:
+            "We could not send the contribution. Please try again in a moment.",
+        back: "Back to Voices of Pineda",
+    },
+} as const;
+
+const text = copy[lang];
+
+const routes = {
+    ca: "/veus/envia-la-teva-veu/",
+    es: "/es/veus/envia-tu-voz/",
+    en: "/en/veus/send-your-voice/",
+} as const;
+
+const successUrl =
+    lang === "ca"
+        ? "/enviat/"
+        : lang === "es"
+          ? "/es/enviado/"
+          : "/en/sent/";
+
+const veusUrl =
+    lang === "ca"
+        ? "/veus/"
+        : `/${lang}/veus/`;
+
+const fieldClass =
+    "mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100";
+---
+
+<form
+    name="veu"
+    method="POST"
+    enctype="multipart/form-data"
+    data-netlify="true"
+    data-netlify-recaptcha="true"
+    netlify-honeypot="bot-field"
+    novalidate
+    data-veu-submission-flow
+    data-success-url={successUrl}
+    data-sending-label={text.sending}
+    data-image-size-error={text.imageSizeError}
+    data-image-type-error={text.imageTypeError}
+    class="min-h-screen bg-stone-50"
+>
+    <input
+        type="hidden"
+        name="form-name"
+        value="veu"
+    />
+
+    <input
+        type="hidden"
+        name="idioma_solicitud"
+        value={lang}
+    />
+
+    <div class="sr-only" aria-hidden="true">
+        <label>
+            No omplis aquest camp
+            <input
+                name="bot-field"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+            />
+        </label>
+    </div>
+
+    <div
+        class="border-b border-slate-200 bg-white px-5 py-4 sm:px-8"
+    >
+        <div
+            class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4"
+        >
+            <a
+                href={veusUrl}
+                class="text-sm font-black text-slate-600 transition hover:text-violet-800"
+            >
+                ← {text.back}
+            </a>
+
+            <nav
+                aria-label="Language"
+                class="inline-flex rounded-full border border-slate-200 bg-stone-50 p-1 text-sm"
+            >
+                {
+                    (
+                        Object.entries(routes) as [
+                            "ca" | "es" | "en",
+                            string,
+                        ][]
+                    ).map(([code, href]) => (
+                        <a
+                            href={href}
+                            aria-current={
+                                lang === code
+                                    ? "page"
+                                    : undefined
+                            }
+                            class:list={[
+                                "rounded-full px-3.5 py-2 font-bold transition",
+                                lang === code
+                                    ? "bg-slate-950 text-white"
+                                    : "text-slate-600 hover:text-slate-950",
+                            ]}
+                        >
+                            {code.toUpperCase()}
+                        </a>
+                    ))
+                }
+            </nav>
+        </div>
+    </div>
+
+    <section
+        id="veu-step-form"
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-5xl">
+            <p
+                class="text-sm font-black uppercase tracking-[0.18em] text-violet-700"
+            >
+                {text.eyebrow}
+            </p>
+
+            <h1
+                class="mt-3 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+            >
+                {text.title}
+            </h1>
+
+            <p
+                class="mt-4 max-w-3xl text-lg leading-8 text-slate-600"
+            >
+                {text.intro}
+            </p>
+
+            <div
+                class="mt-10 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-9"
+            >
+                <h2
+                    class="text-2xl font-black text-slate-950"
+                >
+                    {text.contentSection}
+                </h2>
+
+                <div class="mt-7 grid gap-6">
+                    <label class="font-bold text-slate-800">
+                        {text.titleLabel}
+                        <input
+                            name="titol"
+                            type="text"
+                            required
+                            minlength="8"
+                            maxlength="140"
+                            class={fieldClass}
+                        />
+                    </label>
+
+                    <label class="font-bold text-slate-800">
+                        {text.summaryLabel}
+                        <textarea
+                            name="resum"
+                            required
+                            minlength="30"
+                            maxlength="400"
+                            rows="3"
+                            class={fieldClass}
+                        ></textarea>
+
+                        <span
+                            data-veu-counter="resum"
+                            data-min="30"
+                            data-max="400"
+                            data-minimum-label={text.minimum}
+                            class="mt-2 block text-right text-xs font-bold text-slate-400"
+                        >
+                            0 / 400 · {text.minimum} 30
+                        </span>
+                    </label>
+
+                    <label class="font-bold text-slate-800">
+                        {text.contentLabel}
+                        <textarea
+                            name="contingut"
+                            required
+                            minlength="500"
+                            maxlength="6000"
+                            rows="12"
+                            class={fieldClass}
+                        ></textarea>
+
+                        <span
+                            data-veu-counter="contingut"
+                            data-min="500"
+                            data-max="6000"
+                            data-minimum-label={text.minimum}
+                            class="mt-2 block text-right text-xs font-bold text-slate-400"
+                        >
+                            0 / 6000 · {text.minimum} 500
+                        </span>
+                    </label>
+                </div>
+
+                <section
+                    class="mt-10 border-t border-slate-200 pt-8"
+                >
+                    <h2
+                        class="text-2xl font-black text-slate-950"
+                    >
+                        {text.authorshipSection}
+                    </h2>
+
+                    <p
+                        class="mt-2 max-w-2xl leading-7 text-slate-600"
+                    >
+                        {text.authorshipIntro}
+                    </p>
+
+                    <div
+                        class="mt-6 grid gap-6 md:grid-cols-2"
+                    >
+                        <label class="font-bold text-slate-800">
+                            {text.authorshipLabel}
+
+                            <select
+                                name="tipo_autoria"
+                                required
+                                class={fieldClass}
+                            >
+                                <option value="">
+                                    —
+                                </option>
+                                <option value="nom_complet">
+                                    {text.authorshipFull}
+                                </option>
+                                <option value="nom">
+                                    {text.authorshipName}
+                                </option>
+                                <option value="pseudonim">
+                                    {text.authorshipPseudo}
+                                </option>
+                            </select>
+                        </label>
+
+                        <label class="font-bold text-slate-800">
+                            {text.publicAuthorLabel}
+
+                            <input
+                                name="autor_public"
+                                type="text"
+                                required
+                                minlength="2"
+                                maxlength="120"
+                                class={fieldClass}
+                            />
+
+                            <span
+                                class="mt-2 block text-sm font-medium leading-6 text-slate-500"
+                            >
+                                {text.publicAuthorHelp}
+                            </span>
+                        </label>
+                    </div>
+                </section>
+
+                <section
+                    class="mt-10 border-t border-slate-200 pt-8"
+                >
+                    <h2
+                        class="text-2xl font-black text-slate-950"
+                    >
+                        {text.imageTitle}
+                    </h2>
+
+                    <p
+                        class="mt-2 max-w-2xl leading-7 text-slate-600"
+                    >
+                        {text.imageHelp}
+                    </p>
+
+                    <input
+                        id="veu-image-input"
+                        name="imatge"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                        aria-describedby="veu-image-error"
+                        class="sr-only"
+                    />
+
+                    <div
+                        id="veu-image-empty"
+                        class="mt-5 flex min-h-44 flex-col items-center justify-center rounded-3xl border-2 border-dashed border-violet-200 bg-violet-50/60 p-6 text-center"
+                    >
+                        <div
+                            aria-hidden="true"
+                            class="flex size-12 items-center justify-center rounded-2xl bg-white text-2xl font-light shadow-sm"
+                        >
+                            +
+                        </div>
+
+                        <label
+                            for="veu-image-input"
+                            class="mt-4 inline-flex cursor-pointer rounded-full bg-violet-800 px-5 py-2.5 text-sm font-black text-white transition hover:bg-violet-700"
+                        >
+                            {text.chooseImage}
+                        </label>
+                    </div>
+
+                    <div
+                        id="veu-image-selected"
+                        hidden
+                        class="mt-5 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50"
+                    >
+                        <img
+                            id="veu-image-preview"
+                            src=""
+                            alt={text.imageAlt}
+                            class="aspect-[16/9] w-full bg-slate-100 object-cover"
+                        />
+
+                        <div
+                            class="flex flex-wrap items-center justify-between gap-4 p-5"
+                        >
+                            <p
+                                id="veu-image-name"
+                                class="min-w-0 flex-1 truncate text-sm font-bold text-slate-700"
+                            ></p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <label
+                                    for="veu-image-input"
+                                    class="cursor-pointer rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-violet-600 hover:text-violet-800"
+                                >
+                                    {text.changeImage}
+                                </label>
+
+                                <button
+                                    id="veu-image-remove"
+                                    type="button"
+                                    class="rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-bold text-rose-800 transition hover:bg-rose-100"
+                                >
+                                    {text.removeImage}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p
+                        id="veu-image-error"
+                        hidden
+                        role="alert"
+                        class="mt-3 text-sm font-bold leading-6 text-rose-700"
+                    ></p>
+                </section>
+
+                <section
+                    class="mt-10 border-t border-slate-200 pt-8"
+                >
+                    <h2
+                        class="text-2xl font-black text-slate-950"
+                    >
+                        {text.contactSection}
+                    </h2>
+
+                    <p
+                        class="mt-2 max-w-2xl leading-7 text-slate-600"
+                    >
+                        {text.contactIntro}
+                    </p>
+
+                    <div
+                        class="mt-6 grid gap-6 md:grid-cols-2"
+                    >
+                        <label class="font-bold text-slate-800">
+                            {text.contactNameLabel}
+
+                            <input
+                                name="nombre_contacto"
+                                type="text"
+                                required
+                                minlength="2"
+                                maxlength="120"
+                                class={fieldClass}
+                            />
+                        </label>
+
+                        <label class="font-bold text-slate-800">
+                            {text.contactEmailLabel}
+
+                            <input
+                                name="email_contacto"
+                                type="email"
+                                required
+                                maxlength="254"
+                                class={fieldClass}
+                            />
+                        </label>
+                    </div>
+                </section>
+
+                <div class="mt-9 flex justify-end">
+                    <button
+                        id="veu-continue"
+                        type="button"
+                        class="inline-flex min-h-12 items-center justify-center rounded-full bg-violet-800 px-7 py-3 font-black text-white transition hover:bg-violet-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-violet-200"
+                    >
+                        {text.continue}
+                        <span aria-hidden="true" class="ml-3">
+                            →
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section
+        id="veu-step-review"
+        hidden
+        class="px-5 py-10 sm:px-8 sm:py-14"
+    >
+        <div class="mx-auto max-w-5xl">
+            <p
+                class="text-sm font-black uppercase tracking-[0.18em] text-violet-700"
+            >
+                {text.eyebrow}
+            </p>
+
+            <div
+                class="mt-3 flex flex-wrap items-center justify-between gap-4"
+            >
+                <h1
+                    class="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl"
+                >
+                    {text.reviewTitle}
+                </h1>
+
+                <button
+                    id="veu-review-back"
+                    type="button"
+                    class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-black text-slate-700"
+                >
+                    ← {text.edit}
+                </button>
+            </div>
+
+            <div class="mt-8 grid gap-5 md:grid-cols-2">
+                <article
+                    class="md:col-span-2 rounded-2xl border border-slate-200 bg-white p-6"
+                >
+                    <h2
+                        data-veu-review="titol"
+                        class="text-2xl font-black text-slate-950"
+                    ></h2>
+
+                    <p
+                        data-veu-review="resum"
+                        class="mt-3 leading-7 text-slate-600"
+                    ></p>
+
+                    <p
+                        data-veu-review="contingut"
+                        class="mt-5 whitespace-pre-line leading-7 text-slate-700"
+                    ></p>
+                </article>
+
+                <article
+                    id="veu-review-image-card"
+                    hidden
+                    class="md:col-span-2 overflow-hidden rounded-2xl border border-slate-200 bg-white"
+                >
+                    <img
+                        id="veu-review-image"
+                        src=""
+                        alt={text.imageAlt}
+                        class="max-h-[34rem] w-full bg-slate-100 object-contain"
+                    />
+                </article>
+
+                <article
+                    class="rounded-2xl border border-violet-200 bg-violet-50 p-6"
+                >
+                    <h2
+                        class="text-lg font-black text-slate-950"
+                    >
+                        {text.publicAuthorReview}
+                    </h2>
+
+                    <p
+                        data-veu-review="tipo_autoria"
+                        class="mt-3 text-sm font-bold text-violet-700"
+                    ></p>
+
+                    <p
+                        data-veu-review="autor_public"
+                        class="mt-1 text-lg font-black text-slate-950"
+                    ></p>
+                </article>
+
+                <article
+                    class="rounded-2xl border border-sky-200 bg-sky-50 p-6"
+                >
+                    <h2
+                        class="text-lg font-black text-slate-950"
+                    >
+                        {text.privateContactReview}
+                    </h2>
+
+                    <p
+                        data-veu-review="nombre_contacto"
+                        class="mt-3 font-bold"
+                    ></p>
+
+                    <p
+                        data-veu-review="email_contacto"
+                        class="mt-1 text-slate-700"
+                    ></p>
+                </article>
+            </div>
+
+            <div
+                class="mt-6 rounded-2xl border border-slate-200 bg-white p-5"
+            >
+                <label
+                    class="flex cursor-pointer items-start gap-3"
+                >
+                    <input
+                        id="veu-privacy"
+                        name="aceptacion_privacidad"
+                        value="true"
+                        type="checkbox"
+                        required
+                        class="mt-1 size-5"
+                    />
+
+                    <span
+                        class="text-sm font-medium leading-6 text-slate-700"
+                    >
+                        {text.privacy}
+                    </span>
+                </label>
+            </div>
+
+            <div
+                data-netlify-recaptcha="true"
+                class="mt-6"
+            ></div>
+
+            <p
+                id="veu-submit-error"
+                hidden
+                class="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 font-bold text-red-800"
+            >
+                {text.sendError}
+            </p>
+
+            <div class="mt-8 flex justify-end">
+                <button
+                    id="veu-submit"
+                    type="submit"
+                    disabled
+                    class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-7 py-3 font-black text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                    <span id="veu-submit-label">
+                        {text.send}
+                    </span>
+
+                    <span aria-hidden="true" class="ml-3">
+                        →
+                    </span>
+                </button>
+            </div>
+        </div>
+    </section>
+</form>
+
+<SubmissionSendingOverlay lang={lang} />
+
+<script>
+    import {
+        initVeuSubmissionFlow,
+    } from "../lib/veuSubmissionFlow";
+
+    initVeuSubmissionFlow();
+</script>

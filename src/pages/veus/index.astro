@@ -19,6 +19,7 @@ const copy = {
             "Ara mateix no hi ha cap veu publicada.",
         view: "Llegir la veu",
         readingSuffix: "min de lectura",
+        submit: "Envia la teva veu",
     },
     es: {
         title: "Voces de Pineda",
@@ -28,6 +29,7 @@ const copy = {
             "Ahora mismo no hay ninguna voz publicada.",
         view: "Leer la voz",
         readingSuffix: "min de lectura",
+        submit: "Envía tu voz",
     },
     en: {
         title: "Voices of Pineda",
@@ -37,6 +39,7 @@ const copy = {
             "There are currently no voices published.",
         view: "Read this voice",
         readingSuffix: "min read",
+        submit: "Send your voice",
     },
 }[lang];
 
@@ -76,6 +79,13 @@ function getVeuUrl(slug: string): string {
         ? `/veus/${slug}`
         : `/${lang}/veus/${slug}`;
 }
+
+const submissionUrl =
+    lang === "ca"
+        ? "/veus/envia-la-teva-veu/"
+        : lang === "es"
+          ? "/es/veus/envia-tu-voz/"
+          : "/en/veus/send-your-voice/";
 ---
 
 <Layout
@@ -105,6 +115,14 @@ function getVeuUrl(slug: string): string {
                 >
                     {copy.description}
                 </p>
+
+                <a
+                    href={submissionUrl}
+                    class="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 py-3 font-black text-violet-950 transition hover:bg-violet-100"
+                >
+                    {copy.submit}
+                    <span aria-hidden="true" class="ml-3">→</span>
+                </a>
             </div>
         </section>
 

@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro";
+import VeuSubmissionFlow from "../components/VeuSubmissionFlow.astro";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const titles = {
+    ca: "Envia la teva veu",
+    es: "Envía tu voz",
+    en: "Send your voice",
+};
+
+const descriptions = {
+    ca: "Envia una opinió, reflexió o experiència per a Veus de Pineda.",
+    es: "Envía una opinión, reflexión o experiencia para Voces de Pineda.",
+    en: "Submit an opinion, reflection or experience for Voices of Pineda.",
+};
+---
+
+<Layout
+    lang={lang}
+    title={`${titles[lang]} | GUIAPINEDA`}
+    description={descriptions[lang]}
+    showLanguageSwitcher={false}
+>
+    <VeuSubmissionFlow lang={lang} />
+</Layout>

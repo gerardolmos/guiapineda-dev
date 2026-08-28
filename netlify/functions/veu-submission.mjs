@@ -179,7 +179,7 @@ export function buildVeuPayload(data) {
         "contingut",
         {
             required: true,
-            min: 120,
+            min: 500,
             max: 6000,
         },
     );
