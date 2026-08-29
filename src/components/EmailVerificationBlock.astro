@@ -1,0 +1,208 @@
+---
+interface Props {
+    lang: "ca" | "es" | "en";
+    scope: "agenda" | "veu";
+}
+
+const {
+    lang,
+    scope,
+} = Astro.props;
+
+const copy = {
+    ca: {
+        title:
+            "Verifica el teu email",
+        intro:
+            "T'enviarem un codi de 6 xifres a l'email de contacte. El codi caduca al cap de 10 minuts.",
+        request:
+            "Enviar codi",
+        requesting:
+            "Enviant codi...",
+        codeLabel:
+            "Codi de verificació",
+        codeHelp:
+            "Introdueix les 6 xifres que has rebut per email.",
+        verify:
+            "Verificar email",
+        verifying:
+            "Verificant...",
+        verified:
+            "Email verificat correctament.",
+        resend:
+            "Tornar a enviar el codi",
+        invalid:
+            "El codi no és correcte o ja no és vàlid.",
+        unavailable:
+            "Ara mateix no podem verificar l'email. Torna-ho a provar d'aquí a uns instants.",
+    },
+    es: {
+        title:
+            "Verifica tu email",
+        intro:
+            "Te enviaremos un código de 6 cifras al email de contacto. El código caduca en 10 minutos.",
+        request:
+            "Enviar código",
+        requesting:
+            "Enviando código...",
+        codeLabel:
+            "Código de verificación",
+        codeHelp:
+            "Introduce las 6 cifras que has recibido por email.",
+        verify:
+            "Verificar email",
+        verifying:
+            "Verificando...",
+        verified:
+            "Email verificado correctamente.",
+        resend:
+            "Volver a enviar el código",
+        invalid:
+            "El código no es correcto o ya no es válido.",
+        unavailable:
+            "Ahora mismo no podemos verificar el email. Vuelve a intentarlo en unos instantes.",
+    },
+    en: {
+        title:
+            "Verify your email",
+        intro:
+            "We will send a 6-digit code to your contact email. The code expires after 10 minutes.",
+        request:
+            "Send code",
+        requesting:
+            "Sending code...",
+        codeLabel:
+            "Verification code",
+        codeHelp:
+            "Enter the 6 digits you received by email.",
+        verify:
+            "Verify email",
+        verifying:
+            "Verifying...",
+        verified:
+            "Email verified successfully.",
+        resend:
+            "Send the code again",
+        invalid:
+            "The code is incorrect or is no longer valid.",
+        unavailable:
+            "We cannot verify your email right now. Please try again in a moment.",
+    },
+} as const;
+
+const text = copy[lang];
+
+const codeId =
+    `${scope}-verification-code`;
+---
+
+<div
+    hidden
+    data-email-verification
+    data-verification-scope={scope}
+    data-verification-language={lang}
+    class="mt-6 rounded-2xl border border-sky-200 bg-sky-50 p-5 sm:p-6"
+>
+    <div
+        data-verification-pending
+    >
+        <h2
+            class="text-lg font-black text-slate-950"
+        >
+            {text.title}
+        </h2>
+
+        <p
+            class="mt-2 max-w-3xl text-sm font-medium leading-6 text-slate-700"
+        >
+            {text.intro}
+        </p>
+
+        <button
+            type="button"
+            data-verification-request
+            data-default-label={text.request}
+            data-loading-label={text.requesting}
+            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-sky-700 px-6 py-2.5 font-black text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+            {text.request}
+        </button>
+    </div>
+
+    <div
+        hidden
+        data-verification-code-step
+        class="mt-5 border-t border-sky-200 pt-5"
+    >
+        <label
+            for={codeId}
+            class="font-bold text-slate-800"
+        >
+            {text.codeLabel}
+
+            <input
+                id={codeId}
+                data-verification-code
+                type="text"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                class="mt-2 block w-full max-w-xs rounded-xl border border-slate-300 bg-white px-4 py-3 text-lg font-black tracking-[0.25em] text-slate-950 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+            />
+        </label>
+
+        <p
+            class="mt-2 text-sm text-slate-600"
+        >
+            {text.codeHelp}
+        </p>
+
+        <div
+            class="mt-4 flex flex-wrap gap-3"
+        >
+            <button
+                type="button"
+                data-verification-confirm
+                data-default-label={text.verify}
+                data-loading-label={text.verifying}
+                class="inline-flex min-h-11 items-center justify-center rounded-full bg-slate-950 px-6 py-2.5 font-black text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+                {text.verify}
+            </button>
+
+            <button
+                type="button"
+                data-verification-resend
+                class="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 font-bold text-slate-700 transition hover:border-sky-400 hover:text-sky-800 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+                {text.resend}
+            </button>
+        </div>
+    </div>
+
+    <p
+        hidden
+        data-verification-success
+        class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 font-bold text-emerald-800"
+        role="status"
+    >
+        {text.verified}
+    </p>
+
+    <p
+        hidden
+        data-verification-error
+        data-invalid-message={text.invalid}
+        data-unavailable-message={text.unavailable}
+        class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 font-bold text-red-800"
+        role="alert"
+    ></p>
+
+    <input
+        type="hidden"
+        name="email_verification_token"
+        value=""
+        data-verification-token
+    />
+</div>
