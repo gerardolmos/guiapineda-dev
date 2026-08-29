@@ -1,4 +1,5 @@
 import { fail, readString } from "./_shared/submission-common.mjs";
+import { createStrapiSubmission } from "./_shared/strapi-submission.mjs";
 
 const LANGUAGES = new Set(["ca", "es", "en"]);
 
@@ -430,42 +431,17 @@ export function buildAgendaPayload(
 async function createAgendaRequest(
     payload,
 ) {
-    const rawUrl =
-        process.env.GUIAPINEDA_STRAPI_URL;
-
-    const token =
-        process.env.GUIAPINEDA_STRAPI_AGENDA_TOKEN;
-
-    if (!rawUrl || !token) {
-        throw new Error(
-            "Agenda Strapi configuration is missing.",
-        );
-    }
-
-    const baseUrl =
-        rawUrl.trim().replace(/\/+$/, "");
-
-    const response = await fetch(
-        `${baseUrl}/api/solicitudes-agenda`,
-        {
-            method: "POST",
-            headers: {
-                Authorization:
-                    `Bearer ${token}`,
-                "Content-Type":
-                    "application/json",
-            },
-            body: JSON.stringify({
-                data: payload,
-            }),
-        },
-    );
-
-    if (!response.ok) {
-        throw new Error(
-            `Agenda Strapi request failed: ${response.status}`,
-        );
-    }
+    await createStrapiSubmission({
+        payload,
+        rawUrl:
+            process.env.GUIAPINEDA_STRAPI_URL,
+        token:
+            process.env.GUIAPINEDA_STRAPI_AGENDA_TOKEN,
+        endpoint:
+            "/api/solicitudes-agenda",
+        label:
+            "Agenda",
+    });
 }
 
 export default {
