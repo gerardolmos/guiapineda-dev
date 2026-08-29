@@ -1,3 +1,4 @@
+import { initEmailVerificationController } from "./emailVerificationController";
 import { submitNetlifyForm } from "./netlifySubmission";
 
 export function initAgendaSubmissionFlow() {
@@ -7,6 +8,10 @@ export function initAgendaSubmissionFlow() {
         );
 
     if (!form) return;
+
+    initEmailVerificationController(
+        form,
+    );
 
     const formStep =
         document.getElementById(

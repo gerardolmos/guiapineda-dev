@@ -33,6 +33,8 @@ const copy = {
             "Tornar a enviar el codi",
         invalid:
             "El codi no és correcte o ja no és vàlid.",
+        limited:
+            "Espera una mica abans de demanar un altre codi.",
         unavailable:
             "Ara mateix no podem verificar l'email. Torna-ho a provar d'aquí a uns instants.",
     },
@@ -59,6 +61,8 @@ const copy = {
             "Volver a enviar el código",
         invalid:
             "El código no es correcto o ya no es válido.",
+        limited:
+            "Espera un poco antes de solicitar otro código.",
         unavailable:
             "Ahora mismo no podemos verificar el email. Vuelve a intentarlo en unos instantes.",
     },
@@ -85,6 +89,8 @@ const copy = {
             "Send the code again",
         invalid:
             "The code is incorrect or is no longer valid.",
+        limited:
+            "Please wait before requesting another code.",
         unavailable:
             "We cannot verify your email right now. Please try again in a moment.",
     },
@@ -194,6 +200,7 @@ const codeId =
         hidden
         data-verification-error
         data-invalid-message={text.invalid}
+        data-limited-message={text.limited}
         data-unavailable-message={text.unavailable}
         class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 font-bold text-red-800"
         role="alert"
