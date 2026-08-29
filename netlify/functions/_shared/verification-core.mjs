@@ -33,6 +33,26 @@ export function normalizeVerificationEmail(
     return normalized || null;
 }
 
+const VERIFICATION_EMAIL_PATTERN =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function isValidVerificationEmail(
+    value,
+) {
+    const normalized =
+        normalizeVerificationEmail(
+            value,
+        );
+
+    return (
+        normalized !== null &&
+        normalized.length <= 254 &&
+        VERIFICATION_EMAIL_PATTERN.test(
+            normalized,
+        )
+    );
+}
+
 export function generateVerificationCode() {
     return String(
         randomInt(0, 1_000_000),
