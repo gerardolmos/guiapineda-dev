@@ -130,6 +130,17 @@ export function createVerificationStore(
             );
         },
 
+        async consumeChallenge(
+            challengeId,
+        ) {
+            return redis.getdel(
+                key(
+                    "challenge",
+                    challengeId,
+                ),
+            );
+        },
+
         async incrementAttempts(
             challengeId,
         ) {
