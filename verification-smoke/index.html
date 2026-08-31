@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+    >
+
+    <meta
+        name="robots"
+        content="noindex,nofollow,noarchive"
+    >
+
+    <title>
+        GUIAPINEDA — prueba privada de verificación
+    </title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem;
+            background: #f8fafc;
+            color: #0f172a;
+            font-family: system-ui, sans-serif;
+        }
+
+        main {
+            max-width: 640px;
+            margin: 4rem auto;
+            padding: 2rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 1rem;
+            background: white;
+        }
+
+        label {
+            display: block;
+            margin-top: 1.25rem;
+            font-weight: 700;
+        }
+
+        input,
+        select,
+        button {
+            box-sizing: border-box;
+            width: 100%;
+            margin-top: .5rem;
+            padding: .8rem 1rem;
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        #status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: .75rem;
+            background: #f1f5f9;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>
+            Prueba privada de verificación
+        </h1>
+
+        <p>
+            Esta página solo prueba
+            Resend + Upstash + Netlify Functions.
+            No utiliza el backend editorial de GUIAPINEDA.
+        </p>
+
+        <label>
+            Idioma
+            <select id="language">
+                <option value="ca">
+                    Català
+                </option>
+
+                <option value="es" selected>
+                    Español
+                </option>
+
+                <option value="en">
+                    English
+                </option>
+            </select>
+        </label>
+
+        <label>
+            Email
+            <input
+                id="email"
+                type="email"
+                autocomplete="email"
+                required
+            >
+        </label>
+
+        <button
+            id="request"
+            type="button"
+        >
+            Enviar código
+        </button>
+
+        <section
+            id="code-step"
+            hidden
+        >
+            <label>
+                Código de 6 cifras
+                <input
+                    id="code"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    maxlength="6"
+                >
+            </label>
+
+            <button
+                id="verify"
+                type="button"
+            >
+                Verificar código
+            </button>
+        </section>
+
+        <div
+            id="status"
+            role="status"
+        >
+            Esperando prueba.
+        </div>
+    </main>
+
+    <script
+        type="module"
+        src="./app.js"
+    ></script>
+</body>
+</html>
