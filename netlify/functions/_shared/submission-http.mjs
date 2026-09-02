@@ -169,3 +169,83 @@ export async function readMultipartSubmission(
         image,
     };
 }
+
+export const MAX_SUBMISSION_IMAGE_BYTES =
+    2 * 1024 * 1024;
+
+export const SUBMISSION_IMAGE_MIME_TYPES =
+    new Set([
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+    ]);
+
+export function validateSubmissionImage(
+    image,
+    {
+        maxBytes =
+            MAX_SUBMISSION_IMAGE_BYTES,
+    } = {},
+) {
+    if (!image) {
+        return {
+            ok: true,
+        };
+    }
+
+    if (
+        typeof image !== "object" ||
+        typeof image.size !== "number" ||
+        typeof image.type !== "string" ||
+        typeof image.arrayBuffer !==
+            "function"
+    ) {
+        return {
+            ok: false,
+            status: 400,
+            reason: "image:invalid",
+        };
+    }
+
+    if (
+        image.size <= 0
+    ) {
+        return {
+            ok: false,
+            status: 400,
+            reason: "image:empty",
+        };
+    }
+
+    if (
+        image.size > maxBytes
+    ) {
+        return {
+            ok: false,
+            status: 413,
+            reason: "image:too-large",
+        };
+    }
+
+    const mimeType =
+        image.type
+            .trim()
+            .toLowerCase();
+
+    if (
+        !SUBMISSION_IMAGE_MIME_TYPES
+            .has(mimeType)
+    ) {
+        return {
+            ok: false,
+            status: 415,
+            reason:
+                "image:unsupported-type",
+        };
+    }
+
+    return {
+        ok: true,
+        mimeType,
+    };
+}

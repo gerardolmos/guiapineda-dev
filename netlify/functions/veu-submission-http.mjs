@@ -3,12 +3,13 @@ import {
 } from "./veu-submission.mjs";
 
 import {
-    createStrapiSubmission,
+    createInternalStrapiSubmission,
 } from "./_shared/strapi-submission.mjs";
 
 import {
     readMultipartSubmission,
     submissionJsonResponse,
+    validateSubmissionImage,
 } from "./_shared/submission-http.mjs";
 
 import {
@@ -31,18 +32,19 @@ export async function handleVeuSubmission(
         );
     }
 
-    /*
-     * El upload seguro se implementa en el
-     * siguiente cambio.
-     */
-    if (incoming.image) {
+    const imageValidation =
+        validateSubmissionImage(
+            incoming.image,
+        );
+
+    if (!imageValidation.ok) {
         return submissionJsonResponse(
             {
                 ok: false,
                 reason:
-                    "image:upload-not-ready",
+                    imageValidation.reason,
             },
-            503,
+            imageValidation.status,
         );
     }
 
@@ -78,16 +80,16 @@ export async function handleVeuSubmission(
     }
 
     try {
-        await createStrapiSubmission({
+        await createInternalStrapiSubmission({
             payload: result.payload,
+            image: incoming.image,
             rawUrl:
                 process.env
                     .GUIAPINEDA_STRAPI_URL,
-            token:
+            secret:
                 process.env
-                    .GUIAPINEDA_STRAPI_VEU_TOKEN,
-            endpoint:
-                "/api/solicitudes-veu",
+                    .GUIAPINEDA_INTERNAL_SUBMISSION_SECRET,
+            section: "veu",
             label: "Veu",
         });
 
