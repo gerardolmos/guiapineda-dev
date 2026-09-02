@@ -1,5 +1,5 @@
 import { initEmailVerificationController } from "./emailVerificationController";
-import { submitNetlifyForm } from "./netlifySubmission";
+import { submitVerifiedSubmissionForm } from "./netlifySubmission";
 
 export function initVeuSubmissionFlow() {
     const form =
@@ -11,6 +11,13 @@ export function initVeuSubmissionFlow() {
 
     initEmailVerificationController(
         form,
+    );
+
+    form.addEventListener(
+        "guiapineda:email-verification-change",
+        () => {
+            updateSubmitState();
+        },
     );
 
     const formStep =
@@ -546,6 +553,7 @@ export function initVeuSubmissionFlow() {
 
         submitButton.disabled =
             submitting ||
+            form.dataset.emailVerified !== "true" ||
             !privacy?.checked;
     }
 
@@ -635,6 +643,7 @@ export function initVeuSubmissionFlow() {
 
             if (
                 submitting ||
+                form.dataset.emailVerified !== "true" ||
                 !privacy?.checked ||
                 !validateForm()
             ) {
@@ -654,7 +663,7 @@ export function initVeuSubmissionFlow() {
             setSubmitting(true);
 
             try {
-                await submitNetlifyForm(
+                await submitVerifiedSubmissionForm(
                     form,
                     {
                         successUrl,

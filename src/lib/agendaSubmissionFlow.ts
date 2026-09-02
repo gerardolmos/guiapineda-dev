@@ -1,5 +1,5 @@
 import { initEmailVerificationController } from "./emailVerificationController";
-import { submitNetlifyForm } from "./netlifySubmission";
+import { submitVerifiedSubmissionForm } from "./netlifySubmission";
 
 export function initAgendaSubmissionFlow() {
     const form =
@@ -11,6 +11,13 @@ export function initAgendaSubmissionFlow() {
 
     initEmailVerificationController(
         form,
+    );
+
+    form.addEventListener(
+        "guiapineda:email-verification-change",
+        () => {
+            updateSubmitState();
+        },
     );
 
     const formStep =
@@ -381,11 +388,81 @@ export function initAgendaSubmissionFlow() {
         reviewImageCard.hidden = false;
     }
 
+    const timeOrderError =
+        document.createElement("p");
+
+    timeOrderError.id =
+        "agenda-time-order-error";
+    timeOrderError.hidden = true;
+    timeOrderError.className =
+        "mt-2 text-sm font-bold text-red-700";
+    timeOrderError.setAttribute(
+        "role",
+        "alert",
+    );
+    timeOrderError.setAttribute(
+        "aria-live",
+        "polite",
+    );
+
+    if (endTime) {
+        const container =
+            endTime.closest("label") ??
+            endTime;
+
+        container.insertAdjacentElement(
+            "afterend",
+            timeOrderError,
+        );
+
+        const describedBy =
+            endTime
+                .getAttribute("aria-describedby")
+                ?.split(/\s+/)
+                .filter(Boolean) ?? [];
+
+        if (
+            !describedBy.includes(
+                timeOrderError.id,
+            )
+        ) {
+            endTime.setAttribute(
+                "aria-describedby",
+                [
+                    ...describedBy,
+                    timeOrderError.id,
+                ].join(" "),
+            );
+        }
+    }
+
+    function hideTimeOrderError() {
+        timeOrderError.hidden = true;
+        timeOrderError.textContent = "";
+        endTime?.removeAttribute(
+            "aria-invalid",
+        );
+    }
+
+    function showTimeOrderError() {
+        timeOrderError.textContent =
+            form.dataset.timeOrderError ??
+            "Invalid time order.";
+
+        timeOrderError.hidden = false;
+
+        endTime?.setAttribute(
+            "aria-invalid",
+            "true",
+        );
+    }
+
     function validateDates(): boolean {
         startDate?.setCustomValidity("");
         endDate?.setCustomValidity("");
         startTime?.setCustomValidity("");
         endTime?.setCustomValidity("");
+        hideTimeOrderError();
 
         if (
             startDate?.value &&
@@ -439,6 +516,8 @@ export function initAgendaSubmissionFlow() {
                     "Invalid time order.",
             );
 
+            showTimeOrderError();
+
             return false;
         }
 
@@ -447,6 +526,25 @@ export function initAgendaSubmissionFlow() {
 
     function validateForm(): boolean {
         if (!validateDates()) {
+            const temporalFields = [
+                startDate,
+                endDate,
+                startTime,
+                endTime,
+            ];
+
+            const invalidField =
+                temporalFields.find(
+                    (field) =>
+                        field !== null &&
+                        !field.checkValidity(),
+                );
+
+            if (invalidField) {
+                invalidField.focus();
+                invalidField.reportValidity();
+            }
+
             return false;
         }
 
@@ -640,6 +738,7 @@ export function initAgendaSubmissionFlow() {
 
         submitButton.disabled =
             submitting ||
+            form.dataset.emailVerified !== "true" ||
             !privacy?.checked;
     }
 
@@ -779,6 +878,7 @@ export function initAgendaSubmissionFlow() {
 
             if (
                 submitting ||
+                form.dataset.emailVerified !== "true" ||
                 !privacy?.checked ||
                 !validateForm()
             ) {
@@ -800,7 +900,7 @@ export function initAgendaSubmissionFlow() {
             setSubmitting(true);
 
             try {
-                await submitNetlifyForm(
+                await submitVerifiedSubmissionForm(
                     form,
                     {
                         successUrl,

@@ -111,6 +111,21 @@ export function initEmailVerificationController(
         return emailInput.value.trim();
     }
 
+    function setVerificationState(
+        verified: boolean,
+    ) {
+        form.dataset.emailVerified =
+            verified ? "true" : "false";
+
+        form.dispatchEvent(
+            new Event(
+                "guiapineda:email-verification-change",
+            ),
+        );
+    }
+
+    form.dataset.emailVerified = "false";
+
     function setButtonLabel(
         button: HTMLButtonElement,
         loading: boolean,
@@ -207,6 +222,7 @@ export function initEmailVerificationController(
         challengeId = "";
         verifiedEmail = "";
         tokenInput.value = "";
+        setVerificationState(false);
         codeInput.value = "";
 
         requestButton.hidden = false;
@@ -364,6 +380,7 @@ export function initEmailVerificationController(
                 result.token;
 
             verifiedEmail = email;
+            setVerificationState(true);
             challengeId = "";
 
             requestButton.hidden = true;
@@ -404,6 +421,19 @@ export function initEmailVerificationController(
     confirmButton.addEventListener(
         "click",
         verifyCode,
+    );
+
+    emailInput.addEventListener(
+        "input",
+        () => {
+            if (
+                challengeId ||
+                verifiedEmail ||
+                tokenInput.value
+            ) {
+                resetVerification();
+            }
+        },
     );
 
     codeInput.addEventListener(
