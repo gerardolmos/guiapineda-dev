@@ -98,6 +98,14 @@ function getVerifiedSubmissionEndpoint(
         return "/api/submissions/veu";
     }
 
+    if (
+        form.matches(
+            "[data-comunicat-submission-flow]",
+        )
+    ) {
+        return "/api/submissions/comunicat";
+    }
+
     throw new Error(
         "Verified submission form is not supported.",
     );
