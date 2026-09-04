@@ -43,6 +43,7 @@ export async function createStrapiSubmission({
 const INTERNAL_SUBMISSION_SECTIONS =
     new Set([
         "agenda",
+        "comunicat",
         "veu",
     ]);
 

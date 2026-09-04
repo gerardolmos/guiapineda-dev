@@ -1,4 +1,5 @@
-import { submitNetlifyForm } from "./netlifySubmission";
+import { initEmailVerificationController } from "./emailVerificationController";
+import { submitVerifiedSubmissionForm } from "./netlifySubmission";
 
 export function initCommunicatSubmissionFlow() {
     const root = document.querySelector<HTMLFormElement>(
@@ -6,6 +7,17 @@ export function initCommunicatSubmissionFlow() {
     );
 
     if (!root) return;
+
+    initEmailVerificationController(
+        root,
+    );
+
+    root.addEventListener(
+        "guiapineda:email-verification-change",
+        () => {
+            updateReviewState();
+        },
+    );
 
     const authorStep = document.getElementById("comunicat-step-author");
     const contentStep = document.getElementById("comunicat-step-content");
@@ -123,7 +135,7 @@ export function initCommunicatSubmissionFlow() {
         "comunicat-submit-error",
     );
 
-    const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
     const ALLOWED_IMAGE_TYPES = new Set([
         "image/jpeg",
@@ -379,7 +391,8 @@ export function initCommunicatSubmissionFlow() {
 
     function updateReviewState() {
         const ready = Boolean(
-            contactEmail?.value.trim() &&
+            root.dataset.emailVerified === "true" &&
+                contactEmail?.value.trim() &&
                 contactEmail.checkValidity() &&
                 privacy?.checked,
         );
@@ -522,7 +535,8 @@ export function initCommunicatSubmissionFlow() {
             (contentInput?.value.trim().length ?? 0) >= 80;
 
         const contactReady = Boolean(
-            contactEmail?.value.trim() &&
+            root.dataset.emailVerified === "true" &&
+                contactEmail?.value.trim() &&
                 contactEmail.checkValidity() &&
                 privacy?.checked,
         );
@@ -583,7 +597,7 @@ export function initCommunicatSubmissionFlow() {
         setSubmitting(true);
 
         try {
-            await submitNetlifyForm(root, {
+            await submitVerifiedSubmissionForm(root, {
                 successUrl,
                 minimumDuration: 3200,
             });

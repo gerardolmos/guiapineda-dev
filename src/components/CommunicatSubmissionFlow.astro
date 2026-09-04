@@ -1,4 +1,5 @@
 ---
+import EmailVerificationBlock from "./EmailVerificationBlock.astro";
 import SubmissionSendingOverlay from "./SubmissionSendingOverlay.astro";
 
 interface Props {
@@ -6,6 +7,15 @@ interface Props {
 }
 
 const { lang } = Astro.props;
+
+const senderTypeValues = [
+    "entitat_associacio",
+    "club_grup",
+    "escola_centre",
+    "comerc_empresa",
+    "particular",
+    "altres",
+] as const;
 
 const successUrl =
     lang === "ca"
@@ -53,7 +63,7 @@ const text =
                   "Explica aquí tota la informació: què passarà, quan, on, per a qui és, com participar-hi...",
               imageTitle: "Imatge del comunicat",
               imageHelp:
-                  "Opcional. Pots afegir una única imatge en JPG, PNG o WebP de fins a 5 MB.",
+                  "Opcional. Pots afegir una única imatge en JPG, PNG o WebP de fins a 2 MB.",
               chooseImage: "Afegir imatge",
               changeImage: "Canviar imatge",
               removeImage: "Eliminar imatge",
@@ -79,7 +89,7 @@ const text =
                   "Accepto que GUIAPINEDA utilitzi aquestes dades de contacte per gestionar i revisar aquest comunicat.",
               send: "Enviar a GUIAPINEDA",
               sending: "Enviant...",
-               fileTooLarge: "La imatge no pot superar els 5 MB.",
+               fileTooLarge: "La imatge no pot superar els 2 MB.",
                fileType:
                    "Selecciona una imatge en format JPG, PNG o WebP.",
               publicLabel: "Contingut públic",
@@ -125,7 +135,7 @@ const text =
                   "Explica aquí toda la información: qué ocurrirá, cuándo, dónde, para quién es, cómo participar...",
               imageTitle: "Imagen del comunicado",
               imageHelp:
-                  "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP de hasta 5 MB.",
+                  "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP de hasta 2 MB.",
               chooseImage: "Añadir imagen",
               changeImage: "Cambiar imagen",
               removeImage: "Eliminar imagen",
@@ -151,7 +161,7 @@ const text =
                   "Acepto que GUIAPINEDA utilice estos datos de contacto para gestionar y revisar este comunicado.",
               send: "Enviar a GUIAPINEDA",
               sending: "Enviando...",
-               fileTooLarge: "La imagen no puede superar los 5 MB.",
+               fileTooLarge: "La imagen no puede superar los 2 MB.",
                fileType:
                    "Selecciona una imagen en formato JPG, PNG o WebP.",
               publicLabel: "Contenido público",
@@ -163,9 +173,6 @@ const text =
     id="comunicat-submission-form"
     name="comunicat"
     method="POST"
-    data-netlify="true"
-    data-netlify-recaptcha="true"
-    netlify-honeypot="bot-field"
     enctype="multipart/form-data"
     novalidate
     data-comunicat-submission-flow
@@ -176,8 +183,7 @@ const text =
     data-success-url={successUrl}
     class="bg-stone-50"
 >
-    <input type="hidden" name="form-name" value="comunicat" />
-    <input type="hidden" name="idioma" value={lang} />
+    <input type="hidden" name="idioma_solicitud" value={lang} />
 
     <div class="sr-only" aria-hidden="true">
         <label for="comunicat-bot-field">
@@ -238,7 +244,7 @@ const text =
                                             class="sr-only"
                                             type="radio"
                                             name="tipus_remitent"
-                                            value={label}
+                                            value={senderTypeValues[index]}
                                             data-label={label}
                                             required
                                         />
@@ -672,7 +678,7 @@ const text =
                         </span>
                         <input
                             id="comunicat-contact-email"
-                            name="email_contacte"
+                            name="email_contacto"
                             type="email"
                             maxlength="180"
                             autocomplete="email"
@@ -690,7 +696,7 @@ const text =
                         </span>
                         <input
                             id="comunicat-contact-name"
-                            name="nom_contacte"
+                            name="nombre_contacto"
                             type="text"
                             maxlength="120"
                             autocomplete="name"
@@ -699,11 +705,16 @@ const text =
                     </label>
                 </div>
 
+                <EmailVerificationBlock
+                    scope="comunicat"
+                    lang={lang}
+                />
+
                 <label class="mt-7 flex cursor-pointer items-start gap-3 rounded-2xl bg-stone-50 p-4">
                     <input
                         id="comunicat-privacy"
-                        name="acceptacio"
-                        value="acceptada"
+                        name="aceptacion_privacidad"
+                        value="true"
                         type="checkbox"
                         required
                         class="mt-1 size-5 shrink-0 accent-slate-950"
@@ -712,11 +723,6 @@ const text =
                         {text.privacy}
                     </span>
                 </label>
-
-                <div
-                    class="mt-7 flex justify-center"
-                    data-netlify-recaptcha="true"
-                ></div>
 
                 <p
                     id="comunicat-submit-error"
