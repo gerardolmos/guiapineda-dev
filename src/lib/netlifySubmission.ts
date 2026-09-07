@@ -106,6 +106,14 @@ function getVerifiedSubmissionEndpoint(
         return "/api/submissions/comunicat";
     }
 
+    if (
+        form.matches(
+            "[data-foto-mes-submission-flow]",
+        )
+    ) {
+        return "/api/submissions/foto-mes";
+    }
+
     throw new Error(
         "Verified submission form is not supported.",
     );
