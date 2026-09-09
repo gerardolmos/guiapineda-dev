@@ -114,6 +114,14 @@ function getVerifiedSubmissionEndpoint(
         return "/api/submissions/foto-mes";
     }
 
+    if (
+        form.matches(
+            "[data-millora-submission-flow]",
+        )
+    ) {
+        return "/api/submissions/millora";
+    }
+
     throw new Error(
         "Verified submission form is not supported.",
     );
