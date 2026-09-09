@@ -1,6 +1,7 @@
 ---
 import { getTranslations } from "../i18n/getTranslations";
 import SubmissionSendingOverlay from "./SubmissionSendingOverlay.astro";
+import EmailVerificationBlock from "./EmailVerificationBlock.astro";
 
 interface Props {
     lang: "ca" | "es" | "en";
@@ -37,9 +38,9 @@ const copy = {
         aliasPlaceholder: "Per exemple: Maria, J. Costa, Veí del Poblenou...",
         aliasHelp:
             "Aquest text serà públic si l'aportació es publica. No hi posis dades que vulguis mantenir privades.",
-        publicTitle: "Només informació pública",
+        publicTitle: "Informació pública i contacte privat",
         publicText:
-            "GUIAPINEDA no et demana nom real, email, telèfon ni cap altra dada privada per enviar una aportació.",
+            "El nom o àlies anterior pot ser públic. Més endavant et demanarem un email privat només per verificar i gestionar aquesta aportació.",
         reviewNotice:
             "Totes les aportacions es revisen abans que puguin publicar-se.",
         continue: "Continuar",
@@ -62,9 +63,9 @@ const copy = {
             "Explica la situació amb les teves paraules. Pots indicar punts concrets, moments del dia, freqüència, conseqüències i una possible millora...",
         imageTitle: "Vols afegir una imatge?",
         imageHelp:
-            "Opcional. Pots afegir una única imatge en JPG, PNG o WebP, amb un màxim de 5 MB. Evita fotografies que mostrin dades personals de terceres persones.",
+            "Opcional. Pots afegir una única imatge en JPG, PNG o WebP, amb un màxim de 4 MB. Evita fotografies que mostrin dades personals de terceres persones.",
         imageFileTooLarge:
-            "La imatge supera el límit de 5 MB. Tria una imatge més petita.",
+            "La imatge supera el límit de 4 MB. Tria una imatge més petita.",
         imageFileType:
             "El format de la imatge no és vàlid. Utilitza JPG, PNG o WebP.",
         chooseImage: "Afegir imatge",
@@ -89,6 +90,12 @@ const copy = {
             "No incloguis telèfons, emails, adreces privades ni altres dades personals de terceres persones.",
             "GUIAPINEDA revisarà l'aportació abans de decidir si es publica.",
         ],
+        contactTitle: "Contacte privat",
+        contactIntro:
+            "Aquest email no es publicarà. Només es conservarà durant la moderació per verificar l’aportació o demanar aclariments, i s’eliminarà quan sigui aprovada o rebutjada.",
+        contactEmailLabel: "Email de contacte",
+        privacy:
+            "Accepto que GUIAPINEDA utilitzi aquest email exclusivament per verificar i gestionar aquesta aportació.",
         send: "Enviar a GUIAPINEDA",
         sending: "Enviant...",
         sendError:
@@ -116,9 +123,9 @@ const copy = {
         aliasPlaceholder: "Por ejemplo: María, J. Costa, Vecino de Poblenou...",
         aliasHelp:
             "Este texto será público si la aportación se publica. No incluyas datos que quieras mantener privados.",
-        publicTitle: "Solo información pública",
+        publicTitle: "Información pública y contacto privado",
         publicText:
-            "GUIAPINEDA no te pide nombre real, email, teléfono ni ningún otro dato privado para enviar una aportación.",
+            "El nombre o alias anterior puede ser público. Más adelante te pediremos un email privado solo para verificar y gestionar esta aportación.",
         reviewNotice:
             "Todas las aportaciones se revisan antes de que puedan publicarse.",
         continue: "Continuar",
@@ -141,9 +148,9 @@ const copy = {
             "Explica la situación con tus propias palabras. Puedes indicar puntos concretos, momentos del día, frecuencia, consecuencias y una posible mejora...",
         imageTitle: "¿Quieres añadir una imagen?",
         imageHelp:
-            "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP, con un máximo de 5 MB. Evita fotografías que muestren datos personales de terceras personas.",
+            "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP, con un máximo de 4 MB. Evita fotografías que muestren datos personales de terceras personas.",
         imageFileTooLarge:
-            "La imagen supera el límite de 5 MB. Elige una imagen más pequeña.",
+            "La imagen supera el límite de 4 MB. Elige una imagen más pequeña.",
         imageFileType:
             "El formato de la imagen no es válido. Utiliza JPG, PNG o WebP.",
         chooseImage: "Añadir imagen",
@@ -168,6 +175,12 @@ const copy = {
             "No incluyas teléfonos, emails, direcciones privadas ni otros datos personales de terceras personas.",
             "GUIAPINEDA revisará la aportación antes de decidir si se publica.",
         ],
+        contactTitle: "Contacto privado",
+        contactIntro:
+            "Este email no se publicará. Solo se conservará durante la moderación para verificar la aportación o solicitar aclaraciones, y se eliminará cuando sea aprobada o rechazada.",
+        contactEmailLabel: "Email de contacto",
+        privacy:
+            "Acepto que GUIAPINEDA utilice este email exclusivamente para verificar y gestionar esta aportación.",
         send: "Enviar a GUIAPINEDA",
         sending: "Enviando...",
         sendError:
@@ -195,9 +208,9 @@ const copy = {
         aliasPlaceholder: "For example: Maria, J. Costa, Poblenou resident...",
         aliasHelp:
             "This text will be public if the contribution is published. Do not include information you want to keep private.",
-        publicTitle: "Public information only",
+        publicTitle: "Public information and private contact",
         publicText:
-            "GUIAPINEDA does not ask for your real name, email address, phone number or any other private contact information.",
+            "The name or alias above may be public. Later we will ask for a private email only to verify and manage this contribution.",
         reviewNotice:
             "Every contribution is reviewed before it can be published.",
         continue: "Continue",
@@ -220,9 +233,9 @@ const copy = {
             "Describe the situation in your own words. You can mention specific locations, times of day, frequency, consequences and a possible improvement...",
         imageTitle: "Would you like to add an image?",
         imageHelp:
-            "Optional. You can add one JPG, PNG or WebP image, up to 5 MB. Avoid photographs containing other people's personal information.",
+            "Optional. You can add one JPG, PNG or WebP image, up to 4 MB. Avoid photographs containing other people's personal information.",
         imageFileTooLarge:
-            "The image exceeds the 5 MB limit. Choose a smaller image.",
+            "The image exceeds the 4 MB limit. Choose a smaller image.",
         imageFileType:
             "The image format is not valid. Use JPG, PNG or WebP.",
         chooseImage: "Add image",
@@ -247,6 +260,12 @@ const copy = {
             "Do not include phone numbers, emails, private addresses or other personal data belonging to third parties.",
             "GUIAPINEDA will review the contribution before deciding whether to publish it.",
         ],
+        contactTitle: "Private contact",
+        contactIntro:
+            "This email will not be published. It will only be kept during moderation to verify the contribution or request clarification, and will be deleted when the request is approved or rejected.",
+        contactEmailLabel: "Contact email",
+        privacy:
+            "I agree that GUIAPINEDA may use this email exclusively to verify and manage this contribution.",
         send: "Send to GUIAPINEDA",
         sending: "Sending...",
         sendError:
@@ -277,9 +296,6 @@ const categoryClasses: Record<string, string> = {
     id="millora-submission-form"
     name="millora"
     method="POST"
-    data-netlify="true"
-    data-netlify-recaptcha="true"
-    netlify-honeypot="bot-field"
     enctype="multipart/form-data"
     novalidate
     data-millora-submission-flow
@@ -289,15 +305,17 @@ const categoryClasses: Record<string, string> = {
     data-file-type-error={text.imageFileType}
     class="min-h-screen bg-stone-50"
 >
-    <input type="hidden" name="form-name" value="millora" />
-    <input type="hidden" name="idioma" value={lang} />
-
-    <p hidden>
-        <label>
-            No omplis aquest camp:
-            <input name="bot-field" />
-        </label>
-    </p>
+    <input
+        type="hidden"
+        name="idioma_solicitud"
+        value={lang}
+    />
+    <input
+        id="millora-autor-public"
+        type="hidden"
+        name="autor_public"
+        value=""
+    />
     <div class="border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
         <div
             class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4"
@@ -414,7 +432,7 @@ const categoryClasses: Record<string, string> = {
                                         <label class="cursor-pointer">
                                             <input
                                                 type="radio"
-                                                name="millora-category"
+                                                name="categoria"
                                                 required
                                                 value={value}
                                                 data-label={label}
@@ -441,7 +459,7 @@ const categoryClasses: Record<string, string> = {
                         <select
                             id="millora-zone"
                             required
-                            name="millora-zone"
+                            name="zona"
                             class="mt-2 min-h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
                         >
                             <option value="">
@@ -664,7 +682,7 @@ const categoryClasses: Record<string, string> = {
                             <input
                                 id="millora-title"
                                 required
-                                name="millora-title"
+                                name="titol"
                                 type="text"
                                 minlength="8"
                                 maxlength="120"
@@ -695,7 +713,7 @@ const categoryClasses: Record<string, string> = {
                             <textarea
                                 id="millora-summary"
                                 required
-                                name="millora-summary"
+                                name="resum"
                                 minlength="30"
                                 maxlength="280"
                                 rows="4"
@@ -722,7 +740,7 @@ const categoryClasses: Record<string, string> = {
                             <textarea
                                 id="millora-content"
                                 required
-                                name="millora-content"
+                                name="contingut"
                                 minlength="80"
                                 maxlength="6000"
                                 rows="12"
@@ -743,7 +761,7 @@ const categoryClasses: Record<string, string> = {
                             <input
                                 id="millora-image-input"
                                 aria-describedby="millora-image-error"
-                                name="millora-image"
+                                name="imatge"
                                 type="file"
                                 accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                 class="peer sr-only"
@@ -1081,10 +1099,54 @@ const categoryClasses: Record<string, string> = {
                 <div
                     class="px-6 pb-6 sm:px-8"
                 >
-                    <div
-                        class="flex justify-center"
-                        data-netlify-recaptcha="true"
-                    ></div>
+
+                    <section
+                        class="mb-8 rounded-[1.6rem] border border-sky-200 bg-sky-50 p-5 sm:p-6"
+                    >
+                        <h2 class="text-xl font-black text-slate-950">
+                            {text.contactTitle}
+                        </h2>
+                        <p class="mt-2 max-w-3xl text-sm font-medium leading-6 text-slate-700">
+                            {text.contactIntro}
+                        </p>
+
+                        <label
+                            for="millora-contact-email"
+                            class="mt-6 block font-bold text-slate-800"
+                        >
+                            {text.contactEmailLabel}
+                            <input
+                                id="millora-contact-email"
+                                name="email_contacto"
+                                type="email"
+                                required
+                                autocomplete="email"
+                                maxlength="180"
+                                class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            />
+                        </label>
+
+                        <EmailVerificationBlock
+                            lang={lang}
+                            scope="millora"
+                        />
+
+                        <label
+                            class="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-white p-4"
+                        >
+                            <input
+                                id="millora-privacy"
+                                name="aceptacion_privacidad"
+                                type="checkbox"
+                                value="true"
+                                required
+                                class="mt-1 h-4 w-4 shrink-0"
+                            />
+                            <span class="text-sm font-medium leading-6 text-slate-700">
+                                {text.privacy}
+                            </span>
+                        </label>
+                    </section>
 
                     <p
                         id="millora-submit-error"

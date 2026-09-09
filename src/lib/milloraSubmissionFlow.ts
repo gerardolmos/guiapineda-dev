@@ -1,4 +1,5 @@
-import { submitNetlifyForm } from "./netlifySubmission";
+import { initEmailVerificationController } from "./emailVerificationController";
+import { submitVerifiedSubmissionForm } from "./netlifySubmission";
 
 export function initMilloraSubmissionFlow() {
     const root = document.querySelector<HTMLFormElement>(
@@ -6,6 +7,17 @@ export function initMilloraSubmissionFlow() {
     );
 
     if (!root) return;
+
+    initEmailVerificationController(
+        root,
+    );
+
+    root.addEventListener(
+        "guiapineda:email-verification-change",
+        () => {
+            updateReviewState();
+        },
+    );
 
     const stepContext = document.getElementById("millora-step-context");
     const stepContent = document.getElementById("millora-step-content");
@@ -23,7 +35,7 @@ export function initMilloraSubmissionFlow() {
 
     const categoryRadios = Array.from(
         document.querySelectorAll<HTMLInputElement>(
-            'input[name="millora-category"]',
+            'input[name="categoria"]',
         ),
     );
 
@@ -42,6 +54,10 @@ export function initMilloraSubmissionFlow() {
     const aliasInput = document.getElementById(
         "millora-alias",
     ) as HTMLInputElement | null;
+    const publicAuthorInput =
+        document.getElementById(
+            "millora-autor-public",
+        ) as HTMLInputElement | null;
 
     const contextContinue = document.getElementById(
         "millora-context-continue",
@@ -144,6 +160,14 @@ export function initMilloraSubmissionFlow() {
     const submitError = document.getElementById(
         "millora-submit-error",
     );
+    const contactEmail =
+        document.getElementById(
+            "millora-contact-email",
+        ) as HTMLInputElement | null;
+    const privacy =
+        document.getElementById(
+            "millora-privacy",
+        ) as HTMLInputElement | null;
 
     const imageError = document.getElementById(
         "millora-image-error",
@@ -155,7 +179,7 @@ export function initMilloraSubmissionFlow() {
     const defaultSubmitLabel =
         submitLabel?.textContent?.trim() ?? "";
 
-    const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+    const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 
     const ALLOWED_IMAGE_TYPES = new Set([
         "image/jpeg",
@@ -228,6 +252,11 @@ export function initMilloraSubmissionFlow() {
                 zoneSelect?.value &&
                 authorReady,
         );
+
+        if (publicAuthorInput) {
+            publicAuthorInput.value =
+                authorLabel();
+        }
 
         contextContinue?.toggleAttribute("disabled", !ready);
         updateLivePreview();
@@ -472,11 +501,24 @@ export function initMilloraSubmissionFlow() {
         }
     }
 
+    function updateReviewState() {
+        const ready = Boolean(
+            root.dataset.emailVerified === "true" &&
+                contactEmail?.value.trim() &&
+                contactEmail.checkValidity() &&
+                privacy?.checked,
+        );
+
+        reviewSend?.toggleAttribute(
+            "disabled",
+            !ready || isSubmitting,
+        );
+    }
+
     function setSubmitting(submitting: boolean) {
         isSubmitting = submitting;
 
         if (reviewSend) {
-            reviewSend.disabled = submitting;
             reviewSend.setAttribute(
                 "aria-busy",
                 String(submitting),
@@ -488,6 +530,8 @@ export function initMilloraSubmissionFlow() {
                 ? sendingLabel
                 : defaultSubmitLabel;
         }
+
+        updateReviewState();
     }
 
     function showStep(
@@ -535,6 +579,16 @@ export function initMilloraSubmissionFlow() {
 
     imageRemove?.addEventListener("click", clearImage);
 
+    contactEmail?.addEventListener(
+        "input",
+        updateReviewState,
+    );
+
+    privacy?.addEventListener(
+        "change",
+        updateReviewState,
+    );
+
     contextContinue?.addEventListener("click", () => {
         if (contextContinue.hasAttribute("disabled")) return;
 
@@ -551,6 +605,7 @@ export function initMilloraSubmissionFlow() {
 
         renderReview();
         showStep("review");
+        updateReviewState();
     });
 
     reviewBack?.addEventListener("click", () => {
@@ -608,6 +663,12 @@ export function initMilloraSubmissionFlow() {
         const contentReady =
             (contentInput?.value.trim().length ?? 0) >= 80;
 
+        const contactReady = Boolean(
+            root.dataset.emailVerified === "true" &&
+                contactEmail?.value.trim() &&
+                contactEmail.checkValidity() &&
+                privacy?.checked,
+        );
         const imageIsValid = validateImage(
             imageInput?.files?.[0],
         );
@@ -617,6 +678,7 @@ export function initMilloraSubmissionFlow() {
             !titleReady ||
             !summaryReady ||
             !contentReady ||
+            !contactReady ||
             !imageIsValid
         ) {
             setSubmitting(false);
@@ -627,16 +689,26 @@ export function initMilloraSubmissionFlow() {
                 return;
             }
 
-            showStep("content");
-            updateContentState();
+            if (
+                !titleReady ||
+                !summaryReady ||
+                !contentReady ||
+                !imageIsValid
+            ) {
+                showStep("content");
+                updateContentState();
 
-            if (!imageIsValid) {
-                imageError?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                });
+                if (!imageIsValid) {
+                    imageError?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                }
+
+                return;
             }
 
+            updateReviewState();
             return;
         }
 
@@ -662,7 +734,7 @@ export function initMilloraSubmissionFlow() {
         setSubmitting(true);
 
         try {
-            await submitNetlifyForm(root, {
+            await submitVerifiedSubmissionForm(root, {
                 successUrl,
                 minimumDuration: 3200,
             });
@@ -694,6 +766,7 @@ export function initMilloraSubmissionFlow() {
 
     updateContextState();
     updateContentState();
+    updateReviewState();
 
     window.addEventListener("beforeunload", revokeImageUrl);
 }
