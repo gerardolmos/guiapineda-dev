@@ -100,6 +100,16 @@ const copy = {
         sending: "Enviant...",
         sendError:
             "No hem pogut enviar l'aportació. Torna-ho a provar d'aquí a uns instants.",
+        reviewMissingFields:
+            "Revisa els camps obligatoris abans d'enviar l'aportació.",
+        reviewEmailInvalid:
+            "Introdueix un email de contacte vàlid per continuar.",
+        reviewEmailUnverified:
+            "Verifica el teu email amb el codi rebut abans d'enviar.",
+        reviewPrivacyRequired:
+            "Accepta l'ús de l'email per poder enviar l'aportació.",
+        reviewImageInvalid:
+            "Revisa la imatge seleccionada abans d'enviar.",
         publicLabel: "Contingut públic",
     },
 
@@ -185,6 +195,16 @@ const copy = {
         sending: "Enviando...",
         sendError:
             "No hemos podido enviar la aportación. Vuelve a intentarlo en unos instantes.",
+        reviewMissingFields:
+            "Revisa los campos obligatorios antes de enviar la aportación.",
+        reviewEmailInvalid:
+            "Introduce un email de contacto válido para continuar.",
+        reviewEmailUnverified:
+            "Verifica tu email con el código recibido antes de enviar.",
+        reviewPrivacyRequired:
+            "Acepta el uso del email para poder enviar la aportación.",
+        reviewImageInvalid:
+            "Revisa la imagen seleccionada antes de enviar.",
         publicLabel: "Contenido público",
     },
 
@@ -270,6 +290,16 @@ const copy = {
         sending: "Sending...",
         sendError:
             "We could not send your contribution. Please try again in a moment.",
+        reviewMissingFields:
+            "Review the required fields before sending your contribution.",
+        reviewEmailInvalid:
+            "Enter a valid contact email to continue.",
+        reviewEmailUnverified:
+            "Verify your email with the code received before sending.",
+        reviewPrivacyRequired:
+            "Accept the email privacy terms before sending your contribution.",
+        reviewImageInvalid:
+            "Check the selected image before sending.",
         publicLabel: "Public content",
     },
 } as const;
@@ -301,6 +331,11 @@ const categoryClasses: Record<string, string> = {
     data-millora-submission-flow
     data-success-url={successUrl}
     data-sending-label={text.sending}
+    data-review-missing-fields={text.reviewMissingFields}
+    data-review-email-invalid={text.reviewEmailInvalid}
+    data-review-email-unverified={text.reviewEmailUnverified}
+    data-review-privacy-required={text.reviewPrivacyRequired}
+    data-review-image-invalid={text.reviewImageInvalid}
     data-file-size-error={text.imageFileTooLarge}
     data-file-type-error={text.imageFileType}
     class="min-h-screen bg-stone-50"
@@ -1149,6 +1184,13 @@ const categoryClasses: Record<string, string> = {
                     </section>
 
                     <p
+                        id="millora-review-validation"
+                        hidden
+                        aria-live="polite"
+                        class="mt-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm font-bold leading-6 text-amber-950"
+                    ></p>
+
+                    <p
                         id="millora-submit-error"
                         hidden
                         role="alert"
@@ -1175,7 +1217,8 @@ const categoryClasses: Record<string, string> = {
                         <button
                             id="millora-review-send"
                             type="submit"
-                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-8 py-3 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-300"
+                            disabled
+                            class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-8 py-3 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-300 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:hover:bg-slate-800"
                         >
                             <span id="millora-submit-label">
                                 {text.send}

@@ -157,6 +157,10 @@ export function initMilloraSubmissionFlow() {
         "millora-submit-label",
     );
 
+    const reviewValidation = document.getElementById(
+        "millora-review-validation",
+    );
+
     const submitError = document.getElementById(
         "millora-submit-error",
     );
@@ -502,17 +506,75 @@ export function initMilloraSubmissionFlow() {
     }
 
     function updateReviewState() {
-        const ready = Boolean(
-            root.dataset.emailVerified === "true" &&
-                contactEmail?.value.trim() &&
-                contactEmail.checkValidity() &&
-                privacy?.checked,
+        const authorType = selectedAuthorType();
+
+        const authorReady =
+            authorType?.value === "alias"
+                ? Boolean(aliasInput?.value.trim())
+                : Boolean(authorType);
+
+        const contextReady = Boolean(
+            selectedCategory() &&
+                zoneSelect?.value &&
+                authorReady,
         );
+
+        const contentReady =
+            (titleInput?.value.trim().length ?? 0) >= 8 &&
+            (summaryInput?.value.trim().length ?? 0) >= 30 &&
+            (contentInput?.value.trim().length ?? 0) >= 80;
+
+        const imageReady =
+            imageInput?.checkValidity() ?? true;
+
+        const emailReady = Boolean(
+            contactEmail?.value.trim() &&
+                contactEmail.checkValidity(),
+        );
+
+        const emailVerified =
+            root.dataset.emailVerified === "true";
+
+        const privacyReady =
+            Boolean(privacy?.checked);
+
+        const ready =
+            contextReady &&
+            contentReady &&
+            imageReady &&
+            emailReady &&
+            emailVerified &&
+            privacyReady;
 
         reviewSend?.toggleAttribute(
             "disabled",
             !ready || isSubmitting,
         );
+
+        if (!reviewValidation) return;
+
+        let message = "";
+
+        if (!contextReady || !contentReady) {
+            message =
+                root.dataset.reviewMissingFields ?? "";
+        } else if (!imageReady) {
+            message =
+                root.dataset.reviewImageInvalid ?? "";
+        } else if (!emailReady) {
+            message =
+                root.dataset.reviewEmailInvalid ?? "";
+        } else if (!emailVerified) {
+            message =
+                root.dataset.reviewEmailUnverified ?? "";
+        } else if (!privacyReady) {
+            message =
+                root.dataset.reviewPrivacyRequired ?? "";
+        }
+
+        reviewValidation.textContent = message;
+        reviewValidation.hidden =
+            !message || isSubmitting;
     }
 
     function setSubmitting(submitting: boolean) {
