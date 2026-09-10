@@ -45,6 +45,7 @@ const INTERNAL_SUBMISSION_SECTIONS =
         "agenda",
         "comunicat",
         "foto_mes",
+        "millora",
         "veu",
     ]);
 
