@@ -30,12 +30,12 @@ const copy = {
         minimum: "mínim",
         imageTitle: "Imatge",
         imageHelp:
-            "Opcional. Una sola imatge JPG, PNG o WebP de màxim 2 MB.",
+            "Opcional. Una sola imatge JPG, PNG o WebP de màxim 4 MB.",
         chooseImage: "Seleccionar imatge",
         changeImage: "Canviar imatge",
         removeImage: "Eliminar",
         imageSizeError:
-            "La imatge no pot superar els 2 MB.",
+            "La imatge no pot superar els 4 MB.",
         imageTypeError:
             "La imatge ha de ser JPG, PNG o WebP.",
         imageAlt:
@@ -54,6 +54,10 @@ const copy = {
         sending: "Enviant...",
         sendError:
             "No hem pogut enviar la proposta. Torna-ho a provar d’aquí a uns instants.",
+        reviewEmailUnverified:
+            "Verifica l’email de contacte abans d’enviar la proposta.",
+        reviewPrivacyRequired:
+            "Accepta el tractament de les dades de contacte abans d’enviar la proposta.",
         back: "Tornar a Agenda Oberta",
         pastDate:
             "La data de l’activitat no pot ser anterior a avui.",
@@ -85,12 +89,12 @@ const copy = {
         minimum: "mínimo",
         imageTitle: "Imagen",
         imageHelp:
-            "Opcional. Una sola imagen JPG, PNG o WebP de máximo 2 MB.",
+            "Opcional. Una sola imagen JPG, PNG o WebP de máximo 4 MB.",
         chooseImage: "Seleccionar imagen",
         changeImage: "Cambiar imagen",
         removeImage: "Eliminar",
         imageSizeError:
-            "La imagen no puede superar los 2 MB.",
+            "La imagen no puede superar los 4 MB.",
         imageTypeError:
             "La imagen debe ser JPG, PNG o WebP.",
         imageAlt:
@@ -109,6 +113,10 @@ const copy = {
         sending: "Enviando...",
         sendError:
             "No hemos podido enviar la propuesta. Vuelve a intentarlo en unos instantes.",
+        reviewEmailUnverified:
+            "Verifica el email de contacto antes de enviar la propuesta.",
+        reviewPrivacyRequired:
+            "Acepta el tratamiento de los datos de contacto antes de enviar la propuesta.",
         back: "Volver a Agenda Abierta",
         pastDate:
             "La fecha de la actividad no puede ser anterior a hoy.",
@@ -140,12 +148,12 @@ const copy = {
         minimum: "minimum",
         imageTitle: "Image",
         imageHelp:
-            "Optional. One JPG, PNG or WebP image, maximum 2 MB.",
+            "Optional. One JPG, PNG or WebP image, maximum 4 MB.",
         chooseImage: "Select image",
         changeImage: "Change image",
         removeImage: "Remove",
         imageSizeError:
-            "The image cannot be larger than 2 MB.",
+            "The image cannot be larger than 4 MB.",
         imageTypeError:
             "The image must be JPG, PNG or WebP.",
         imageAlt:
@@ -164,6 +172,10 @@ const copy = {
         sending: "Sending...",
         sendError:
             "We could not send the proposal. Please try again in a moment.",
+        reviewEmailUnverified:
+            "Verify the contact email before sending the proposal.",
+        reviewPrivacyRequired:
+            "Accept the contact data processing terms before sending the proposal.",
         back: "Back to Open Agenda",
         pastDate:
             "The activity date cannot be earlier than today.",
@@ -206,6 +218,8 @@ const fieldClass =
     novalidate
     data-agenda-submission-flow
     data-success-url={successUrl}
+    data-review-email-unverified={text.reviewEmailUnverified}
+    data-review-privacy-required={text.reviewPrivacyRequired}
     data-sending-label={text.sending}
     data-past-date-error={text.pastDate}
     data-date-order-error={text.dateOrder}
@@ -668,7 +682,8 @@ const fieldClass =
                     <button
                         id="agenda-continue"
                         type="button"
-                        class="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-800 px-7 py-3 font-black text-white transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                        disabled
+                        class="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-800 px-7 py-3 font-black text-white transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                         {text.continue}
                         <span
@@ -869,6 +884,13 @@ const fieldClass =
                 </label>
             </div>
 
+
+            <p
+                id="agenda-review-validation"
+                hidden
+                aria-live="polite"
+                class="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-4 font-bold text-amber-950"
+            ></p>
 
             <p
                 id="agenda-submit-error"

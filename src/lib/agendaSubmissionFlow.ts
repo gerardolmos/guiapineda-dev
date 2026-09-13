@@ -135,9 +135,11 @@ export function initAgendaSubmissionFlow() {
     const firstStepFields =
         Array.from(
             formStep?.querySelectorAll<
-                HTMLInputElement | HTMLTextAreaElement
+                HTMLInputElement |
+                HTMLTextAreaElement |
+                HTMLSelectElement
             >(
-                "input:not([type='hidden']), textarea",
+                "input:not([type='hidden']), textarea, select",
             ) ?? [],
         );
 
@@ -157,7 +159,7 @@ export function initAgendaSubmissionFlow() {
         "";
 
     const MAX_IMAGE_SIZE =
-        2 * 1024 * 1024;
+        4 * 1024 * 1024;
 
     const ALLOWED_IMAGE_TYPES =
         new Set([
@@ -646,6 +648,29 @@ export function initAgendaSubmissionFlow() {
         return value || "—";
     }
 
+    function updateContinueState() {
+        if (!continueButton) return;
+
+        const datesReady = validateDates();
+
+        const fieldsReady =
+            firstStepFields.every(
+                (field) => field.checkValidity(),
+            );
+
+        const selectedImage =
+            imageInput?.files?.[0];
+
+        const imageReady =
+            !selectedImage ||
+            !imageValidationMessage(selectedImage);
+
+        continueButton.disabled =
+            !datesReady ||
+            !fieldsReady ||
+            !imageReady;
+    }
+
     function renderReview() {
         const values: Record<
             string,
@@ -736,10 +761,36 @@ export function initAgendaSubmissionFlow() {
     function updateSubmitState() {
         if (!submitButton) return;
 
+        const emailVerified =
+            form.dataset.emailVerified === "true";
+        const privacyReady =
+            Boolean(privacy?.checked);
+
         submitButton.disabled =
             submitting ||
-            form.dataset.emailVerified !== "true" ||
-            !privacy?.checked;
+            !emailVerified ||
+            !privacyReady;
+
+        const reviewValidation =
+            document.getElementById(
+                "agenda-review-validation",
+            );
+
+        if (!reviewValidation) return;
+
+        let message = "";
+
+        if (!emailVerified) {
+            message =
+                form.dataset.reviewEmailUnverified ?? "";
+        } else if (!privacyReady) {
+            message =
+                form.dataset.reviewPrivacyRequired ?? "";
+        }
+
+        reviewValidation.textContent = message;
+        reviewValidation.hidden =
+            !message || submitting;
     }
 
     function setSubmitting(
@@ -846,6 +897,20 @@ export function initAgendaSubmissionFlow() {
             }
         },
     );
+
+    for (const field of firstStepFields) {
+        field.addEventListener(
+            "input",
+            updateContinueState,
+        );
+
+        field.addEventListener(
+            "change",
+            updateContinueState,
+        );
+    }
+
+    updateContinueState();
 
     continueButton?.addEventListener(
         "click",
