@@ -1,5 +1,6 @@
 import { initEmailVerificationController } from "./emailVerificationController";
 import { submitVerifiedSubmissionForm } from "./netlifySubmission";
+import { initSubmissionDraft } from "./submissionDraft";
 
 export function initAgendaSubmissionFlow() {
     const form =
@@ -8,6 +9,12 @@ export function initAgendaSubmissionFlow() {
         );
 
     if (!form) return;
+
+    const clearDraft =
+        initSubmissionDraft(
+            form,
+            "agenda",
+        );
 
     initEmailVerificationController(
         form,
@@ -973,6 +980,8 @@ export function initAgendaSubmissionFlow() {
                             3200,
                     },
                 );
+
+                clearDraft();
             } catch (error) {
                 console.error(
                     "Error enviando Agenda:",
