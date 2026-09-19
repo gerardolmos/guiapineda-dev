@@ -1,148 +1,53 @@
-type DraftValue =
-    | string
-    | boolean
-    | string[];
+type DraftState = Record<string, string>;
 
-type DraftState =
-    Record<string, DraftValue>;
+interface AgendaDraftEnvelope {
+    version: 1;
+    scope: "agenda";
+    fields: DraftState;
+}
 
-type DraftField =
-    | HTMLInputElement
-    | HTMLTextAreaElement
-    | HTMLSelectElement;
+type DraftField = HTMLInputElement | HTMLTextAreaElement;
 
-const FIELD_SELECTOR = [
-    'input[name]:not([type="file"]):not([type="hidden"]):not([type="password"]):not([type="submit"]):not([type="button"]):not([type="reset"])',
-    "textarea[name]",
-    "select[name]",
-].join(", ");
-
-function storageKey(scope: string) {
-    return `guiapineda:submission-draft:v1:${scope}`;
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function getFields(
     form: HTMLFormElement,
+    allowedNames: readonly string[],
 ): DraftField[] {
-    return Array.from(
-        form.querySelectorAll<DraftField>(
-            FIELD_SELECTOR,
-        ),
-    ).filter((field) => {
-        const name =
-            field.name.trim().toLowerCase();
-        const id =
-            field.id.trim().toLowerCase();
+    return allowedNames.flatMap((name) => {
+        const field = form.elements.namedItem(name);
 
-        if (!name) return false;
+        // namedItem también busca por id; exigir el nombre aprobado.
+        if (!field || !("name" in field) || field.name !== name) return [];
 
+        // La allowlist concede permiso; el tipo solo añade una defensa.
+        // Nunca leer archivos, hidden, contraseñas ni checkboxes.
         if (
-            name.includes("verification") ||
-            id.includes("verification")
+            field instanceof HTMLTextAreaElement ||
+            (field instanceof HTMLInputElement &&
+                ["text", "email", "url", "date", "time"].includes(field.type))
         ) {
-            return false;
+            return [field];
         }
 
-        if (
-            name.includes("privacidad") ||
-            name.includes("privacy") ||
-            name.includes("privacitat") ||
-            id.includes("privacy")
-        ) {
-            return false;
-        }
-
-        return true;
+        return [];
     });
 }
 
-function readDraft(
-    form: HTMLFormElement,
-): DraftState {
+function readDraft(fields: DraftField[]): DraftState {
     const draft: DraftState = {};
-
-    for (const field of getFields(form)) {
-        if (field instanceof HTMLInputElement) {
-            if (field.type === "radio") {
-                if (field.checked) {
-                    draft[field.name] =
-                        field.value;
-                }
-                continue;
-            }
-
-            if (field.type === "checkbox") {
-                draft[field.name] =
-                    field.checked;
-                continue;
-            }
-        }
-
-        if (
-            field instanceof HTMLSelectElement &&
-            field.multiple
-        ) {
-            draft[field.name] =
-                Array.from(
-                    field.selectedOptions,
-                ).map(
-                    (option) => option.value,
-                );
-            continue;
-        }
-
-        draft[field.name] =
-            field.value;
+    for (const field of fields) {
+        draft[field.name] = field.value;
     }
-
     return draft;
 }
 
-function restoreDraft(
-    form: HTMLFormElement,
-    draft: DraftState,
-) {
-    for (const field of getFields(form)) {
-        const saved =
-            draft[field.name];
-
-        if (saved === undefined) {
-            continue;
-        }
-
-        if (field instanceof HTMLInputElement) {
-            if (field.type === "radio") {
-                field.checked =
-                    typeof saved === "string" &&
-                    saved === field.value;
-                continue;
-            }
-
-            if (field.type === "checkbox") {
-                field.checked =
-                    saved === true;
-                continue;
-            }
-        }
-
-        if (
-            field instanceof HTMLSelectElement &&
-            field.multiple
-        ) {
-            const values =
-                Array.isArray(saved)
-                    ? saved
-                    : [];
-
-            for (const option of field.options) {
-                option.selected =
-                    values.includes(
-                        option.value,
-                    );
-            }
-            continue;
-        }
-
+function restoreDraft(fields: DraftField[], draft: Record<string, unknown>) {
+    for (const field of fields) {
+        if (!Object.prototype.hasOwnProperty.call(draft, field.name)) continue;
+        const saved = draft[field.name];
         if (typeof saved === "string") {
             field.value = saved;
         }
@@ -151,50 +56,43 @@ function restoreDraft(
 
 export function initSubmissionDraft(
     form: HTMLFormElement,
-    scope: string,
+    scope: "agenda",
+    allowedNames: readonly string[],
 ) {
-    const key = storageKey(scope);
+    const key = `guiapineda:submission-draft:v1:${scope}`;
 
     const clearDraft = () => {
         try {
             sessionStorage.removeItem(key);
         } catch {
-            // El formulario debe seguir funcionando
-            // aunque el almacenamiento no esté disponible.
+            // El formulario sigue funcionando aunque el storage falle.
         }
     };
 
     const saveDraft = () => {
         try {
-            sessionStorage.setItem(
-                key,
-                JSON.stringify(
-                    readDraft(form),
-                ),
-            );
+            const envelope: AgendaDraftEnvelope = {
+                version: 1,
+                scope,
+                fields: readDraft(getFields(form, allowedNames)),
+            };
+            sessionStorage.setItem(key, JSON.stringify(envelope));
         } catch {
-            // No convertir sessionStorage
-            // en una dependencia funcional.
+            // No convertir sessionStorage en una dependencia funcional.
         }
     };
 
     try {
-        const stored =
-            sessionStorage.getItem(key);
-
-        if (stored) {
-            const parsed =
-                JSON.parse(stored);
-
+        const stored = sessionStorage.getItem(key);
+        if (stored !== null) {
+            const parsed: unknown = JSON.parse(stored);
             if (
-                parsed &&
-                typeof parsed === "object" &&
-                !Array.isArray(parsed)
+                isRecord(parsed) &&
+                parsed.version === 1 &&
+                parsed.scope === scope &&
+                isRecord(parsed.fields)
             ) {
-                restoreDraft(
-                    form,
-                    parsed as DraftState,
-                );
+                restoreDraft(getFields(form, allowedNames), parsed.fields);
             } else {
                 clearDraft();
             }
@@ -203,20 +101,10 @@ export function initSubmissionDraft(
         clearDraft();
     }
 
-    form.addEventListener(
-        "input",
-        saveDraft,
-    );
-
-    form.addEventListener(
-        "change",
-        saveDraft,
-    );
-
-    form.addEventListener(
-        "reset",
-        clearDraft,
-    );
+    // Se registran después de restaurar; no se emiten eventos sintéticos.
+    form.addEventListener("input", saveDraft);
+    form.addEventListener("change", saveDraft);
+    form.addEventListener("reset", clearDraft);
 
     return clearDraft;
 }

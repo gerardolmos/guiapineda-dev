@@ -2,6 +2,22 @@ import { initEmailVerificationController } from "./emailVerificationController";
 import { submitVerifiedSubmissionForm } from "./netlifySubmission";
 import { initSubmissionDraft } from "./submissionDraft";
 
+const AGENDA_DRAFT_FIELDS = [
+    "titol",
+    "resum",
+    "descripcio",
+    "organitzador",
+    "data_inici",
+    "hora_inici",
+    "data_final",
+    "hora_final",
+    "lloc",
+    "adreca",
+    "enllac_oficial",
+    "nombre_contacto",
+    "email_contacto",
+] as const;
+
 export function initAgendaSubmissionFlow() {
     const form =
         document.querySelector<HTMLFormElement>(
@@ -14,6 +30,7 @@ export function initAgendaSubmissionFlow() {
         initSubmissionDraft(
             form,
             "agenda",
+            AGENDA_DRAFT_FIELDS,
         );
 
     initEmailVerificationController(
@@ -534,6 +551,7 @@ export function initAgendaSubmissionFlow() {
     }
 
     function validateForm(): boolean {
+        validateTextLengths();
         if (!validateDates()) {
             const temporalFields = [
                 startDate,
@@ -655,7 +673,37 @@ export function initAgendaSubmissionFlow() {
         return value || "—";
     }
 
+    function validateTextLengths() {
+        // minlength/maxlength nativos no bastan para valores asignados por JS.
+        // Leer los límites actuales del markup, sin duplicar sus reglas.
+        for (const name of AGENDA_DRAFT_FIELDS) {
+            const field = form.elements.namedItem(name);
+            if (
+                !(field instanceof HTMLInputElement ||
+                    field instanceof HTMLTextAreaElement) ||
+                (field instanceof HTMLInputElement &&
+                    !["text", "email", "url"].includes(field.type))
+            ) continue;
+
+            field.setCustomValidity("");
+            const length = field.value.length;
+            const tooShort = length > 0 && field.minLength >= 0 && length < field.minLength;
+            const tooLong = field.maxLength >= 0 && length > field.maxLength;
+            if (!tooShort && !tooLong) continue;
+
+            const limit = tooShort ? field.minLength : field.maxLength;
+            const lang = document.documentElement.lang;
+            const message = lang === "es"
+                ? `Usa ${tooShort ? "al menos" : "como máximo"} ${limit} caracteres.`
+                : lang === "en"
+                    ? `Use ${tooShort ? "at least" : "at most"} ${limit} characters.`
+                    : `Fes servir ${tooShort ? "com a mínim" : "com a màxim"} ${limit} caràcters.`;
+            field.setCustomValidity(message);
+        }
+    }
+
     function updateContinueState() {
+        validateTextLengths();
         if (!continueButton) return;
 
         const datesReady = validateDates();
@@ -917,8 +965,6 @@ export function initAgendaSubmissionFlow() {
         );
     }
 
-    updateContinueState();
-
     continueButton?.addEventListener(
         "click",
         () => {
@@ -1023,6 +1069,29 @@ export function initAgendaSubmissionFlow() {
         revokeImageObjectUrl,
     );
 
-    updateCharacterCounters();
-    updateSubmitState();
+    function reconcileDraftState() {
+        const minimum = todayLocal();
+        if (startDate) startDate.min = minimum;
+        if (endDate) endDate.min = startDate?.value || minimum;
+        // No simular change: su handler puede borrar una fecha final inválida.
+        if (privacy) privacy.checked = false;
+        if (imageInput) imageInput.value = "";
+        clearImageError();
+        clearImagePreview();
+        if (formStep) formStep.hidden = false;
+        if (reviewStep) reviewStep.hidden = true;
+        if (submitError) submitError.hidden = true;
+        updateCharacterCounters();
+        updateContinueState();
+        updateSubmitState();
+    }
+
+    form.addEventListener("reset", (event) => {
+        // El evento precede a la restauración nativa de los valores por defecto.
+        queueMicrotask(() => {
+            if (!event.defaultPrevented) reconcileDraftState();
+        });
+    });
+
+    reconcileDraftState();
 }
