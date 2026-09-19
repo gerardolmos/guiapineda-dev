@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Codex / agent local state
+# Keep Spec Kit skills versioned, ignore any other future agent-local data.
+.agents/*
+!.agents/skills/
+!.agents/skills/**
