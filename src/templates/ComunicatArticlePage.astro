@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import StrapiBlocks from "../components/StrapiBlocks.astro";
 import CommunicatCard from "../components/CommunicatCard.astro";
+import CommunicatReportFlow from "../components/CommunicatReportFlow.astro";
 import { getLocalizedName } from "../lib/getLocalizedName";
 import { getReadingTime } from "../lib/readingTime";
 import { getTranslations } from "../i18n/getTranslations";
@@ -182,7 +183,11 @@ const relatedTitle =
                     class="comunicat-body"
                 />
 
-
+                <CommunicatReportFlow
+                    lang={lang}
+                    documentId={comunicat.documentId}
+                    slug={comunicat.slug}
+                />
             </div>
         </div>
         {

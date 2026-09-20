@@ -1,0 +1,344 @@
+---
+import EmailVerificationBlock from "./EmailVerificationBlock.astro";
+
+interface Props {
+    lang: "ca" | "es" | "en";
+    documentId: string;
+    slug: string;
+}
+
+const {
+    lang,
+    documentId,
+    slug,
+} = Astro.props;
+
+const reasonValues = [
+    "informacion_falsa",
+    "spam_fraude",
+    "contenido_inapropiado_ilegal",
+    "privacidad_datos",
+    "otro",
+] as const;
+
+const copy = {
+    ca: {
+        action: "Denunciar aquest comunicat",
+        title: "Envia una denúncia privada",
+        intro:
+            "Si detectes un problema en aquest comunicat, avisa l'equip editorial. La denúncia no es publicarà ni retirarà automàticament el contingut.",
+        reason: "Motiu de la denúncia",
+        chooseReason: "Selecciona un motiu",
+        reasons: [
+            "Informació falsa o enganyosa",
+            "Contingut brossa o frau",
+            "Contingut inadequat o possiblement il·legal",
+            "Privacitat o dades personals",
+            "Un altre motiu",
+        ],
+        explanation: "Explicació privada",
+        optional: "opcional",
+        explanationHelp:
+            "Afegeix context per a l'equip editorial. És obligatori si tries «Un altre motiu».",
+        characters: "caràcters",
+        email: "Email de contacte",
+        emailHelp:
+            "Només s'utilitza per verificar aquest enviament. No es guardarà a la denúncia.",
+        privacy:
+            "La denúncia serà privada. No demanem ni guardem el teu nom, la teva IP ni altres identificadors personals.",
+        send: "Enviar denúncia",
+        sending: "Enviant...",
+        requiredReason: "Selecciona un motiu.",
+        requiredExplanation:
+            "Explica breument el motiu quan selecciones «Un altre motiu».",
+        tooLong:
+            "L'explicació no pot superar els 1.000 caràcters.",
+        verificationRequired:
+            "Verifica l'email abans d'enviar la denúncia.",
+        unavailable:
+            "No hem pogut rebre la denúncia. Les dades continuen al formulari; verifica de nou l'email i torna-ho a provar.",
+        successTitle: "Denúncia rebuda",
+        success:
+            "L'equip editorial la revisarà de manera privada. El comunicat no s'ha modificat ni retirat automàticament.",
+    },
+    es: {
+        action: "Denunciar este comunicado",
+        title: "Envía una denuncia privada",
+        intro:
+            "Si detectas un problema en este comunicado, avisa al equipo editorial. La denuncia no se publicará ni retirará automáticamente el contenido.",
+        reason: "Motivo de la denuncia",
+        chooseReason: "Selecciona un motivo",
+        reasons: [
+            "Información falsa o engañosa",
+            "Spam o fraude",
+            "Contenido inapropiado o posiblemente ilegal",
+            "Privacidad o datos personales",
+            "Otro",
+        ],
+        explanation: "Explicación privada",
+        optional: "opcional",
+        explanationHelp:
+            "Añade contexto para el equipo editorial. Es obligatorio si eliges «Otro».",
+        characters: "caracteres",
+        email: "Email de contacto",
+        emailHelp:
+            "Solo se utiliza para verificar este envío. No se guardará en la denuncia.",
+        privacy:
+            "La denuncia será privada. No solicitamos ni guardamos tu nombre, tu IP ni otros identificadores personales.",
+        send: "Enviar denuncia",
+        sending: "Enviando...",
+        requiredReason: "Selecciona un motivo.",
+        requiredExplanation:
+            "Explica brevemente el motivo cuando selecciones «Otro».",
+        tooLong:
+            "La explicación no puede superar los 1.000 caracteres.",
+        verificationRequired:
+            "Verifica el email antes de enviar la denuncia.",
+        unavailable:
+            "No hemos podido recibir la denuncia. Los datos siguen en el formulario; verifica de nuevo el email e inténtalo otra vez.",
+        successTitle: "Denuncia recibida",
+        success:
+            "El equipo editorial la revisará de forma privada. El comunicado no se ha modificado ni retirado automáticamente.",
+    },
+    en: {
+        action: "Report this announcement",
+        title: "Send a private report",
+        intro:
+            "If you notice a problem with this announcement, alert the editorial team. The report will not be published or automatically remove the content.",
+        reason: "Reason for reporting",
+        chooseReason: "Select a reason",
+        reasons: [
+            "False or misleading information",
+            "Spam or fraud",
+            "Inappropriate or potentially illegal content",
+            "Privacy or personal data",
+            "Other",
+        ],
+        explanation: "Private explanation",
+        optional: "optional",
+        explanationHelp:
+            "Add context for the editorial team. This is required if you select “Other”.",
+        characters: "characters",
+        email: "Contact email",
+        emailHelp:
+            "It is used only to verify this submission. It will not be stored in the report.",
+        privacy:
+            "The report will remain private. We do not request or store your name, IP address, or other personal identifiers.",
+        send: "Send report",
+        sending: "Sending...",
+        requiredReason: "Select a reason.",
+        requiredExplanation:
+            "Briefly explain the reason when you select “Other”.",
+        tooLong:
+            "The explanation cannot exceed 1,000 characters.",
+        verificationRequired:
+            "Verify your email before sending the report.",
+        unavailable:
+            "We could not receive the report. Your details remain in the form; verify your email again and retry.",
+        successTitle: "Report received",
+        success:
+            "The editorial team will review it privately. The announcement has not been automatically changed or removed.",
+    },
+} as const;
+
+const text = copy[lang];
+---
+
+<section
+    class="mt-12 border-t border-slate-200 pt-8"
+    aria-labelledby={`communicat-report-title-${slug}`}
+>
+    <details
+        data-communicat-report-details
+        class="rounded-2xl border border-slate-200 bg-slate-50"
+    >
+        <summary
+            class="cursor-pointer list-none px-5 py-4 font-black text-slate-700 transition hover:text-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 sm:px-6"
+        >
+            <span class="inline-flex items-center gap-2">
+                <span aria-hidden="true">⚑</span>
+                {text.action}
+            </span>
+        </summary>
+
+        <div class="border-t border-slate-200 px-5 py-6 sm:px-6 sm:py-8">
+            <div data-communicat-report-form-wrap>
+                <h2
+                    id={`communicat-report-title-${slug}`}
+                    class="text-2xl font-black tracking-tight text-slate-950"
+                >
+                    {text.title}
+                </h2>
+
+                <p class="mt-3 max-w-3xl leading-7 text-slate-600">
+                    {text.intro}
+                </p>
+
+                <form
+                    class="mt-7 max-w-3xl"
+                    data-communicat-report-flow
+                    data-required-reason={text.requiredReason}
+                    data-required-explanation={text.requiredExplanation}
+                    data-too-long={text.tooLong}
+                    data-verification-required={text.verificationRequired}
+                    data-unavailable={text.unavailable}
+                    data-sending-label={text.sending}
+                    novalidate
+                >
+                    <input
+                        type="hidden"
+                        name="comunicat_document_id"
+                        value={documentId}
+                    />
+                    <input
+                        type="hidden"
+                        name="comunicat_slug"
+                        value={slug}
+                    />
+                    <input
+                        type="hidden"
+                        name="idioma_solicitud"
+                        value={lang}
+                    />
+
+                    <div
+                        aria-hidden="true"
+                        class="absolute -left-[10000px] size-px overflow-hidden"
+                    >
+                        <label>
+                            Leave this field empty
+                            <input
+                                type="text"
+                                name="bot-field"
+                                tabindex="-1"
+                                autocomplete="off"
+                            />
+                        </label>
+                    </div>
+
+                    <label class="block" for={`communicat-report-reason-${slug}`}>
+                        <span class="font-bold text-slate-950">
+                            {text.reason}
+                        </span>
+                        <select
+                            id={`communicat-report-reason-${slug}`}
+                            name="motivo"
+                            required
+                            data-report-reason
+                            class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition focus:border-rose-500 focus:ring-4 focus:ring-rose-100"
+                        >
+                            <option value="">{text.chooseReason}</option>
+                            {
+                                reasonValues.map((value, index) => (
+                                    <option value={value}>
+                                        {text.reasons[index]}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </label>
+
+                    <label
+                        class="mt-6 block"
+                        for={`communicat-report-explanation-${slug}`}
+                    >
+                        <span class="font-bold text-slate-950">
+                            {text.explanation}
+                            <span
+                                data-report-optional
+                                class="font-medium text-slate-400"
+                            >
+                                ({text.optional})
+                            </span>
+                        </span>
+                        <textarea
+                            id={`communicat-report-explanation-${slug}`}
+                            name="explicacion"
+                            rows="6"
+                            maxlength="1000"
+                            data-report-explanation
+                            class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition focus:border-rose-500 focus:ring-4 focus:ring-rose-100"
+                        ></textarea>
+                    </label>
+
+                    <div class="mt-2 flex flex-wrap justify-between gap-3 text-sm text-slate-500">
+                        <p>{text.explanationHelp}</p>
+                        <p aria-live="polite">
+                            <span data-report-explanation-count>0</span>/1000 {text.characters}
+                        </p>
+                    </div>
+
+                    <label
+                        class="mt-6 block"
+                        for={`communicat-report-email-${slug}`}
+                    >
+                        <span class="font-bold text-slate-950">
+                            {text.email}
+                        </span>
+                        <input
+                            id={`communicat-report-email-${slug}`}
+                            name="email_contacto"
+                            type="email"
+                            maxlength="180"
+                            autocomplete="email"
+                            required
+                            data-report-email
+                            class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition focus:border-rose-500 focus:ring-4 focus:ring-rose-100"
+                        />
+                    </label>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        {text.emailHelp}
+                    </p>
+
+                    <EmailVerificationBlock
+                        lang={lang}
+                        scope="communicat-report"
+                    />
+
+                    <p class="mt-6 rounded-xl bg-white p-4 text-sm leading-6 text-slate-600">
+                        {text.privacy}
+                    </p>
+
+                    <p
+                        hidden
+                        data-report-error
+                        class="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 font-bold text-red-800"
+                        role="alert"
+                    ></p>
+
+                    <button
+                        type="submit"
+                        disabled
+                        data-report-submit
+                        data-default-label={text.send}
+                        class="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-rose-700 px-7 py-3 font-black text-white transition hover:bg-rose-800 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        {text.send}
+                    </button>
+                </form>
+            </div>
+
+            <div
+                hidden
+                data-communicat-report-success
+                class="rounded-2xl border border-emerald-200 bg-emerald-50 p-6"
+                role="status"
+                tabindex="-1"
+            >
+                <h2 class="text-2xl font-black text-emerald-950">
+                    {text.successTitle}
+                </h2>
+                <p class="mt-3 leading-7 text-emerald-900">
+                    {text.success}
+                </p>
+            </div>
+        </div>
+    </details>
+</section>
+
+<script>
+    import { initCommunicatReportFlow } from "../lib/communicatReportFlow";
+
+    initCommunicatReportFlow();
+</script>

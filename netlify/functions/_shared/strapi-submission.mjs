@@ -44,6 +44,7 @@ const INTERNAL_SUBMISSION_SECTIONS =
     new Set([
         "agenda",
         "comunicat",
+        "communicat_report",
         "foto_mes",
         "millora",
         "veu",
