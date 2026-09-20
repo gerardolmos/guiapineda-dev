@@ -3,7 +3,7 @@ import EmailVerificationBlock from "./EmailVerificationBlock.astro";
 import SubmissionSendingOverlay from "./SubmissionSendingOverlay.astro";
 
 interface Props {
-    lang: "ca" | "es";
+    lang: "ca" | "es" | "en";
 }
 
 const { lang } = Astro.props;
@@ -20,153 +20,236 @@ const senderTypeValues = [
 const successUrl =
     lang === "ca"
         ? "/enviat/"
-        : "/es/enviado/";
+        : lang === "es"
+          ? "/es/enviado/"
+          : "/en/sent/";
 
-const text =
-    lang === "ca"
-        ? {
-              eyebrow: "Comparteix-ho amb Pineda",
-              section1: "Qui ho envia",
-              section2: "El comunicat",
-              section3: "Revisió",
-              step1Title: "Qui signa públicament el comunicat?",
-              step1Intro:
-                  "Pot ser una entitat, un club, un comerç o una persona particular. Només necessitem saber qui apareixerà com a autor.",
-              senderType: "Quin tipus de remitent sou?",
-              senderTypes: [
-                  "Entitat o associació",
-                  "Club o grup",
-                  "Escola o centre",
-                  "Comerç o empresa",
-                  "Particular",
-                  "Altres",
-              ],
-              authorLabel: "Nom que apareixerà com a autor",
-              authorPlaceholder: "Per exemple, Associació de Veïns del Carme",
-              authorHelp:
-                  "Aquest nom sí que serà públic si el comunicat es publica.",
-              continue: "Continuar",
-              back: "Enrere",
-              step2Title: "Ara explica'ns què voleu comunicar",
-              step2Intro:
-                  "Escriu-ho amb naturalitat. Abans d'enviar-ho podràs revisar com quedarà.",
-              titleLabel: "Títol",
-              titlePlaceholder: "Un títol clar que expliqui què passa",
-              summaryLabel: "Resum",
-              minLabel: "mín.",
-              summaryHelp:
-                  "És el text breu que la gent veurà al llistat de Comunicats.",
-              summaryPlaceholder:
-                  "Resumeix la informació principal en dues o tres frases.",
-              contentLabel: "Comunicat complet",
-              contentPlaceholder:
-                  "Explica aquí tota la informació: què passarà, quan, on, per a qui és, com participar-hi...",
-              imageTitle: "Imatge del comunicat",
-              imageHelp:
-                  "Opcional. Pots afegir una única imatge en JPG, PNG o WebP de fins a 2 MB.",
-              chooseImage: "Afegir imatge",
-              changeImage: "Canviar imatge",
-              removeImage: "Eliminar imatge",
-              previewTitle: "Així començarà a veure's",
-              previewEmptyTitle: "El títol apareixerà aquí",
-              previewEmptySummary: "El resum apareixerà aquí.",
-              readingSuffix: "min de lectura",
-              reviewTitle: "El teu comunicat està llest",
-              reviewIntro:
-                  "Revisa que la informació sigui correcta. Encara podràs tornar enrere i modificar-la.",
-              editAuthor: "Editar autor",
-              editContent: "Editar comunicat",
-              noImage: "Sense imatge",
-              contactTitle: "Contacte per a la revisió",
-              contactIntro:
-                  "Aquestes dades no es publicaran. Només les utilitzarem si necessitem confirmar o aclarir alguna informació del comunicat.",
-              contactName: "Nom de contacte",
-              contactEmail: "Email de contacte",
-              sendError:
-                  "No hem pogut enviar el comunicat. Torna-ho a provar d'aquí a uns instants.",
-              optional: "opcional",
-              privacy:
-                  "Accepto que GUIAPINEDA utilitzi aquestes dades de contacte per gestionar i revisar aquest comunicat.",
-              send: "Enviar a GUIAPINEDA",
-              sending: "Enviant...",
-               fileTooLarge: "La imatge no pot superar els 2 MB.",
-               fileType:
-                   "Selecciona una imatge en format JPG, PNG o WebP.",
-              publicLabel: "Contingut públic",
-              privateLabel: "Contacte privat",
-          }
-        : {
-              eyebrow: "Compártelo con Pineda",
-              section1: "Quién lo envía",
-              section2: "El comunicado",
-              section3: "Revisión",
-              step1Title: "¿Quién firma públicamente el comunicado?",
-              step1Intro:
-                  "Puede ser una entidad, un club, un comercio o una persona particular. Solo necesitamos saber quién aparecerá como autor.",
-              senderType: "¿Qué tipo de remitente sois?",
-              senderTypes: [
-                  "Entidad o asociación",
-                  "Club o grupo",
-                  "Escuela o centro",
-                  "Comercio o empresa",
-                  "Particular",
-                  "Otros",
-              ],
-              authorLabel: "Nombre que aparecerá como autor",
-              authorPlaceholder:
-                  "Por ejemplo, Asociación de Vecinos del Carmen",
-              authorHelp:
-                  "Este nombre sí será público si el comunicado se publica.",
-              continue: "Continuar",
-              back: "Atrás",
-              step2Title: "Ahora cuéntanos qué queréis comunicar",
-              step2Intro:
-                  "Escríbelo con naturalidad. Antes de enviarlo podrás revisar cómo quedará.",
-              titleLabel: "Título",
-              titlePlaceholder: "Un título claro que explique qué ocurre",
-              summaryLabel: "Resumen",
-              minLabel: "mín.",
-              summaryHelp:
-                  "Es el texto breve que la gente verá en el listado de Comunicados.",
-              summaryPlaceholder:
-                  "Resume la información principal en dos o tres frases.",
-              contentLabel: "Comunicado completo",
-              contentPlaceholder:
-                  "Explica aquí toda la información: qué ocurrirá, cuándo, dónde, para quién es, cómo participar...",
-              imageTitle: "Imagen del comunicado",
-              imageHelp:
-                  "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP de hasta 2 MB.",
-              chooseImage: "Añadir imagen",
-              changeImage: "Cambiar imagen",
-              removeImage: "Eliminar imagen",
-              previewTitle: "Así empezará a verse",
-              previewEmptyTitle: "El título aparecerá aquí",
-              previewEmptySummary: "El resumen aparecerá aquí.",
-              readingSuffix: "min de lectura",
-              reviewTitle: "Tu comunicado está listo",
-              reviewIntro:
-                  "Revisa que la información sea correcta. Todavía podrás volver atrás y modificarla.",
-              editAuthor: "Editar autor",
-              editContent: "Editar comunicado",
-              noImage: "Sin imagen",
-              contactTitle: "Contacto para la revisión",
-              contactIntro:
-                  "Estos datos no se publicarán. Solo los utilizaremos si necesitamos confirmar o aclarar alguna información del comunicado.",
-              contactName: "Nombre de contacto",
-              contactEmail: "Email de contacto",
-              sendError:
-                  "No hemos podido enviar el comunicado. Vuelve a intentarlo en unos instantes.",
-              optional: "opcional",
-              privacy:
-                  "Acepto que GUIAPINEDA utilice estos datos de contacto para gestionar y revisar este comunicado.",
-              send: "Enviar a GUIAPINEDA",
-              sending: "Enviando...",
-               fileTooLarge: "La imagen no puede superar los 2 MB.",
-               fileType:
-                   "Selecciona una imagen en formato JPG, PNG o WebP.",
-              publicLabel: "Contenido público",
-              privateLabel: "Contacto privado",
-          };
+const copy = {
+    ca: {
+        eyebrow: "Comparteix-ho amb Pineda",
+        section1: "Qui ho envia",
+        section2: "El comunicat",
+        section3: "Revisió",
+        step1Title: "Qui signa públicament el comunicat?",
+        step1Intro:
+            "Pot ser una entitat, un club, un comerç o una persona particular. Només necessitem saber qui apareixerà com a autor.",
+        senderType: "Quin tipus de remitent sou?",
+        senderTypes: [
+            "Entitat o associació",
+            "Club o grup",
+            "Escola o centre",
+            "Comerç o empresa",
+            "Particular",
+            "Altres",
+        ],
+        authorLabel: "Nom que apareixerà com a autor",
+        authorPlaceholder: "Per exemple, Associació de Veïns del Carme",
+        authorHelp:
+            "Aquest nom sí que serà públic si el comunicat es publica.",
+        continue: "Continuar",
+        back: "Enrere",
+        step2Title: "Ara explica'ns què voleu comunicar",
+        step2Intro:
+            "Escriu-ho amb naturalitat. Abans d'enviar-ho podràs revisar com quedarà.",
+        titleLabel: "Títol",
+        titlePlaceholder: "Un títol clar que expliqui què passa",
+        summaryLabel: "Resum",
+        minLabel: "mín.",
+        summaryHelp:
+            "És el text breu que la gent veurà al llistat de Comunicats.",
+        summaryPlaceholder:
+            "Resumeix la informació principal en dues o tres frases.",
+        contentLabel: "Comunicat complet",
+        contentPlaceholder:
+            "Explica aquí tota la informació: què passarà, quan, on, per a qui és, com participar-hi...",
+        imageTitle: "Imatge del comunicat",
+        imageHelp:
+            "Opcional. Pots afegir una única imatge en JPG, PNG o WebP de fins a 2 MB.",
+        chooseImage: "Afegir imatge",
+        changeImage: "Canviar imatge",
+        removeImage: "Eliminar imatge",
+        previewTitle: "Així començarà a veure's",
+        previewEmptyTitle: "El títol apareixerà aquí",
+        previewEmptySummary: "El resum apareixerà aquí.",
+        readingSuffix: "min de lectura",
+        reviewTitle: "El teu comunicat està llest",
+        reviewIntro:
+            "Revisa que la informació sigui correcta. Encara podràs tornar enrere i modificar-la.",
+        editAuthor: "Editar autor",
+        editContent: "Editar comunicat",
+        noImage: "Sense imatge",
+        contactTitle: "Contacte per a la revisió",
+        contactIntro:
+            "Aquestes dades no es publicaran. Només les utilitzarem si necessitem confirmar o aclarir alguna informació del comunicat.",
+        contactName: "Nom de contacte",
+        contactEmail: "Email de contacte",
+        sendError:
+            "No hem pogut enviar el comunicat. Torna-ho a provar d'aquí a uns instants.",
+        optional: "opcional",
+        privacy:
+            "Accepto que GUIAPINEDA utilitzi aquestes dades de contacte per gestionar i revisar aquest comunicat.",
+        send: "Enviar a GUIAPINEDA",
+        sending: "Enviant...",
+        fileTooLarge: "La imatge no pot superar els 2 MB.",
+        fileType: "Selecciona una imatge en format JPG, PNG o WebP.",
+        publicLabel: "Contingut públic",
+        privateLabel: "Contacte privat",
+        publicDescription:
+            "El nom de l'autor, el títol, el resum i el contingut formaran part del comunicat si finalment es publica.",
+        moderationNotice:
+            "Tots els comunicats es revisen abans de publicar-se.",
+    },
+    es: {
+        eyebrow: "Compártelo con Pineda",
+        section1: "Quién lo envía",
+        section2: "El comunicado",
+        section3: "Revisión",
+        step1Title: "¿Quién firma públicamente el comunicado?",
+        step1Intro:
+            "Puede ser una entidad, un club, un comercio o una persona particular. Solo necesitamos saber quién aparecerá como autor.",
+        senderType: "¿Qué tipo de remitente sois?",
+        senderTypes: [
+            "Entidad o asociación",
+            "Club o grupo",
+            "Escuela o centro",
+            "Comercio o empresa",
+            "Particular",
+            "Otros",
+        ],
+        authorLabel: "Nombre que aparecerá como autor",
+        authorPlaceholder: "Por ejemplo, Asociación de Vecinos del Carmen",
+        authorHelp:
+            "Este nombre sí será público si el comunicado se publica.",
+        continue: "Continuar",
+        back: "Atrás",
+        step2Title: "Ahora cuéntanos qué queréis comunicar",
+        step2Intro:
+            "Escríbelo con naturalidad. Antes de enviarlo podrás revisar cómo quedará.",
+        titleLabel: "Título",
+        titlePlaceholder: "Un título claro que explique qué ocurre",
+        summaryLabel: "Resumen",
+        minLabel: "mín.",
+        summaryHelp:
+            "Es el texto breve que la gente verá en el listado de Comunicados.",
+        summaryPlaceholder:
+            "Resume la información principal en dos o tres frases.",
+        contentLabel: "Comunicado completo",
+        contentPlaceholder:
+            "Explica aquí toda la información: qué ocurrirá, cuándo, dónde, para quién es, cómo participar...",
+        imageTitle: "Imagen del comunicado",
+        imageHelp:
+            "Opcional. Puedes añadir una única imagen en JPG, PNG o WebP de hasta 2 MB.",
+        chooseImage: "Añadir imagen",
+        changeImage: "Cambiar imagen",
+        removeImage: "Eliminar imagen",
+        previewTitle: "Así empezará a verse",
+        previewEmptyTitle: "El título aparecerá aquí",
+        previewEmptySummary: "El resumen aparecerá aquí.",
+        readingSuffix: "min de lectura",
+        reviewTitle: "Tu comunicado está listo",
+        reviewIntro:
+            "Revisa que la información sea correcta. Todavía podrás volver atrás y modificarla.",
+        editAuthor: "Editar autor",
+        editContent: "Editar comunicado",
+        noImage: "Sin imagen",
+        contactTitle: "Contacto para la revisión",
+        contactIntro:
+            "Estos datos no se publicarán. Solo los utilizaremos si necesitamos confirmar o aclarar alguna información del comunicado.",
+        contactName: "Nombre de contacto",
+        contactEmail: "Email de contacto",
+        sendError:
+            "No hemos podido enviar el comunicado. Vuelve a intentarlo en unos instantes.",
+        optional: "opcional",
+        privacy:
+            "Acepto que GUIAPINEDA utilice estos datos de contacto para gestionar y revisar este comunicado.",
+        send: "Enviar a GUIAPINEDA",
+        sending: "Enviando...",
+        fileTooLarge: "La imagen no puede superar los 2 MB.",
+        fileType: "Selecciona una imagen en formato JPG, PNG o WebP.",
+        publicLabel: "Contenido público",
+        privateLabel: "Contacto privado",
+        publicDescription:
+            "El nombre del autor, el título, el resumen y el contenido formarán parte del comunicado si finalmente se publica.",
+        moderationNotice:
+            "Todos los comunicados se revisan antes de publicarse.",
+    },
+    en: {
+        eyebrow: "Share it with Pineda",
+        section1: "Who is sending it",
+        section2: "The announcement",
+        section3: "Review",
+        step1Title: "Who will publicly sign the announcement?",
+        step1Intro:
+            "It can be a local association, club, school, business or individual. We only need to know who will appear as the author.",
+        senderType: "What type of sender are you?",
+        senderTypes: [
+            "Association or organisation",
+            "Club or group",
+            "School or centre",
+            "Business or company",
+            "Individual",
+            "Other",
+        ],
+        authorLabel: "Name that will appear as the author",
+        authorPlaceholder: "For example, Carme Residents' Association",
+        authorHelp:
+            "This name will be public if the announcement is published.",
+        continue: "Continue",
+        back: "Back",
+        step2Title: "Now tell us what you want to announce",
+        step2Intro:
+            "Write naturally. You will be able to review how it will look before sending it.",
+        titleLabel: "Title",
+        titlePlaceholder: "A clear title that explains what is happening",
+        summaryLabel: "Summary",
+        minLabel: "min.",
+        summaryHelp:
+            "This is the short text people will see in the Announcements list.",
+        summaryPlaceholder:
+            "Summarise the main information in two or three sentences.",
+        contentLabel: "Full announcement",
+        contentPlaceholder:
+            "Include all the information here: what will happen, when, where, who it is for and how to take part...",
+        imageTitle: "Announcement image",
+        imageHelp:
+            "Optional. You can add one JPG, PNG or WebP image up to 2 MB.",
+        chooseImage: "Add image",
+        changeImage: "Change image",
+        removeImage: "Remove image",
+        previewTitle: "How it will start to look",
+        previewEmptyTitle: "The title will appear here",
+        previewEmptySummary: "The summary will appear here.",
+        readingSuffix: "min read",
+        reviewTitle: "Your announcement is ready",
+        reviewIntro:
+            "Check that the information is correct. You can still go back and edit it.",
+        editAuthor: "Edit author",
+        editContent: "Edit announcement",
+        noImage: "No image",
+        contactTitle: "Contact details for review",
+        contactIntro:
+            "These details will not be published. We will only use them if we need to confirm or clarify information in the announcement.",
+        contactName: "Contact name",
+        contactEmail: "Contact email",
+        sendError:
+            "We could not send the announcement. Please try again in a moment.",
+        optional: "optional",
+        privacy:
+            "I agree that GUIAPINEDA may use these contact details to manage and review this announcement.",
+        send: "Send to GUIAPINEDA",
+        sending: "Sending...",
+        fileTooLarge: "The image cannot be larger than 2 MB.",
+        fileType: "Select an image in JPG, PNG or WebP format.",
+        publicLabel: "Public content",
+        privateLabel: "Private contact details",
+        publicDescription:
+            "The author's name, title, summary and content will form part of the announcement if it is published.",
+        moderationNotice:
+            "All announcements are reviewed before publication.",
+    },
+} as const;
+
+const text = copy[lang];
 ---
 
 <form
@@ -299,19 +382,11 @@ const text =
                         {text.publicLabel}
                     </h2>
                     <p class="mt-3 text-sm leading-6 text-slate-300">
-                        {
-                            lang === "ca"
-                                ? "El nom de l'autor, el títol, el resum i el contingut formaran part del comunicat si finalment es publica."
-                                : "El nombre del autor, el título, el resumen y el contenido formarán parte del comunicado si finalmente se publica."
-                        }
+                        {text.publicDescription}
                     </p>
                     <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
                         <p class="text-sm font-bold text-sky-200">
-                            {
-                                lang === "ca"
-                                    ? "Tots els comunicats es revisen abans de publicar-se."
-                                    : "Todos los comunicados se revisan antes de publicarse."
-                            }
+                            {text.moderationNotice}
                         </p>
                     </div>
                 </aside>

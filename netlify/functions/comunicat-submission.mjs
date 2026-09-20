@@ -6,6 +6,7 @@ import {
 const LANGUAGES = new Set([
     "ca",
     "es",
+    "en",
 ]);
 
 const SENDER_TYPES = new Set([

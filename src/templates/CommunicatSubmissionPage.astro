@@ -3,20 +3,30 @@ import Layout from "../layouts/Layout.astro";
 import CommunicatSubmissionFlow from "../components/CommunicatSubmissionFlow.astro";
 
 interface Props {
-    lang: "ca" | "es";
+    lang: "ca" | "es" | "en";
 }
 
 const { lang } = Astro.props;
 
-const title =
-    lang === "ca"
-        ? "Envia un comunicat | GUIAPINEDA"
-        : "Enviar un comunicado | GUIAPINEDA";
+const metadata = {
+    ca: {
+        title: "Envia un comunicat | GUIAPINEDA",
+        description:
+            "Envia una activitat, iniciativa o informació d'interès per a Pineda de Mar.",
+    },
+    es: {
+        title: "Enviar un comunicado | GUIAPINEDA",
+        description:
+            "Envía una actividad, iniciativa o información de interés para Pineda de Mar.",
+    },
+    en: {
+        title: "Send an announcement | GUIAPINEDA",
+        description:
+            "Send an activity, initiative or information of interest to Pineda de Mar.",
+    },
+} as const;
 
-const description =
-    lang === "ca"
-        ? "Envia una activitat, iniciativa o informació d'interès per a Pineda de Mar."
-        : "Envía una actividad, iniciativa o información de interés para Pineda de Mar.";
+const { title, description } = metadata[lang];
 ---
 
 <Layout
