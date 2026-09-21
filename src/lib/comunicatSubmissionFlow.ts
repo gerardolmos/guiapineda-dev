@@ -1,5 +1,16 @@
 import { initEmailVerificationController } from "./emailVerificationController";
 import { submitVerifiedSubmissionForm } from "./netlifySubmission";
+import { initSubmissionDraft } from "./submissionDraft";
+
+const COMMUNICAT_DRAFT_FIELDS = [
+    "tipus_remitent",
+    "autor",
+    "titol",
+    "resum",
+    "contingut",
+    "nombre_contacto",
+    "email_contacto",
+] as const;
 
 export function initCommunicatSubmissionFlow() {
     const root = document.querySelector<HTMLFormElement>(
@@ -8,9 +19,13 @@ export function initCommunicatSubmissionFlow() {
 
     if (!root) return;
 
-    initEmailVerificationController(
+    const clearDraft = initSubmissionDraft(
         root,
+        "comunicat",
+        COMMUNICAT_DRAFT_FIELDS,
     );
+
+    initEmailVerificationController(root);
 
     root.addEventListener(
         "guiapineda:email-verification-change",
@@ -117,6 +132,9 @@ export function initCommunicatSubmissionFlow() {
     const contactEmail = document.getElementById(
         "comunicat-contact-email",
     ) as HTMLInputElement | null;
+    const contactName = document.getElementById(
+        "comunicat-contact-name",
+    ) as HTMLInputElement | null;
     const privacy = document.getElementById(
         "comunicat-privacy",
     ) as HTMLInputElement | null;
@@ -159,6 +177,38 @@ export function initCommunicatSubmissionFlow() {
         root.dataset.fileTypeError ??
         "Invalid image type.";
 
+    const initialLiveTitle = liveTitle?.textContent ?? "";
+    const initialLiveSummary = liveSummary?.textContent ?? "";
+
+    const language = (() => {
+        const current =
+            root.closest<HTMLElement>("[lang]")?.lang ||
+            document.documentElement.lang;
+
+        return current === "es" || current === "en" ? current : "ca";
+    })();
+
+    const validationMessages = {
+        ca: {
+            minimum: (minimum: number) =>
+                `Cal introduir com a mínim ${minimum} caràcters.`,
+            maximum: (maximum: number) =>
+                `No es poden superar els ${maximum} caràcters.`,
+        },
+        es: {
+            minimum: (minimum: number) =>
+                `Debes introducir al menos ${minimum} caracteres.`,
+            maximum: (maximum: number) =>
+                `No se pueden superar los ${maximum} caracteres.`,
+        },
+        en: {
+            minimum: (minimum: number) =>
+                `Enter at least ${minimum} characters.`,
+            maximum: (maximum: number) =>
+                `Do not exceed ${maximum} characters.`,
+        },
+    }[language];
+
     let imageUrl = "";
     let isSubmitting = false;
 
@@ -180,10 +230,50 @@ export function initCommunicatSubmissionFlow() {
         return Math.max(1, Math.ceil(words / 200));
     }
 
+    function validateTextField(
+        field: HTMLInputElement | HTMLTextAreaElement | null,
+        minimum = 0,
+    ) {
+        if (!field) return false;
+
+        field.setCustomValidity("");
+
+        const trimmedLength = field.value.trim().length;
+        const effectiveMinimum = Math.max(minimum, field.minLength);
+
+        if (trimmedLength > 0 && trimmedLength < effectiveMinimum) {
+            field.setCustomValidity(
+                validationMessages.minimum(effectiveMinimum),
+            );
+        } else if (
+            field.maxLength >= 0 &&
+            field.value.length > field.maxLength
+        ) {
+            field.setCustomValidity(
+                validationMessages.maximum(field.maxLength),
+            );
+        }
+
+        return field.validity.valid;
+    }
+
+    function validateTextFields() {
+        return {
+            author: validateTextField(authorInput),
+            title: validateTextField(titleInput, 8),
+            summary: validateTextField(summaryInput, 30),
+            content: validateTextField(contentInput, 80),
+            contactName: validateTextField(contactName),
+            contactEmail: validateTextField(contactEmail),
+        };
+    }
+
     function updateAuthorState() {
+        const validity = validateTextFields();
         const ready = Boolean(
             selectedSender() &&
-                authorInput?.value.trim().length,
+                authorInput?.value.trim().length &&
+                validity.author,
         );
 
         authorContinue?.toggleAttribute("disabled", !ready);
@@ -191,6 +281,7 @@ export function initCommunicatSubmissionFlow() {
     }
 
     function updateContentState() {
+        const validity = validateTextFields();
         if (titleCount && titleInput) {
             titleCount.textContent = String(titleInput.value.length);
         }
@@ -204,13 +295,13 @@ export function initCommunicatSubmissionFlow() {
         }
 
         const titleReady =
-            (titleInput?.value.trim().length ?? 0) >= 8;
+            (titleInput?.value.trim().length ?? 0) >= 8 && validity.title;
 
         const summaryReady =
-            (summaryInput?.value.trim().length ?? 0) >= 30;
+            (summaryInput?.value.trim().length ?? 0) >= 30 && validity.summary;
 
         const contentReady =
-            (contentInput?.value.trim().length ?? 0) >= 80;
+            (contentInput?.value.trim().length ?? 0) >= 80 && validity.content;
 
         [
             [titleMeta, titleReady],
@@ -250,12 +341,14 @@ export function initCommunicatSubmissionFlow() {
             liveAuthor.textContent = authorInput?.value.trim() ?? "";
         }
 
-        if (liveTitle && titleInput?.value.trim()) {
-            liveTitle.textContent = titleInput.value.trim();
+        if (liveTitle) {
+            liveTitle.textContent =
+                titleInput?.value.trim() || initialLiveTitle;
         }
 
-        if (liveSummary && summaryInput?.value.trim()) {
-            liveSummary.textContent = summaryInput.value.trim();
+        if (liveSummary) {
+            liveSummary.textContent =
+                summaryInput?.value.trim() || initialLiveSummary;
         }
 
         if (liveReading) {
@@ -312,10 +405,12 @@ export function initCommunicatSubmissionFlow() {
 
         if (imagePreview) imagePreview.removeAttribute("src");
         if (liveImage) liveImage.removeAttribute("src");
+        if (reviewImage) reviewImage.removeAttribute("src");
 
         if (imageEmpty) imageEmpty.hidden = false;
         if (imageSelected) imageSelected.hidden = true;
         if (liveImageWrap) liveImageWrap.hidden = true;
+        if (reviewImageWrap) reviewImageWrap.hidden = true;
     }
 
     function setImage(file?: File) {
@@ -390,10 +485,12 @@ export function initCommunicatSubmissionFlow() {
     }
 
     function updateReviewState() {
+        const validity = validateTextFields();
         const ready = Boolean(
             root.dataset.emailVerified === "true" &&
                 contactEmail?.value.trim() &&
-                contactEmail.checkValidity() &&
+                validity.contactEmail &&
+                validity.contactName &&
                 privacy?.checked,
         );
 
@@ -503,6 +600,7 @@ export function initCommunicatSubmissionFlow() {
         });
 
     contactEmail?.addEventListener("input", updateReviewState);
+    contactName?.addEventListener("input", updateReviewState);
     privacy?.addEventListener("change", updateReviewState);
 
     root.addEventListener("submit", async (event) => {
@@ -520,24 +618,28 @@ export function initCommunicatSubmissionFlow() {
             return;
         }
 
+        const validity = validateTextFields();
+
         const senderReady = Boolean(
             selectedSender() &&
-                authorInput?.value.trim(),
+                authorInput?.value.trim() &&
+                validity.author,
         );
 
         const titleReady =
-            (titleInput?.value.trim().length ?? 0) >= 8;
+            (titleInput?.value.trim().length ?? 0) >= 8 && validity.title;
 
         const summaryReady =
-            (summaryInput?.value.trim().length ?? 0) >= 30;
+            (summaryInput?.value.trim().length ?? 0) >= 30 && validity.summary;
 
         const contentReady =
-            (contentInput?.value.trim().length ?? 0) >= 80;
+            (contentInput?.value.trim().length ?? 0) >= 80 && validity.content;
 
         const contactReady = Boolean(
             root.dataset.emailVerified === "true" &&
                 contactEmail?.value.trim() &&
-                contactEmail.checkValidity() &&
+                validity.contactEmail &&
+                validity.contactName &&
                 privacy?.checked,
         );
 
@@ -555,7 +657,10 @@ export function initCommunicatSubmissionFlow() {
         ) {
             setSubmitting(false);
 
-            if (
+            if (!senderReady) {
+                showStep("author");
+                updateAuthorState();
+            } else if (
                 !titleReady ||
                 !summaryReady ||
                 !contentReady ||
@@ -601,6 +706,7 @@ export function initCommunicatSubmissionFlow() {
                 successUrl,
                 minimumDuration: 3200,
             });
+            clearDraft();
         } catch (error) {
             console.error(
                 "Error enviando el comunicado:",
@@ -619,9 +725,32 @@ export function initCommunicatSubmissionFlow() {
         }
     });
 
-    updateAuthorState();
-    updateContentState();
-    updateReviewState();
+    function reconcileDraftState() {
+        if (authorStep) authorStep.hidden = false;
+        if (contentStep) contentStep.hidden = true;
+        if (reviewStep) reviewStep.hidden = true;
+
+        clearImage();
+
+        if (privacy) privacy.checked = false;
+        if (submitError) submitError.hidden = true;
+
+        setSubmitting(false);
+        updateAuthorState();
+        updateContentState();
+        renderReview();
+        updateReviewState();
+    }
+
+    root.addEventListener("reset", (event) => {
+        queueMicrotask(() => {
+            if (!event.defaultPrevented) {
+                reconcileDraftState();
+            }
+        });
+    });
+
+    reconcileDraftState();
 
     window.addEventListener("pageshow", () => {
         setSubmitting(false);
