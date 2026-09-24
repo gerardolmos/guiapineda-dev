@@ -43,6 +43,7 @@ export async function createStrapiSubmission({
 const INTERNAL_SUBMISSION_SECTIONS =
     new Set([
         "agenda",
+        "comercio",
         "comunicat",
         "communicat_report",
         "foto_mes",
@@ -96,6 +97,8 @@ function requireInternalSubmissionConfig({
 async function buildInternalSubmissionBody({
     payload,
     image,
+    images,
+    section,
 }) {
     const body =
         new FormData();
@@ -106,7 +109,147 @@ async function buildInternalSubmissionBody({
     );
 
     if (!image) {
+        if (section !== "comercio") {
+            if (images !== null) {
+                throw new Error(
+                    "Internal submission images are not supported for this section.",
+                );
+            }
+
+            return body;
+        }
+
+        if (
+            !images ||
+            typeof images !== "object" ||
+            Array.isArray(images)
+        ) {
+            throw new Error(
+                "Commerce internal submission images are missing.",
+            );
+        }
+
+        const allowedRoles =
+            new Set([
+                "imagen_principal",
+                "logo",
+                "galeria",
+            ]);
+
+        if (
+            Object.keys(images).some(
+                (role) =>
+                    !allowedRoles.has(role),
+            )
+        ) {
+            throw new Error(
+                "Commerce internal submission image role is invalid.",
+            );
+        }
+
+        const principal =
+            images.imagen_principal;
+
+        const logo = images.logo ?? null;
+        const gallery =
+            images.galeria ?? [];
+
+        if (
+            !principal ||
+            (logo !== null && !logo) ||
+            !Array.isArray(gallery) ||
+            gallery.length > 4
+        ) {
+            throw new Error(
+                "Commerce internal submission image cardinality is invalid.",
+            );
+        }
+
+        const entries = [
+            {
+                field: "imagen_principal",
+                file: principal,
+                name: "principal",
+            },
+            ...(logo
+                ? [
+                      {
+                          field: "logo",
+                          file: logo,
+                          name: "logo",
+                      },
+                  ]
+                : []),
+            ...gallery.map(
+                (file, index) => ({
+                    field: "galeria",
+                    file,
+                    name:
+                        `galeria-${index + 1}`,
+                }),
+            ),
+        ];
+
+        for (const entry of entries) {
+            if (
+                !entry.file ||
+                typeof entry.file !==
+                    "object" ||
+                typeof entry.file.type !==
+                    "string" ||
+                typeof entry.file.arrayBuffer !==
+                    "function"
+            ) {
+                throw new Error(
+                    "Commerce internal submission image is invalid.",
+                );
+            }
+
+            const mimeType =
+                entry.file.type
+                    .trim()
+                    .toLowerCase();
+
+            const extension =
+                INTERNAL_IMAGE_EXTENSIONS[
+                    mimeType
+                ];
+
+            if (!extension) {
+                throw new Error(
+                    "Internal submission image type is invalid.",
+                );
+            }
+
+            const bytes =
+                await entry.file
+                    .arrayBuffer();
+
+            const safeImage =
+                new Blob(
+                    [bytes],
+                    {
+                        type: mimeType,
+                    },
+                );
+
+            body.append(
+                entry.field,
+                safeImage,
+                `${entry.name}${extension}`,
+            );
+        }
+
         return body;
+    }
+
+    if (
+        section === "comercio" ||
+        images !== null
+    ) {
+        throw new Error(
+            "Internal submission image shape is invalid.",
+        );
     }
 
     const mimeType =
@@ -156,6 +299,7 @@ async function buildInternalSubmissionBody({
 export async function createInternalStrapiSubmission({
     payload,
     image = null,
+    images = null,
     rawUrl,
     secret,
     section,
@@ -178,6 +322,8 @@ export async function createInternalStrapiSubmission({
         await buildInternalSubmissionBody({
             payload,
             image,
+            images,
+            section,
         });
 
     const controller =

@@ -1,4 +1,6 @@
 ---
+import EmailVerificationBlock from "./EmailVerificationBlock.astro";
+
 interface Category {
     id: string;
     label: string;
@@ -11,7 +13,7 @@ interface Subcategory {
 }
 
 interface Props {
-    lang: "ca" | "es";
+    lang: "ca" | "es" | "en";
     categorias: Category[];
     subcategorias: Subcategory[];
 }
@@ -226,7 +228,19 @@ const text =
                   "He llegit i accepto el tractament de les meves dades per gestionar aquesta sol·licitud.",
               send: "Enviar a GUIAPINEDA",
               prototypeNote:
-                  "Perfecte. Tot està preparat. Encara no s'ha enviat res: connectarem aquest botó amb Strapi en la següent fase.",
+                  "No hem pogut enviar la sol·licitud. Revisa les dades i torna-ho a provar.",
+              webUrlError:
+                  "Introdueix una adreça web completa que comenci per http:// o https://.",
+              socialUrlError:
+                  "Afegeix una URL pública vàlida per a aquesta xarxa o desmarca-la.",
+              scheduleError:
+                  "Revisa aquest horari: cada tram ha de ser complet, avançar en el temps i no solapar-se.",
+              submissionVerificationError:
+                  "La verificació ja no és vàlida. Les dades continuen aquí, però has de verificar de nou el correu abans de tornar a enviar.",
+              submissionAmbiguousError:
+                  "No hem pogut confirmar si la sol·licitud ha arribat. Per evitar un enviament duplicat no la reintentarem automàticament. Revisa les dades i verifica de nou el correu abans de decidir si la tornes a enviar.",
+              submissionUnavailableError:
+                  "El servei de verificació no està disponible temporalment i no podem confirmar si l'autorització s'ha consumit. Les dades continuen aquí, però has de verificar de nou el correu abans de tornar a enviar; no ho reintentarem automàticament.",
           }
         : {
               eyebrow: "Forma parte de GUIAPINEDA",
@@ -434,8 +448,32 @@ const text =
                   "He leído y acepto el tratamiento de mis datos para gestionar esta solicitud.",
               send: "Enviar a GUIAPINEDA",
               prototypeNote:
-                  "Perfecto. Todo está preparado. Todavía no se ha enviado nada: conectaremos este botón con Strapi en la siguiente fase.",
+                  "No hemos podido enviar la solicitud. Revisa los datos y vuelve a intentarlo.",
+              webUrlError:
+                  "Introduce una dirección web completa que empiece por http:// o https://.",
+              socialUrlError:
+                  "Añade una URL pública válida para esta red o desmárcala.",
+              scheduleError:
+                  "Revisa este horario: cada tramo debe estar completo, avanzar en el tiempo y no solaparse.",
+              submissionVerificationError:
+                  "La verificación ya no es válida. Los datos siguen aquí, pero debes verificar de nuevo el correo antes de volver a enviar.",
+              submissionAmbiguousError:
+                  "No hemos podido confirmar si la solicitud ha llegado. Para evitar un envío duplicado no la reintentaremos automáticamente. Revisa los datos y verifica de nuevo el correo antes de decidir si vuelves a enviarla.",
+              submissionUnavailableError:
+                  "El servicio de verificación no está disponible temporalmente y no podemos confirmar si la autorización se ha consumido. Los datos siguen aquí, pero debes verificar de nuevo el correo antes de volver a enviar; no lo reintentaremos automáticamente.",
           };
+
+if (lang === "en") {
+    Object.assign(text, {
+        eyebrow: "Join GUIAPINEDA", welcomeTitle: "Help your business grow.", welcomeText: "In a few minutes we will prepare your profile together.", start: "Get started", languageCa: "Català", languageEs: "Español", section: "Your business", progress: "Let’s start with the basics", title: "Tell us about your business", intro: "Three details are enough to start shaping your profile.", nameLabel: "What is your business called?", namePlaceholder: "Business name", categoryLabel: "What do you do?", categoryHelp: "Choose the category that best represents you.", subcategoryLabel: "Let’s be more specific", subcategoryHelp: "Choose the option that best describes your activity.", continue: "Continue", previewLabel: "Your profile starts here", previewName: "Your business", previewCategory: "Category · Subcategory", doneTitle: "Great. We have the basics.", doneText: "Next, tell us simply what you do and what makes you special.", back: "Back", next: "Continue",
+        descriptionSection: "What you do", descriptionProgress: "Tell us what makes you special", descriptionTitle: "Tell us what you do", descriptionIntro: "Write as you would explain it to someone visiting your business for the first time.", shortLabel: "In one sentence, what will people find?", shortHelp: "This is the short introduction to your business.", shortPlaceholder: "For example: Artisan bread and cakes made fresh every day.", longLabel: "What else should people know?", longHelp: "Describe what you do, your specialities and what sets you apart.", longPlaceholder: "Tell us about your business in your own words...", descriptionContinue: "Done", descriptionPreview: "Your profile is taking shape", previewShort: "Your short introduction will appear here.", previewLong: "More information about what you offer will appear here.", descriptionDoneTitle: "Great. We know you better now.", descriptionDoneText: "Next, tell us where you are and how people can contact you.", contactNext: "Continue",
+        contactSection: "Where to find you", contactProgress: "Let’s put you on the map", contactTitle: "Where can people find you?", contactIntro: "Add your address and the contact methods you actually use.", addressLabel: "What is your address?", addressPlaceholder: "Street, number, unit...", contactWaysTitle: "How can people contact you?", contactWaysHelp: "At least one contact method is required.", phoneLabel: "Phone", phonePlaceholder: "93 000 00 00", whatsappSame: "This number also uses WhatsApp", whatsappLabel: "WhatsApp", whatsappPlaceholder: "600 000 000", emailLabel: "Email", emailPlaceholder: "hello@yourbusiness.com", webLabel: "Website", webPlaceholder: "www.yourbusiness.com", optional: "Optional", contactContinue: "Done", contactPreview: "It already looks like a real profile", previewAddress: "Your address will appear here", previewContactEmpty: "Your contact methods will appear here.", contactDoneTitle: "Great. We know how to find you.", contactDoneText: "Now tell us when you open and how you serve customers.", hoursNext: "Continue",
+        hoursSection: "Opening hours", hoursProgress: "Let’s keep it simple", hoursTitle: "When are you open?", hoursIntro: "Complete one day and copy it to other days if the hours are the same.", closed: "Closed", morning: "Opens", closing: "Closes", secondShift: "+ Add second period", removeSecondShift: "Remove second period", copyWeekdays: "Copy Monday to weekdays", copyAll: "Copy Monday to the whole week", copyHelp: "Complete Monday first, then reuse it with one click.", attentionTitle: "How do you serve customers?", attentionHelp: "Choose every option that applies.", presencial: "At the business", domicilio: "At home", online: "Online", recogida: "Local pickup", reparto: "Delivery", hoursContinue: "Hours ready", hoursPreview: "This is how your hours will appear", unresolvedDay: "Incomplete", closedPreview: "Closed", hoursDoneTitle: "Opening hours complete.", hoursDoneText: "Now tell us what you offer.", offerNext: "Continue",
+        offerSection: "What you offer", offerProgress: "Share the best of your business", offerTitle: "What will people find?", offerIntro: "Add the services, products or specialities that best represent you.", serviceName: "Service or speciality", serviceNamePlaceholder: "For example: Artisan bread", serviceDescription: "A little more, if you like", serviceDescriptionPlaceholder: "For example: Made fresh every day.", addService: "+ Add another", removeService: "Remove", maxServices: "You can add up to 6 main services.", socialTitle: "Where can people follow you?", socialHelp: "Only add social networks you actually use.", additionalTitle: "Anything else we should know?", additionalHelp: "Optional. Orders, accessibility, payment methods or other useful details.", additionalPlaceholder: "Add any useful information here...", offerContinue: "Done", offerPreview: "What people will start to see", previewServicesEmpty: "Your services will appear here.", offerDoneTitle: "Great. We know what makes you special.", offerDoneText: "Now add photos of your business.", photosNext: "Continue",
+        photosSection: "Your photos", photosProgress: "Let’s bring your profile to life", photosTitle: "Show us your business", photosIntro: "Choose one main photo, an optional logo and up to four gallery photos.", photosGuideTitle: "Before uploading photos", photosGuideIntro: "Well-chosen images will make your profile clearer.", photosGuideMain: "Main photo: use a clear image that shows the business or premises.", photosGuideLogo: "Logo: use a clean, legible version if you have one.", photosGuideGallery: "Gallery: up to 4 different photos of your space, products or team.", photosGuideFormat: "Accepted formats: JPG, PNG or WebP.", photosGuideFinal: "We will handle the final image processing.", mainPhotoTitle: "Main photo", mainPhotoHelp: "This will be the main image for your profile.", chooseMainPhoto: "Choose main photo", changePhoto: "Change photo", logoTitle: "Do you have a logo?", logoHelp: "Optional. It helps identify your business.", chooseLogo: "Add logo", changeLogo: "Change logo", galleryTitle: "More photos?", galleryHelp: "Add up to 4 gallery images.", addGallery: "+ Add photos", galleryCounter: "photos added", removePhoto: "Remove", photosContinue: "Photos ready", photosPreview: "Your business is coming to life", photoPlaceholder: "Your main photo will appear here", photosDoneTitle: "Your business profile is ready.", photosDoneText: "Review the information before sending it.", reviewNext: "Review my business",
+        reviewSection: "Ready", reviewProgress: "Review what you created", reviewTitle: "Your business is ready.", reviewIntro: "Review everything carefully. You can still edit any section.", edit: "Edit", reviewAbout: "About the business", reviewContact: "Where to find you", reviewHours: "Opening hours", reviewServices: "What you offer", reviewGallery: "Gallery", reviewNoGallery: "You have not added gallery photos.", applicantTitle: "Who is sending this request?", applicantIntro: "We only use these private details to contact you during editorial review.", applicantName: "Full name", applicantNamePlaceholder: "Responsible person", applicantEmail: "Email", applicantEmailPlaceholder: "you@example.com", applicantPhone: "Phone", applicantPhonePlaceholder: "Optional", applicantPrivacy: "I accept the processing of my data to manage this request.", send: "Send to GUIAPINEDA", prototypeNote: "We could not send the request. Check the information and try again.", webUrlError: "Enter a complete website address beginning with http:// or https://.", socialUrlError: "Add a valid public URL for this network or deselect it.", scheduleError: "Review these opening hours: each period must be complete, move forward in time and not overlap.", submissionVerificationError: "Verification is no longer valid. Your data is still here, but you must verify your email again before submitting.", submissionAmbiguousError: "We could not confirm whether the request arrived. To avoid a duplicate submission, we will not retry automatically. Review your data and verify your email again before deciding whether to submit it again.", submissionUnavailableError: "The verification service is temporarily unavailable, and we cannot confirm whether the authorization was consumed. Your data is still here, but you must verify your email again before submitting; we will not retry automatically.",
+    });
+}
 
 const days =
     lang === "ca"
@@ -448,7 +486,8 @@ const days =
               ["sabado", "Dissabte"],
               ["domingo", "Diumenge"],
           ]
-        : [
+        : lang === "es"
+          ? [
               ["lunes", "Lunes"],
               ["martes", "Martes"],
               ["miercoles", "Miércoles"],
@@ -456,13 +495,24 @@ const days =
               ["viernes", "Viernes"],
               ["sabado", "Sábado"],
               ["domingo", "Domingo"],
-          ];
+            ]
+          : [
+                ["lunes", "Monday"],
+                ["martes", "Tuesday"],
+                ["miercoles", "Wednesday"],
+                ["jueves", "Thursday"],
+                ["viernes", "Friday"],
+                ["sabado", "Saturday"],
+                ["domingo", "Sunday"],
+            ];
 
 const caHref = "/alta-comerc";
 const esHref = "/es/alta-comercio";
+const enHref = "/en/businesses/add-a-business";
 ---
 
 <div class="bg-stone-50">
+    <form data-commerce-submission-flow novalidate>
     <section
         id="signup-welcome"
         class="flex min-h-[72vh] items-center px-5 py-16 sm:px-8"
@@ -495,6 +545,18 @@ const esHref = "/es/alta-comercio";
                         ]}
                     >
                         {text.languageEs}
+                    </a>
+
+                    <a
+                        href={enHref}
+                        class:list={[
+                            "rounded-full px-4 py-2 font-semibold transition",
+                            lang === "en"
+                                ? "bg-slate-950 text-white"
+                                : "text-slate-600 hover:text-slate-950",
+                        ]}
+                    >
+                        English
                     </a>
                 </div>
             </div>
@@ -703,8 +765,8 @@ const esHref = "/es/alta-comercio";
                         </div>
                     </fieldset>
 
-                    <input id="selected-category" type="hidden" />
-                    <input id="selected-subcategory" type="hidden" />
+                    <input id="selected-category" name="categoria_document_id" type="hidden" />
+                    <input id="selected-subcategory" name="subcategoria_document_id" type="hidden" />
 
                     <div
                         class="mt-10 flex justify-end border-t border-slate-100 pt-6"
@@ -1934,6 +1996,7 @@ const esHref = "/es/alta-comercio";
 
                         <textarea
                             id="business-additional-info"
+                            name="informacion_adicional"
                             rows="4"
                             maxlength="800"
                             class="mt-3 w-full resize-y rounded-2xl border border-slate-300 bg-white px-5 py-4 text-base leading-relaxed text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
@@ -2209,6 +2272,7 @@ const esHref = "/es/alta-comercio";
 
                             <input
                                 id="main-photo-input"
+                                name="imagen_principal"
                                 type="file"
                                 accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                 class="sr-only"
@@ -2261,6 +2325,7 @@ const esHref = "/es/alta-comercio";
 
                                 <input
                                     id="logo-input"
+                                    name="logo"
                                     type="file"
                                     accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                     class="sr-only"
@@ -2330,6 +2395,7 @@ const esHref = "/es/alta-comercio";
 
                         <input
                             id="gallery-input"
+                            name="galeria"
                             type="file"
                             accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                             multiple
@@ -2807,6 +2873,7 @@ const esHref = "/es/alta-comercio";
 
                         <input
                             id="applicant-name"
+                            name="nombre_contacto"
                             type="text"
                             autocomplete="name"
                             maxlength="120"
@@ -2822,6 +2889,7 @@ const esHref = "/es/alta-comercio";
 
                         <input
                             id="applicant-email"
+                            name="email_contacto"
                             type="email"
                             autocomplete="email"
                             maxlength="180"
@@ -2837,6 +2905,7 @@ const esHref = "/es/alta-comercio";
 
                         <input
                             id="applicant-phone"
+                            name="telefono_contacto"
                             type="tel"
                             autocomplete="tel"
                             maxlength="30"
@@ -2851,6 +2920,8 @@ const esHref = "/es/alta-comercio";
                 >
                     <input
                         id="applicant-privacy"
+                        name="aceptacion_privacidad"
+                        value="true"
                         type="checkbox"
                         class="mt-0.5 size-4 shrink-0 accent-slate-950"
                     />
@@ -2871,7 +2942,7 @@ const esHref = "/es/alta-comercio";
 
                     <button
                         id="review-send"
-                        type="button"
+                        type="submit"
                         disabled
                         class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-8 py-3 font-bold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                     >
@@ -2880,19 +2951,49 @@ const esHref = "/es/alta-comercio";
                     </button>
                 </div>
 
-                <div
-                    id="review-prototype-note"
+                <EmailVerificationBlock lang={lang} scope="comercio" />
+
+                <p
+                    data-commerce-submission-error
+                    data-validation-message={text.prototypeNote}
+                    data-web-message={text.webUrlError}
+                    data-social-message={text.socialUrlError}
+                    data-schedule-message={text.scheduleError}
+                    data-verification-message={text.submissionVerificationError}
+                    data-ambiguous-message={text.submissionAmbiguousError}
+                    data-unavailable-message={text.submissionUnavailableError}
                     hidden
-                    class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-relaxed text-emerald-950"
+                    class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold leading-relaxed text-red-900"
                 >
                     {text.prototypeNote}
-                </div>
+                </p>
             </section>
         </div>
     </section>
+    </form>
 </div>
 
 <script>
+    import {
+        CommerceSubmissionError,
+        findCommerceFieldIssue,
+        findCommerceNetworkIssue,
+        findCommerceScheduleIssue,
+        submitCommerce,
+        validateCommerceImages,
+        type CommerceFieldIssue,
+        type CommerceScheduleDay,
+    } from "../lib/commerceSubmission";
+    import { initEmailVerificationController } from "../lib/emailVerificationController";
+    const submissionForm = document.querySelector<HTMLFormElement>(
+        "form[data-commerce-submission-flow]",
+    );
+    const verificationController = submissionForm
+        ? initEmailVerificationController(submissionForm)
+        : null;
+    const submissionError = submissionForm?.querySelector<HTMLElement>(
+        "[data-commerce-submission-error]",
+    );
     const welcome = document.getElementById("signup-welcome");
     const business = document.getElementById("signup-business");
     const checkpoint = document.getElementById("signup-checkpoint");
@@ -2972,8 +3073,6 @@ const esHref = "/es/alta-comercio";
         document.getElementById("review-back");
     const reviewSendButton =
         document.getElementById("review-send");
-    const reviewPrototypeNote =
-        document.getElementById("review-prototype-note");
 
     const applicantName = document.getElementById(
         "applicant-name",
@@ -2983,6 +3082,9 @@ const esHref = "/es/alta-comercio";
     ) as HTMLInputElement | null;
     const applicantPrivacy = document.getElementById(
         "applicant-privacy",
+    ) as HTMLInputElement | null;
+    const applicantPhone = document.getElementById(
+        "applicant-phone",
     ) as HTMLInputElement | null;
 
     const reviewMainPhoto =
@@ -3208,6 +3310,138 @@ const esHref = "/es/alta-comercio";
     let subcategoryLabel = "";
     let categoryHasSubcategories = false;
 
+    function collectSchedule(): CommerceScheduleDay[] {
+        return scheduleRows.map((row) => {
+            const read = (selector: string) =>
+                row.querySelector<HTMLInputElement>(selector)?.value ?? "";
+            const cerrado = row.querySelector<HTMLInputElement>(
+                ".schedule-closed",
+            )?.checked ?? false;
+            return {
+                dia: row.dataset.day ?? "",
+                cerrado,
+                ...(cerrado ? {} : {
+                    apertura_1: read(".schedule-open-1"),
+                    cierre_1: read(".schedule-close-1"),
+                    ...(read(".schedule-open-2") || read(".schedule-close-2") ? {
+                        apertura_2: read(".schedule-open-2"),
+                        cierre_2: read(".schedule-close-2"),
+                    } : {}),
+                }),
+            };
+        });
+    }
+
+    function collectNetworks() {
+        return Array.from(
+            document.querySelectorAll<HTMLElement>(".social-row"),
+        ).flatMap((row) => {
+            const selected = row.querySelector<HTMLButtonElement>(
+                ".social-toggle",
+            )?.getAttribute("aria-pressed") === "true";
+            const url = row.querySelector<HTMLInputElement>(
+                ".social-url",
+            )?.value.trim() ?? "";
+            return selected ? [{
+                plataforma: row.dataset.social ?? "",
+                url,
+            }] : [];
+        });
+    }
+
+    function clearCommerceFieldErrors(
+        field?: CommerceFieldIssue["field"],
+    ) {
+        const errorSelector = field
+            ? `[data-commerce-field-error="${field}"]`
+            : "[data-commerce-field-error]";
+        const invalidSelector = field
+            ? `[data-commerce-field-invalid="${field}"]`
+            : "[data-commerce-field-invalid]";
+        submissionForm?.querySelectorAll(errorSelector)
+            .forEach((error) => error.remove());
+        submissionForm?.querySelectorAll(invalidSelector)
+            .forEach((input) => {
+                input.removeAttribute("aria-invalid");
+                input.removeAttribute("aria-describedby");
+                input.removeAttribute("data-commerce-field-invalid");
+            });
+    }
+
+    function fieldTarget(issue: CommerceFieldIssue) {
+        if (issue.field === "web") return webInput;
+        if (issue.field === "redes_sociales") {
+            return document.querySelectorAll<HTMLElement>(".social-row")
+                .item(issue.index ?? 0)
+                ?.querySelector<HTMLInputElement>(".social-url") ?? null;
+        }
+        const row = scheduleRows[issue.index ?? 0];
+        const selectors: Partial<Record<keyof CommerceScheduleDay, string>> = {
+            cerrado: ".schedule-closed",
+            apertura_1: ".schedule-open-1",
+            cierre_1: ".schedule-close-1",
+            apertura_2: ".schedule-open-2",
+            cierre_2: ".schedule-close-2",
+        };
+        return row?.querySelector<HTMLInputElement>(
+            selectors[issue.input ?? "apertura_1"] ?? ".schedule-open-1",
+        ) ?? null;
+    }
+
+    function showCommerceFieldIssue(
+        issue: CommerceFieldIssue,
+        { focus = true } = {},
+    ) {
+        clearCommerceFieldErrors(issue.field);
+        const editTarget = issue.field === "web"
+            ? "contact"
+            : issue.field === "horario_semanal"
+              ? "hours"
+              : "offer";
+        const targetScreen = editTarget === "contact"
+            ? contact
+            : editTarget === "hours"
+              ? hours
+              : offer;
+        if (targetScreen?.hidden) openReviewEdit(editTarget);
+        const target = fieldTarget(issue);
+        if (!target) return;
+
+        const message = issue.field === "web"
+            ? submissionError?.dataset.webMessage
+            : issue.field === "redes_sociales"
+              ? submissionError?.dataset.socialMessage
+              : submissionError?.dataset.scheduleMessage;
+        const error = document.createElement("p");
+        error.id = `commerce-field-error-${issue.field}-${issue.index ?? 0}`;
+        error.dataset.commerceFieldError = issue.field;
+        error.setAttribute("role", "alert");
+        error.className = "mt-2 text-sm font-semibold leading-relaxed text-red-700";
+        error.textContent = message ?? "";
+        target.setAttribute("aria-invalid", "true");
+        target.setAttribute("aria-describedby", error.id);
+        target.dataset.commerceFieldInvalid = issue.field;
+        (target.closest("label") ?? target).insertAdjacentElement(
+            "afterend",
+            error,
+        );
+        if (focus) {
+            target.focus();
+            target.scrollIntoView({ block: "center", behavior: "smooth" });
+        }
+    }
+
+    function refreshVisibleCommerceScheduleIssue() {
+        const visibleError = submissionForm?.querySelector(
+            '[data-commerce-field-error="horario_semanal"]',
+        );
+        if (!visibleError) return;
+
+        const issue = findCommerceScheduleIssue(collectSchedule());
+        clearCommerceFieldErrors("horario_semanal");
+        if (issue) showCommerceFieldIssue(issue, { focus: false });
+    }
+
     function showScreen(
         target: HTMLElement | null,
         ...others: Array<HTMLElement | null>
@@ -3276,6 +3510,28 @@ const esHref = "/es/alta-comercio";
     let galleryFiles: File[] = [];
     let galleryUrls: string[] = [];
 
+    function imageSelectionIsValid() {
+        const principal = mainPhotoInput?.files?.[0];
+        if (!principal) return false;
+        try {
+            validateCommerceImages({
+                imagen_principal: principal,
+                logo: logoInput?.files?.[0],
+                galeria: galleryFiles,
+            });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    function updatePhotoContinueState() {
+        photosContinueButton?.toggleAttribute(
+            "disabled",
+            !imageSelectionIsValid(),
+        );
+    }
+
     function revokeUrl(url: string) {
         if (url) {
             URL.revokeObjectURL(url);
@@ -3334,7 +3590,7 @@ const esHref = "/es/alta-comercio";
             photosPreviewPlaceholder.hidden = true;
         }
 
-        photosContinueButton?.removeAttribute("disabled");
+        updatePhotoContinueState();
     }
 
     function updateLogo(file?: File) {
@@ -3365,8 +3621,11 @@ const esHref = "/es/alta-comercio";
             logoButton.textContent =
                 document.documentElement.lang === "ca"
                     ? "Canviar logo"
-                    : "Cambiar logo";
+                    : document.documentElement.lang === "es"
+                      ? "Cambiar logo"
+                      : "Change logo";
         }
+        updatePhotoContinueState();
     }
 
     function renderGallery() {
@@ -3413,7 +3672,9 @@ const esHref = "/es/alta-comercio";
                     "aria-label",
                     document.documentElement.lang === "ca"
                         ? "Eliminar foto"
-                        : "Eliminar foto",
+                        : document.documentElement.lang === "es"
+                          ? "Eliminar foto"
+                          : "Remove photo",
                 );
 
                 slot.append(image, remove);
@@ -3449,6 +3710,7 @@ const esHref = "/es/alta-comercio";
                 full,
             );
         }
+        updatePhotoContinueState();
     }
 
     let editingFromReview = false;
@@ -3631,7 +3893,9 @@ const esHref = "/es/alta-comercio";
                     value.textContent =
                         document.documentElement.lang === "ca"
                             ? "Tancat"
-                            : "Cerrado";
+                            : document.documentElement.lang === "es"
+                              ? "Cerrado"
+                              : "Closed";
                 } else {
                     const first =
                         `${formatScheduleTime(open1)}–${formatScheduleTime(close1)}`;
@@ -3770,7 +4034,9 @@ const esHref = "/es/alta-comercio";
             applicantName?.value.trim() &&
             applicantEmail?.value.trim() &&
             applicantEmail.checkValidity() &&
-            applicantPrivacy?.checked
+            applicantPrivacy?.checked &&
+            verificationController?.isVerified() &&
+            imageSelectionIsValid()
         );
 
         reviewSendButton.toggleAttribute(
@@ -3778,9 +4044,7 @@ const esHref = "/es/alta-comercio";
             !ready,
         );
 
-        if (reviewPrototypeNote) {
-            reviewPrototypeNote.hidden = true;
-        }
+        if (submissionError) submissionError.hidden = true;
     }
 
     function openReviewEdit(target: string) {
@@ -3818,6 +4082,30 @@ const esHref = "/es/alta-comercio";
         );
 
         window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function returnToReviewIfEditing() {
+        if (!editingFromReview) return false;
+
+        editingFromReview = false;
+        renderReview();
+        showScreen(
+            review,
+            welcome,
+            business,
+            checkpoint,
+            description,
+            descriptionCheckpoint,
+            contact,
+            contactCheckpoint,
+            hours,
+            hoursCheckpoint,
+            offer,
+            offerCheckpoint,
+            photos,
+            photosCheckpoint,
+        );
+        return true;
     }
 
     function getServiceRows() {
@@ -4029,7 +4317,9 @@ const esHref = "/es/alta-comercio";
                     preview.textContent =
                         document.documentElement.lang === "ca"
                             ? "Tancat"
-                            : "Cerrado";
+                            : document.documentElement.lang === "es"
+                              ? "Cerrado"
+                              : "Closed";
                     preview.className =
                         "preview-day-value text-right text-sm font-semibold text-slate-500";
                 }
@@ -4054,7 +4344,9 @@ const esHref = "/es/alta-comercio";
                     preview.textContent =
                         document.documentElement.lang === "ca"
                             ? "Per completar"
-                            : "Por completar";
+                            : document.documentElement.lang === "es"
+                              ? "Por completar"
+                              : "Incomplete";
                     preview.className =
                         "preview-day-value text-right text-sm text-slate-400";
                 }
@@ -4438,6 +4730,7 @@ const esHref = "/es/alta-comercio";
 
     continueButton?.addEventListener("click", () => {
         if (continueButton.hasAttribute("disabled")) return;
+        if (returnToReviewIfEditing()) return;
 
         showScreen(
             checkpoint,
@@ -4501,6 +4794,7 @@ const esHref = "/es/alta-comercio";
         ) {
             return;
         }
+        if (returnToReviewIfEditing()) return;
 
         showScreen(
             descriptionCheckpoint,
@@ -4556,7 +4850,10 @@ const esHref = "/es/alta-comercio";
         emailInput,
         webInput,
     ].forEach((input) => {
-        input?.addEventListener("input", updateContactPreview);
+        input?.addEventListener("input", () => {
+            if (input === webInput) clearCommerceFieldErrors("web");
+            updateContactPreview();
+        });
     });
 
     whatsappSamePhone?.addEventListener("change", () => {
@@ -4601,6 +4898,17 @@ const esHref = "/es/alta-comercio";
         ) {
             return;
         }
+
+        const fieldIssue = findCommerceFieldIssue({
+            web: webInput?.value.trim(),
+            horario_semanal: collectSchedule(),
+            redes_sociales: [],
+        });
+        if (fieldIssue?.field === "web") {
+            showCommerceFieldIssue(fieldIssue);
+            return;
+        }
+        if (returnToReviewIfEditing()) return;
 
         showScreen(
             contactCheckpoint,
@@ -4667,12 +4975,16 @@ const esHref = "/es/alta-comercio";
 
         closed?.addEventListener("change", () => {
             setClosedState(row);
+            refreshVisibleCommerceScheduleIssue();
         });
 
         row.querySelectorAll<HTMLInputElement>(
             'input[type="time"]',
         ).forEach((input) => {
-            input.addEventListener("input", updateHours);
+            input.addEventListener("input", () => {
+                updateHours();
+                refreshVisibleCommerceScheduleIssue();
+            });
         });
 
         secondToggle?.addEventListener("click", () => {
@@ -4693,6 +5005,7 @@ const esHref = "/es/alta-comercio";
                 : secondToggle.dataset.removeLabel ?? "";
 
             updateHours();
+            refreshVisibleCommerceScheduleIssue();
         });
     });
 
@@ -4722,10 +5035,12 @@ const esHref = "/es/alta-comercio";
                 ].includes(row.dataset.day ?? ""),
             ),
         );
+        refreshVisibleCommerceScheduleIssue();
     });
 
     copyMondayAll?.addEventListener("click", () => {
         copyMonday(scheduleRows);
+        refreshVisibleCommerceScheduleIssue();
     });
 
     hoursBackButton?.addEventListener("click", () => {
@@ -4748,6 +5063,13 @@ const esHref = "/es/alta-comercio";
         ) {
             return;
         }
+
+        const fieldIssue = findCommerceScheduleIssue(collectSchedule());
+        if (fieldIssue) {
+            showCommerceFieldIssue(fieldIssue);
+            return;
+        }
+        if (returnToReviewIfEditing()) return;
 
         showScreen(
             hoursCheckpoint,
@@ -4854,6 +5176,7 @@ const esHref = "/es/alta-comercio";
                 );
 
             toggle?.addEventListener("click", () => {
+                clearCommerceFieldErrors("redes_sociales");
                 const selected =
                     toggle.getAttribute("aria-pressed") ===
                     "true";
@@ -4890,10 +5213,10 @@ const esHref = "/es/alta-comercio";
                 updateOfferPreview();
             });
 
-            url?.addEventListener(
-                "input",
-                updateOfferPreview,
-            );
+            url?.addEventListener("input", () => {
+                clearCommerceFieldErrors("redes_sociales");
+                updateOfferPreview();
+            });
         });
 
     offerBackButton?.addEventListener("click", () => {
@@ -4918,6 +5241,13 @@ const esHref = "/es/alta-comercio";
         ) {
             return;
         }
+
+        const fieldIssue = findCommerceNetworkIssue(collectNetworks());
+        if (fieldIssue) {
+            showCommerceFieldIssue(fieldIssue);
+            return;
+        }
+        if (returnToReviewIfEditing()) return;
 
         showScreen(
             offerCheckpoint,
@@ -4980,10 +5310,12 @@ const esHref = "/es/alta-comercio";
 
     mainPhotoInput?.addEventListener("change", () => {
         updateMainPhoto(mainPhotoInput.files?.[0]);
+        updatePhotoContinueState();
     });
 
     logoInput?.addEventListener("change", () => {
         updateLogo(logoInput.files?.[0]);
+        updatePhotoContinueState();
     });
 
     galleryInput?.addEventListener("change", () => {
@@ -5008,6 +5340,7 @@ const esHref = "/es/alta-comercio";
 
         galleryInput.value = "";
         renderGallery();
+        updatePhotoContinueState();
     });
 
     document.addEventListener("click", (event) => {
@@ -5027,6 +5360,7 @@ const esHref = "/es/alta-comercio";
 
         galleryFiles.splice(index, 1);
         renderGallery();
+        updatePhotoContinueState();
     });
 
     photosBackButton?.addEventListener("click", () => {
@@ -5057,6 +5391,7 @@ const esHref = "/es/alta-comercio";
             ) {
                 return;
             }
+            if (returnToReviewIfEditing()) return;
 
             showScreen(
                 photosCheckpoint,
@@ -5141,45 +5476,6 @@ const esHref = "/es/alta-comercio";
 
             const target = event.target as HTMLElement | null;
             const button = target?.closest<HTMLButtonElement>(
-                "#business-continue, #description-continue, #contact-continue, #hours-continue, #offer-continue, #photos-continue",
-            );
-
-            if (!button) return;
-            if (button.hasAttribute("disabled")) return;
-
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            editingFromReview = false;
-            renderReview();
-
-            showScreen(
-                review,
-                welcome,
-                business,
-                checkpoint,
-                description,
-                descriptionCheckpoint,
-                contact,
-                contactCheckpoint,
-                hours,
-                hoursCheckpoint,
-                offer,
-                offerCheckpoint,
-                photos,
-                photosCheckpoint,
-            );
-        },
-        true,
-    );
-
-    document.addEventListener(
-        "click",
-        (event) => {
-            if (!editingFromReview) return;
-
-            const target = event.target as HTMLElement | null;
-            const button = target?.closest<HTMLButtonElement>(
                 "#checkpoint-back, #description-back, #contact-back, #hours-back, #offer-back, #photos-back",
             );
 
@@ -5242,19 +5538,121 @@ const esHref = "/es/alta-comercio";
         );
     });
 
-    reviewSendButton?.addEventListener("click", () => {
+    submissionForm?.addEventListener(
+        "guiapineda:email-verification-change",
+        updateReviewSendState,
+    );
+
+    submissionForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
         if (
-            reviewSendButton.hasAttribute("disabled")
-        ) {
+            !reviewSendButton ||
+            reviewSendButton.hasAttribute("disabled") ||
+            !verificationController?.isVerified() ||
+            !nameInput || !categoryInput || !shortDescription ||
+            !longDescription || !addressInput || !applicantName ||
+            !applicantEmail || !applicantPrivacy ||
+            !mainPhotoInput?.files?.[0]
+        ) return;
+
+        const schedule = collectSchedule();
+        const services = getServiceRows().map((row) => ({
+            nombre: row.querySelector<HTMLInputElement>(
+                ".service-name",
+            )?.value.trim() ?? "",
+            descripcion: row.querySelector<HTMLTextAreaElement>(
+                ".service-description",
+            )?.value.trim() ?? "",
+        })).filter((item) => item.nombre);
+        const networks = collectNetworks();
+        const modality = (value: string) =>
+            attentionButtons.some((button) =>
+                button.dataset.attention === value &&
+                button.getAttribute("aria-pressed") === "true"
+            );
+        const pageLanguage = document.documentElement.lang;
+        const idioma = pageLanguage === "es" || pageLanguage === "en"
+            ? pageLanguage
+            : "ca";
+
+        const fieldIssue = findCommerceFieldIssue({
+            web: webInput?.value.trim(),
+            horario_semanal: schedule,
+            redes_sociales: networks,
+        });
+        if (fieldIssue) {
+            showCommerceFieldIssue(fieldIssue);
             return;
         }
 
-        if (reviewPrototypeNote) {
-            reviewPrototypeNote.hidden = false;
-            reviewPrototypeNote.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
+        reviewSendButton.setAttribute("disabled", "");
+        if (submissionError) submissionError.hidden = true;
+
+        try {
+            await submitCommerce({
+                idioma_solicitud: idioma,
+                nombre: nameInput.value.trim(),
+                categoria_document_id: categoryInput.value,
+                subcategoria_document_id: subcategoryInput?.value || undefined,
+                descripcion_corta: shortDescription.value.trim(),
+                descripcion_completa: longDescription.value.trim(),
+                direccion: addressInput.value.trim(),
+                telefono: phoneInput?.value.trim(),
+                whatsapp: whatsappInput?.value.trim(),
+                email: emailInput?.value.trim(),
+                web: webInput?.value.trim(),
+                atencion_presencial: modality("presencial"),
+                atencion_domicilio: modality("domicilio"),
+                atencion_online: modality("online"),
+                recogida_local: modality("recogida"),
+                reparto: modality("reparto"),
+                horario_semanal: schedule,
+                servicios: services,
+                redes_sociales: networks,
+                informacion_adicional: (
+                    document.getElementById("business-additional-info") as HTMLTextAreaElement | null
+                )?.value.trim(),
+                nombre_contacto: applicantName.value.trim(),
+                email_contacto: applicantEmail.value.trim(),
+                telefono_contacto: applicantPhone?.value.trim(),
+                aceptacion_privacidad: true,
+                email_verification_token: verificationController.getToken(),
+                imagen_principal: mainPhotoInput.files[0],
+                logo: logoInput?.files?.[0],
+                galeria: galleryFiles,
             });
+            verificationController.reset();
+            window.location.assign(
+                idioma === "ca" ? "/enviat/" :
+                idioma === "es" ? "/es/enviado/" : "/en/sent/",
+            );
+        } catch (error) {
+            const submissionFailure = error instanceof CommerceSubmissionError
+                ? error
+                : null;
+            if (submissionFailure?.fieldIssue) {
+                updateReviewSendState();
+                showCommerceFieldIssue(submissionFailure.fieldIssue);
+                return;
+            }
+            if (!submissionFailure || submissionFailure.requiresReverification) {
+                verificationController.reset();
+            }
+            updateReviewSendState();
+            if (submissionError) {
+                submissionError.textContent = !submissionFailure
+                    ? submissionError.dataset.ambiguousMessage ?? ""
+                    : submissionFailure.message === "verification:unavailable"
+                      ? submissionError.dataset.unavailableMessage ?? ""
+                    : submissionFailure.kind === "verification"
+                      ? submissionError.dataset.verificationMessage ?? ""
+                      : submissionFailure.kind === "post-consumption" ||
+                          submissionFailure.kind === "ambiguous"
+                        ? submissionError.dataset.ambiguousMessage ?? ""
+                        : submissionError.dataset.validationMessage ?? "";
+                submissionError.hidden = false;
+                submissionError.scrollIntoView({ block: "nearest" });
+            }
         }
     });
 

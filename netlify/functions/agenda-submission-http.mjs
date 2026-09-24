@@ -66,6 +66,7 @@ export async function handleAgendaSubmission(
             data: incoming.data,
             email:
                 result.payload.email_contacto,
+            scope: "agenda",
         });
 
     if (!verification.ok) {

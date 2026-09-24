@@ -20,6 +20,29 @@ export const VERIFICATION_MAX_ATTEMPTS =
 export const VERIFICATION_TOKEN_TTL_SECONDS =
     15 * 60;
 
+export const VERIFICATION_SCOPES =
+    Object.freeze([
+        "agenda",
+        "veu",
+        "comunicat",
+        "communicat-report",
+        "foto-mes",
+        "millora",
+        "comercio",
+    ]);
+
+const VERIFICATION_SCOPE_SET =
+    new Set(VERIFICATION_SCOPES);
+
+export function isValidVerificationScope(
+    value,
+) {
+    return (
+        typeof value === "string" &&
+        VERIFICATION_SCOPE_SET.has(value)
+    );
+}
+
 export function normalizeVerificationEmail(
     value,
 ) {

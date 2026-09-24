@@ -4,6 +4,7 @@ import {
     generateVerificationToken,
     hashVerificationValue,
     isValidVerificationEmail,
+    isValidVerificationScope,
     normalizeVerificationEmail,
     verificationHashesMatch,
 } from "./verification-core.mjs";
@@ -65,6 +66,7 @@ export function createVerificationCheckService({
             challengeId,
             email,
             code,
+            scope,
         }) {
             if (
                 !validOpaqueValue(
@@ -73,7 +75,10 @@ export function createVerificationCheckService({
                 !isValidVerificationEmail(
                     email,
                 ) ||
-                !validCode(code)
+                !validCode(code) ||
+                !isValidVerificationScope(
+                    scope,
+                )
             ) {
                 return {
                     ok: false,
@@ -137,6 +142,7 @@ export function createVerificationCheckService({
                 hashVerificationValue(
                     secret,
                     "code",
+                    scope,
                     challengeId,
                     emailHash,
                     code,
@@ -227,6 +233,7 @@ export function createVerificationCheckService({
                 hashVerificationValue(
                     secret,
                     "token",
+                    scope,
                     token,
                 );
 

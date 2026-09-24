@@ -66,6 +66,7 @@ export async function handleVeuSubmission(
             data: incoming.data,
             email:
                 result.payload.email_contacto,
+            scope: "veu",
         });
 
     if (!verification.ok) {

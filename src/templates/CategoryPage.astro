@@ -34,7 +34,7 @@ const businessSignupHref =
         ? "/alta-comerc/"
         : lang === "es"
           ? "/es/alta-comercio/"
-          : null;
+          : "/en/businesses/add-a-business/";
 
 const data = await fetchAPI(endpoints.subcategorias);
 const todasLasSubcategorias: Subcategoria[] = data.data || [];

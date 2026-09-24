@@ -81,6 +81,8 @@ export async function handleCommunicatReport(
                 incoming.data,
             email:
                 result.verificationEmail,
+            scope:
+                "communicat-report",
         });
 
     if (!verification.ok) {

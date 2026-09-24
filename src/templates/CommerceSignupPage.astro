@@ -4,7 +4,7 @@ import CommerceSignupFlow from "../components/CommerceSignupFlow.astro";
 import { endpoints, fetchAPI } from "../lib/api";
 
 interface Props {
-    lang: "ca" | "es";
+    lang: "ca" | "es" | "en";
 }
 
 const { lang } = Astro.props;
@@ -26,7 +26,9 @@ const categorias = (categoriasData.data ?? [])
     .map((item: any) => ({
         id: getId(item),
         label:
-            lang === "es"
+            lang === "en"
+                ? item.nombre_en || item.nombre
+                : lang === "es"
                 ? item.nombre_es || item.nombre
                 : item.nombre,
     }));
@@ -41,7 +43,9 @@ const subcategorias = (subcategoriasData.data ?? [])
         id: getId(item),
         categoriaId: getId(item.categoria),
         label:
-            lang === "es"
+            lang === "en"
+                ? item.nombre_en || item.nombre
+                : lang === "es"
                 ? item.nombre_es || item.nombre
                 : item.nombre,
     }))
@@ -50,12 +54,16 @@ const subcategorias = (subcategoriasData.data ?? [])
 const title =
     lang === "ca"
         ? "Afegeix el teu comerç | GUIAPINEDA"
-        : "Añade tu comercio | GUIAPINEDA";
+        : lang === "es"
+          ? "Añade tu comercio | GUIAPINEDA"
+          : "Add your business | GUIAPINEDA";
 
 const description =
     lang === "ca"
         ? "Prepara la fitxa del teu comerç a GUIAPINEDA de manera fàcil i guiada."
-        : "Prepara la ficha de tu comercio en GUIAPINEDA de forma fácil y guiada.";
+        : lang === "es"
+          ? "Prepara la ficha de tu comercio en GUIAPINEDA de forma fácil y guiada."
+          : "Prepare your GUIAPINEDA business profile with a simple guided flow.";
 ---
 
 <Layout

@@ -102,6 +102,9 @@ export async function handleFotoMesSubmission(
             email:
                 result.payload
                     .email_contacto,
+
+            scope:
+                "foto-mes",
         });
 
     if (!verification.ok) {

@@ -1,6 +1,7 @@
 import {
     requestEmailVerification,
     verifyEmailCode,
+    type VerificationScope,
 } from "./emailVerification.ts";
 
 type VerificationLanguage =
@@ -23,6 +24,28 @@ function readLanguage(
         value === "en"
         ? value
         : "ca";
+}
+
+const VERIFICATION_SCOPES =
+    new Set<VerificationScope>([
+        "agenda",
+        "veu",
+        "comunicat",
+        "communicat-report",
+        "foto-mes",
+        "millora",
+        "comercio",
+    ]);
+
+function readScope(
+    value: string | undefined,
+): VerificationScope | null {
+    return value &&
+        VERIFICATION_SCOPES.has(
+            value as VerificationScope,
+        )
+        ? (value as VerificationScope)
+        : null;
 }
 
 export function initEmailVerificationController(
@@ -98,6 +121,16 @@ export function initEmailVerificationController(
             block.dataset
                 .verificationLanguage,
         );
+
+    const scope =
+        readScope(
+            block.dataset
+                .verificationScope,
+        );
+
+    if (!scope) {
+        return null;
+    }
 
     let challengeId = "";
     let verifiedEmail = "";
@@ -272,6 +305,7 @@ export function initEmailVerificationController(
                 await requestEmailVerification({
                     email,
                     language,
+                    scope,
                 });
 
             if (!result.ok) {
@@ -357,6 +391,7 @@ export function initEmailVerificationController(
                     challengeId,
                     email,
                     code,
+                    scope,
                 });
 
             if (!result.ok) {

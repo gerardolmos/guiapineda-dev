@@ -4,6 +4,7 @@ import {
     generateVerificationToken,
     hashVerificationValue,
     isValidVerificationEmail,
+    isValidVerificationScope,
     normalizeVerificationEmail,
 } from "./verification-core.mjs";
 
@@ -68,6 +69,7 @@ export function createVerificationRequestService({
         async requestCode({
             email,
             language = "ca",
+            scope,
         }) {
             if (
                 !isValidVerificationEmail(
@@ -90,6 +92,18 @@ export function createVerificationRequestService({
                     ok: false,
                     reason:
                         "language:invalid",
+                };
+            }
+
+            if (
+                !isValidVerificationScope(
+                    scope,
+                )
+            ) {
+                return {
+                    ok: false,
+                    reason:
+                        "scope:invalid",
                 };
             }
 
@@ -151,6 +165,7 @@ export function createVerificationRequestService({
                 hashVerificationValue(
                     secret,
                     "code",
+                    scope,
                     challengeId,
                     emailHash,
                     code,

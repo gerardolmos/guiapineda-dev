@@ -22,6 +22,7 @@ import {
 export async function consumeSubmissionVerification({
     data,
     email,
+    scope,
 }) {
     const token = readString(
         data,
@@ -57,6 +58,7 @@ export async function consumeSubmissionVerification({
             await service.consume({
                 token: token.value,
                 email,
+                scope,
             });
 
         if (!result.ok) {

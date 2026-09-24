@@ -74,6 +74,8 @@ export async function handleComunicatSubmission(
             email:
                 result.payload
                     .email_contacto,
+            scope:
+                "comunicat",
         });
 
     if (!verification.ok) {

@@ -1,6 +1,7 @@
 import {
     hashVerificationValue,
     isValidVerificationEmail,
+    isValidVerificationScope,
     normalizeVerificationEmail,
     verificationHashesMatch,
 } from "./verification-core.mjs";
@@ -44,11 +45,15 @@ export function createVerificationTokenService({
         async consume({
             token,
             email,
+            scope,
         }) {
             if (
                 !validToken(token) ||
                 !isValidVerificationEmail(
                     email,
+                ) ||
+                !isValidVerificationScope(
+                    scope,
                 )
             ) {
                 return {
@@ -74,6 +79,7 @@ export function createVerificationTokenService({
                 hashVerificationValue(
                     secret,
                     "token",
+                    scope,
                     token,
                 );
 

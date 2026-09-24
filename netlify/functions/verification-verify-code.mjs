@@ -146,6 +146,8 @@ export async function handleVerificationCheck(
                     parsed.data.email,
                 code:
                     parsed.data.code,
+                scope:
+                    parsed.data.scope,
             });
 
         if (result.ok) {

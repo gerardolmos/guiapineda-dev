@@ -4,6 +4,15 @@ const REQUEST_CODE_ENDPOINT =
 const VERIFY_CODE_ENDPOINT =
     "/api/verification/verify-code";
 
+export type VerificationScope =
+    | "agenda"
+    | "veu"
+    | "comunicat"
+    | "communicat-report"
+    | "foto-mes"
+    | "millora"
+    | "comercio";
+
 async function postVerificationRequest(
     endpoint: string,
     payload: Record<string, unknown>,
@@ -83,9 +92,11 @@ export async function requestEmailVerification(
     {
         email,
         language,
+        scope,
     }: {
         email: string;
         language: string;
+        scope: VerificationScope;
     },
     fetchImpl: typeof fetch = fetch,
 ) {
@@ -95,6 +106,7 @@ export async function requestEmailVerification(
             {
                 email,
                 language,
+                scope,
             },
             fetchImpl,
         );
@@ -131,10 +143,12 @@ export async function verifyEmailCode(
         challengeId,
         email,
         code,
+        scope,
     }: {
         challengeId: string;
         email: string;
         code: string;
+        scope: VerificationScope;
     },
     fetchImpl: typeof fetch = fetch,
 ) {
@@ -145,6 +159,7 @@ export async function verifyEmailCode(
                 challengeId,
                 email,
                 code,
+                scope,
             },
             fetchImpl,
         );

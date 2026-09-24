@@ -90,6 +90,8 @@ export async function handleMilloraSubmission(
             email:
                 result.payload
                     .email_contacto,
+            scope:
+                "millora",
         });
 
     if (!verification.ok) {

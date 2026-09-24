@@ -152,6 +152,8 @@ export async function handleVerificationRequest(
                 language:
                     parsed.data.language ??
                     "ca",
+                scope:
+                    parsed.data.scope,
             });
 
         if (result.ok) {
@@ -168,7 +170,9 @@ export async function handleVerificationRequest(
             result.reason ===
                 "email:invalid" ||
             result.reason ===
-                "language:invalid"
+                "language:invalid" ||
+            result.reason ===
+                "scope:invalid"
         ) {
             return jsonResponse(
                 {
