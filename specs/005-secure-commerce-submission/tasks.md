@@ -316,3 +316,14 @@ un paso posterior y no forma parte de esta fase de IMPLEMENT.
 only the persistent QA harness and the minimum SDD authorization/documentation needed for that
 harness. T048 remains complete because its historical acceptance required the then-present
 non-versioned remediation probe; T051 adds the newly required cross-session reproducibility.
+
+---
+
+## Phase 11: Post-closure remediation
+
+- [X] T052 Restore the Add a Business CTA on the English home and verify CA/ES/EN parity: remove
+  the stale English-only exclusion in `src/pages/index.astro`; preserve the shared localized CTA
+  markup and canonical CA `/alta-comerc/`, ES `/es/alta-comercio/` and EN
+  `/en/businesses/add-a-business/` destinations; validate generated home and signup HTML, run the
+  persistent commerce QA harness, Astro build and `git diff --check`, and confirm the backend
+  remains unchanged, per T019, plan: English CTAs and Constitution VI (contradicts).

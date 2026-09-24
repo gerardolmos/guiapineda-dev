@@ -850,6 +850,16 @@ async function testBackendGuardModerationAndImages(images) {
     assert.equal(await privateImages.findPrivateSubmissionImage(orphan.id), null);
 }
 
+async function testHomeCtaParity() {
+    const source = await fs.readFile(path.join(frontendRoot, "src/pages/index.astro"), "utf8");
+    assert.equal(source.includes('lang !== "en"'), false);
+    assert.ok(source.includes("data-business-cta"));
+    assert.ok(source.includes("{t.home.businessCtaButton}"));
+    for (const href of ["/alta-comerc/", "/es/alta-comercio/", "/en/businesses/add-a-business/"]) {
+        assert.ok(source.includes(`"${href}"`), `missing canonical home CTA destination: ${href}`);
+    }
+}
+
 async function testReviewEventStructure() {
     const source = await fs.readFile(path.join(frontendRoot, "src/components/CommerceSignupFlow.astro"), "utf8");
     const handlerChecks = [
@@ -890,6 +900,7 @@ async function main() {
     await testScopes();
     await testInternalTransport(images);
     await testBackendGuardModerationAndImages(images);
+    await testHomeCtaParity();
     await testReviewEventStructure();
 }
 
