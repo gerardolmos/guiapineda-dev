@@ -43,7 +43,7 @@ const moderationImages = requireBackend(path.join(backendRoot, "src/services/pri
 
 const DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"];
 const NETWORKS = ["instagram", "facebook", "tiktok", "youtube", "linkedin", "x"];
-const SCOPES = ["agenda", "veu", "comunicat", "communicat-report", "foto-mes", "millora", "comercio"];
+const SCOPES = ["agenda", "veu", "comunicat", "communicat-report", "foto-mes", "millora", "comercio", "content-report"];
 const SECRET = "commerce-qa-secret";
 const EMAIL = "qa-commerce@example.invalid";
 

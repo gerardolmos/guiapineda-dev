@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import StrapiBlocks from "../components/StrapiBlocks.astro";
+import ContentReportFlow from "../components/ContentReportFlow.astro";
 import { formatDate } from "../lib/formatDate";
 import { getReadingTime } from "../lib/readingTime";
 import { getStrapiMediaUrl } from "../lib/strapi";
@@ -193,6 +194,12 @@ const readingTime = getReadingTime(
                 <StrapiBlocks
                     blocks={veu.contingut}
                     class="veu-body"
+                />
+
+                <ContentReportFlow
+                    lang={lang}
+                    contentType="veu"
+                    documentId={veu.documentId}
                 />
             </div>
         </div>

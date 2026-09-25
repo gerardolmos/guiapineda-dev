@@ -29,6 +29,7 @@ export const VERIFICATION_SCOPES =
         "foto-mes",
         "millora",
         "comercio",
+        "content-report",
     ]);
 
 const VERIFICATION_SCOPE_SET =

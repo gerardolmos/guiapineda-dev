@@ -46,6 +46,7 @@ const INTERNAL_SUBMISSION_SECTIONS =
         "comercio",
         "comunicat",
         "communicat_report",
+        "content_report",
         "foto_mes",
         "millora",
         "veu",

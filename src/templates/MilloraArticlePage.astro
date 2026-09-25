@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import StrapiBlocks from "../components/StrapiBlocks.astro";
+import ContentReportFlow from "../components/ContentReportFlow.astro";
 import { getTranslations } from "../i18n/getTranslations";
 import { formatDate } from "../lib/formatDate";
 import { getReadingTime } from "../lib/readingTime";
@@ -239,6 +240,12 @@ const readingTime = getReadingTime(millora.contingut);
                     <div class="millora-body">
                         <StrapiBlocks blocks={millora.contingut} />
                     </div>
+
+                    <ContentReportFlow
+                        lang={lang}
+                        contentType="millora"
+                        documentId={millora.documentId}
+                    />
                 </div>
             </section>
         </article>

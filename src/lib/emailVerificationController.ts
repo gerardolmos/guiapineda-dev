@@ -17,6 +17,19 @@ export function normalizeVerificationCode(
         .slice(0, 6);
 }
 
+export function isVerificationEmailInputAcceptable(
+    value: string,
+    inputValid: boolean,
+): boolean {
+    const normalized = value.trim();
+
+    return Boolean(
+        normalized &&
+        normalized.length <= 180 &&
+        inputValid,
+    );
+}
+
 function readLanguage(
     value: string | undefined,
 ): VerificationLanguage {
@@ -35,6 +48,7 @@ const VERIFICATION_SCOPES =
         "foto-mes",
         "millora",
         "comercio",
+        "content-report",
     ]);
 
 function readScope(
@@ -273,8 +287,10 @@ export function initEmailVerificationController(
             currentEmail();
 
         if (
-            !email ||
-            !emailInput.checkValidity()
+            !isVerificationEmailInputAcceptable(
+                email,
+                emailInput.checkValidity(),
+            )
         ) {
             emailInput.reportValidity();
             return null;

@@ -11,7 +11,8 @@ export type VerificationScope =
     | "communicat-report"
     | "foto-mes"
     | "millora"
-    | "comercio";
+    | "comercio"
+    | "content-report";
 
 async function postVerificationRequest(
     endpoint: string,

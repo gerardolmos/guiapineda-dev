@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import StrapiBlocks from "../components/StrapiBlocks.astro";
+import ContentReportFlow from "../components/ContentReportFlow.astro";
 import { getStrapiMediaUrl } from "../lib/strapi";
 import type { Lang } from "../lib/languageSwitcher";
 
@@ -331,6 +332,12 @@ const imageAlt =
                     <StrapiBlocks
                         blocks={event.contingut}
                         class="agenda-body"
+                    />
+
+                    <ContentReportFlow
+                        lang={lang}
+                        contentType="agenda"
+                        documentId={event.documentId}
                     />
                 </div>
             </section>
