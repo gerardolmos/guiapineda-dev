@@ -1,5 +1,38 @@
 import { initEmailVerificationController } from "./emailVerificationController";
 import { submitVerifiedSubmissionForm } from "./netlifySubmission";
+import { initSubmissionDraft } from "./submissionDraft";
+
+const VEU_DRAFT_FIELDS = [
+    "titol",
+    "resum",
+    "contingut",
+    "tipo_autoria",
+    "autor_public",
+    "nombre_contacto",
+    "email_contacto",
+] as const;
+
+const VEU_DRAFT_RESTORE_PREDICATES = {
+    titol: (value: string) =>
+        value.length <= 140,
+    resum: (value: string) =>
+        value.length <= 400,
+    contingut: (value: string) =>
+        value.length <= 6000,
+    tipo_autoria: (value: string) =>
+        [
+            "",
+            "nom_complet",
+            "nom",
+            "pseudonim",
+        ].includes(value),
+    autor_public: (value: string) =>
+        value.length <= 120,
+    nombre_contacto: (value: string) =>
+        value.length <= 120,
+    email_contacto: (value: string) =>
+        value.length <= 254,
+} as const;
 
 export function initVeuSubmissionFlow() {
     const form =
@@ -8,6 +41,14 @@ export function initVeuSubmissionFlow() {
         );
 
     if (!form) return;
+
+    const clearDraft =
+        initSubmissionDraft(
+            form,
+            "veu",
+            VEU_DRAFT_FIELDS,
+            VEU_DRAFT_RESTORE_PREDICATES,
+        );
 
     initEmailVerificationController(
         form,
@@ -671,6 +712,8 @@ export function initVeuSubmissionFlow() {
                             3200,
                     },
                 );
+
+                clearDraft();
             } catch (error) {
                 console.error(
                     "Error enviando Veu:",
@@ -711,6 +754,7 @@ export function initVeuSubmissionFlow() {
         revokeImageObjectUrl,
     );
 
+    showStep("form");
     updateCounters();
     updateSubmitState();
 }

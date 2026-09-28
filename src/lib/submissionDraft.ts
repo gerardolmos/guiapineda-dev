@@ -1,6 +1,15 @@
 type DraftState = Record<string, string>;
 
-type DraftScope = "agenda" | "comunicat";
+type DraftScope = "agenda" | "comunicat" | "veu";
+
+type DraftRestorePredicates = Readonly<
+    Partial<
+        Record<
+            string,
+            (value: string) => boolean
+        >
+    >
+>;
 
 interface DraftEnvelope {
     version: 1;
@@ -44,6 +53,33 @@ function getFields(
                     read: () => field.value,
                     restore: (value) => {
                         field.value = value;
+                    },
+                },
+            ];
+        }
+
+        if (
+            field instanceof
+                HTMLSelectElement &&
+            field.name === name
+        ) {
+            return [
+                {
+                    name,
+                    read: () => field.value,
+                    restore: (value) => {
+                        const hasOption =
+                            Array.from(
+                                field.options,
+                            ).some(
+                                (option) =>
+                                    option.value ===
+                                    value,
+                            );
+
+                        if (hasOption) {
+                            field.value = value;
+                        }
                     },
                 },
             ];
@@ -102,11 +138,23 @@ function readDraft(fields: DraftField[]): DraftState {
     return draft;
 }
 
-function restoreDraft(fields: DraftField[], draft: Record<string, unknown>) {
+function restoreDraft(
+    fields: DraftField[],
+    draft: Record<string, unknown>,
+    restorePredicates: DraftRestorePredicates,
+) {
     for (const field of fields) {
         if (!Object.prototype.hasOwnProperty.call(draft, field.name)) continue;
         const saved = draft[field.name];
-        if (typeof saved === "string") {
+        const predicate =
+            restorePredicates[
+                field.name
+            ];
+
+        if (
+            typeof saved === "string" &&
+            (!predicate || predicate(saved))
+        ) {
             field.restore(saved);
         }
     }
@@ -116,6 +164,7 @@ export function initSubmissionDraft(
     form: HTMLFormElement,
     scope: DraftScope,
     allowedNames: readonly string[],
+    restorePredicates: DraftRestorePredicates = {},
 ) {
     const key = `guiapineda:submission-draft:v1:${scope}`;
 
@@ -150,7 +199,14 @@ export function initSubmissionDraft(
                 parsed.scope === scope &&
                 isRecord(parsed.fields)
             ) {
-                restoreDraft(getFields(form, allowedNames), parsed.fields);
+                restoreDraft(
+                    getFields(
+                        form,
+                        allowedNames,
+                    ),
+                    parsed.fields,
+                    restorePredicates,
+                );
             } else {
                 clearDraft();
             }
