@@ -1,6 +1,7 @@
 interface SubmissionOptions {
     successUrl: string;
     minimumDuration?: number;
+    navigation?: "automatic" | "caller";
 }
 
 const LOCAL_HOSTS = new Set([
@@ -172,11 +173,14 @@ function isSuccessfulSubmissionResponse(
  */
 export async function submitVerifiedSubmissionForm(
     form: HTMLFormElement,
-    {
+    options: SubmissionOptions,
+) {
+    const {
         successUrl,
         minimumDuration = 3200,
-    }: SubmissionOptions,
-) {
+    } = options;
+    const navigation =
+        options.navigation ?? "automatic";
     const startedAt =
         performance.now();
 
@@ -243,9 +247,11 @@ export async function submitVerifiedSubmissionForm(
 
         await wait(remaining);
 
-        window.location.assign(
-            successUrl,
-        );
+        if (navigation === "automatic") {
+            window.location.assign(
+                successUrl,
+            );
+        }
     } catch (error) {
         hideSendingOverlay();
         throw error;

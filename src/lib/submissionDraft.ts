@@ -1,6 +1,6 @@
 type DraftState = Record<string, string>;
 
-type DraftScope = "agenda" | "comunicat" | "veu";
+type DraftScope = "agenda" | "comunicat" | "veu" | "millora";
 
 type DraftRestorePredicates = Readonly<
     Partial<

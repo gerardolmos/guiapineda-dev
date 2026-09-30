@@ -1,5 +1,6 @@
 import { initEmailVerificationController } from "./emailVerificationController";
 import { submitVerifiedSubmissionForm } from "./netlifySubmission";
+import { initSubmissionDraft } from "./submissionDraft";
 
 export function initMilloraSubmissionFlow() {
     const root = document.querySelector<HTMLFormElement>(
@@ -8,7 +9,29 @@ export function initMilloraSubmissionFlow() {
 
     if (!root) return;
 
-    initEmailVerificationController(
+    const clearDraft = initSubmissionDraft(
+        root,
+        "millora",
+        [
+            "categoria",
+            "zona",
+            "millora-author-type",
+            "millora-alias",
+            "titol",
+            "resum",
+            "contingut",
+            "email_contacto",
+        ],
+        {
+            "millora-alias": (value) => value.length <= 100,
+            titol: (value) => value.length <= 120,
+            resum: (value) => value.length <= 280,
+            contingut: (value) => value.length <= 6000,
+            email_contacto: (value) => value.length <= 180,
+        },
+    );
+
+    const emailVerification = initEmailVerificationController(
         root,
     );
 
@@ -244,6 +267,10 @@ export function initMilloraSubmissionFlow() {
 
         if (aliasWrap) {
             aliasWrap.hidden = authorType?.value !== "alias";
+        }
+
+        if (aliasInput) {
+            aliasInput.disabled = authorType?.value !== "alias";
         }
 
         const authorReady =
@@ -620,6 +647,12 @@ export function initMilloraSubmissionFlow() {
         });
     }
 
+    function resetToContextStep() {
+        if (stepContext) stepContext.hidden = false;
+        if (stepContent) stepContent.hidden = true;
+        if (stepReview) stepReview.hidden = true;
+    }
+
     categoryRadios.forEach((radio) => {
         radio.addEventListener("change", updateContextState);
     });
@@ -799,7 +832,10 @@ export function initMilloraSubmissionFlow() {
             await submitVerifiedSubmissionForm(root, {
                 successUrl,
                 minimumDuration: 3200,
+                navigation: "caller",
             });
+            clearDraft();
+            window.location.assign(successUrl);
         } catch (error) {
             console.error(
                 "Error enviando Millorem:",
@@ -819,13 +855,20 @@ export function initMilloraSubmissionFlow() {
     });
 
     window.addEventListener("pageshow", () => {
+        emailVerification?.reset();
         setSubmitting(false);
 
         if (submitError) {
             submitError.hidden = true;
         }
+
+        resetToContextStep();
+        updateContextState();
+        updateContentState();
+        updateReviewState();
     });
 
+    resetToContextStep();
     updateContextState();
     updateContentState();
     updateReviewState();
