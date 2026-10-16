@@ -1,0 +1,7 @@
+(node:4068) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4068) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+RECOVERY PASS: five scopes, invalid/required/post, controller reuse and unique reset
+SAFE PASS: valid token preserved, expiry and email edits still invalidate
+AMBIGUOUS PASS: network, invalid JSON, uncertain verification, unknown response
+TRANSPORT PASS: six migrated cases, missing controller blocks fetch, missing target fallback

@@ -1,0 +1,19 @@
+QA01 DOM PASS
+QA03 DOM PASS
+QA04 DOM PASS
+QA10 DOM PASS
+QA16 DOM PASS
+QA24 DOM PASS
+QA25 DOM PASS
+QA26 DOM PASS
+QA27 DOM PASS
+QA28 DOM PASS
+QA29 DOM PASS
+QA30 DOM PASS
+QA42 DOM PASS
+QA43 DOM PASS
+QA44 DOM PASS
+QA45 DOM PASS
+DOM_EXECUTED=QA01,QA03,QA04,QA10,QA16,QA24,QA25,QA26,QA27,QA28,QA29,QA30,QA42,QA43,QA44,QA45
+FINAL_STORAGE_SNAPSHOT={"guiapineda:submission-draft:v1:agenda":"agenda","guiapineda:submission-draft:v1:comunicat":"comunicat","guiapineda:submission-draft:v1:veu":"veu"}
+DOM PASS — 16/16 individually executed; deterministic snapshot; zero deferred work

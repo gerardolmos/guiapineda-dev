@@ -1,0 +1,25 @@
+REGRESSION START comercio/ca/safe
+REGRESSION PASS comercio/ca/safe
+REGRESSION START comercio/ca/post
+REGRESSION PASS comercio/ca/post
+REGRESSION START comercio/es/safe
+REGRESSION PASS comercio/es/safe
+REGRESSION START comercio/es/post
+REGRESSION PASS comercio/es/post
+REGRESSION START comercio/en/safe
+REGRESSION PASS comercio/en/safe
+REGRESSION START comercio/en/post
+REGRESSION PASS comercio/en/post
+REGRESSION START communicat-report/ca/post
+REGRESSION PASS communicat-report/ca/post
+REGRESSION START communicat-report/es/post
+REGRESSION PASS communicat-report/es/post
+REGRESSION START communicat-report/en/post
+REGRESSION PASS communicat-report/en/post
+REGRESSION START content-report/ca/post
+REGRESSION PASS content-report/ca/post
+REGRESSION START content-report/es/post
+REGRESSION PASS content-report/es/post
+REGRESSION START content-report/en/post
+REGRESSION PASS content-report/en/post
+BROWSER CLEANUP PASS — qa-root/profile removed; preview/Chrome/CDP closed; ports released; real .astro unchanged; real dist absent; zero owned resources

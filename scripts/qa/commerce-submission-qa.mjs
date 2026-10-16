@@ -512,7 +512,7 @@ async function testInternalTransport(images) {
         label: "Commerce QA",
         fetchImpl: async (url, init) => {
             captured = { url, init };
-            return new Response(null, { status: 204 });
+            return new Response(JSON.stringify({ ok: true }), { status: 201 });
         },
     });
     assert.equal(captured.url, "http://strapi.local/api/internal/submissions/comercio");
@@ -534,7 +534,7 @@ async function testInternalTransport(images) {
         label: "Agenda QA",
         fetchImpl: async (_url, init) => {
             legacyBody = init.body;
-            return new Response(null, { status: 204 });
+            return new Response(JSON.stringify({ ok: true }), { status: 201 });
         },
     });
     assert.equal(legacyBody.get("files").name, "submission.jpg");

@@ -376,7 +376,8 @@ async function runDom() {
         assert.equal(storage.getItem("guiapineda:submission-draft:v1:agenda"), "A"); assert.equal(storage.getItem("guiapineda:submission-draft:v1:comunicat"), "C");
     });
     add("QA43", async () => {
-        for (const name of ["milloraSubmissionFlow.ts", "fotoMesSubmission.ts", "commerceSubmission.ts"]) assert.equal((await readFile(path.join(ROOT, "src/lib", name), "utf8")).includes("initSubmissionDraft"), false);
+        assert.equal((await readFile(path.join(ROOT, "src/lib/milloraSubmissionFlow.ts"), "utf8")).includes("initSubmissionDraft"), true);
+        for (const name of ["fotoMesSubmission.ts", "commerceSubmission.ts"]) assert.equal((await readFile(path.join(ROOT, "src/lib", name), "utf8")).includes("initSubmissionDraft"), false);
     });
 
     const storageFailure = async () => {

@@ -1,0 +1,97 @@
+CLEANUP_CASE=pass;ATTEMPTS=fixture-listener,owned-profile,zero-owned;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+CLEANUP_CASE=assertion-fail;ATTEMPTS=fixture-listener,owned-profile,zero-owned;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438
+    const primary=name==="pass"||name==="cleanup-failure"?null:new Error(name==="assertion-fail"?"injected assertion failure":`injected ${name}`);if(name==="assertion-fail")primary.name="AssertionError";
+                                                               ^
+
+Error [AssertionError]: injected assertion failure
+    at runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438:64)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33
+
+Node.js v24.14.1
+CLEANUP_CASE=exception;ATTEMPTS=fixture-listener,owned-profile,zero-owned;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438
+    const primary=name==="pass"||name==="cleanup-failure"?null:new Error(name==="assertion-fail"?"injected assertion failure":`injected ${name}`);if(name==="assertion-fail")primary.name="AssertionError";
+                                                               ^
+
+Error: injected exception
+    at runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438:64)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33
+
+Node.js v24.14.1
+CLEANUP_CASE=preview-failure;ATTEMPTS=fixture-listener,owned-profile,zero-owned;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438
+    const primary=name==="pass"||name==="cleanup-failure"?null:new Error(name==="assertion-fail"?"injected assertion failure":`injected ${name}`);if(name==="assertion-fail")primary.name="AssertionError";
+                                                               ^
+
+Error: injected preview-failure
+    at runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438:64)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33
+
+Node.js v24.14.1
+CLEANUP_CASE=browser-failure;ATTEMPTS=fixture-listener,owned-profile,zero-owned;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438
+    const primary=name==="pass"||name==="cleanup-failure"?null:new Error(name==="assertion-fail"?"injected assertion failure":`injected ${name}`);if(name==="assertion-fail")primary.name="AssertionError";
+                                                               ^
+
+Error: injected browser-failure
+    at runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438:64)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33
+
+Node.js v24.14.1
+CLEANUP_CASE=controlled-abort;ATTEMPTS=fixture-listener,owned-profile,zero-owned;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438
+    const primary=name==="pass"||name==="cleanup-failure"?null:new Error(name==="assertion-fail"?"injected assertion failure":`injected ${name}`);if(name==="assertion-fail")primary.name="AssertionError";
+                                                               ^
+
+Error: injected controlled-abort
+    at runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:438:64)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33
+
+Node.js v24.14.1
+CLEANUP_CASE=cleanup-failure;ATTEMPTS=fixture-listener,injected-cleanup-failure,owned-profile,zero-owned;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:272
+                if(failures.length) throw new AggregateError(failures,`${label} cleanup failed after ${cause}`);
+                                          ^
+
+AggregateError: probe-cleanup-failure cleanup failed after cleanup-failure
+    at file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:272:43
+    at async runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:439:28)
+    at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33 {
+  [errors]: [
+    Error: probe-cleanup-failure/injected-cleanup-failure: injected cleanup failure
+        at file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:270:48
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:439:28)
+        at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33 {
+      [cause]: Error: injected cleanup failure
+          at file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:435:130
+          at file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:269:31
+          at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+          at async runCleanupCase (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:439:28)
+          at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:793:33
+    }
+  ]
+}
+
+Node.js v24.14.1
+file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:403
+        if(injectFailure)throw new Error("injected build failure after owned resources were created");
+                               ^
+
+Error: injected build failure after owned resources were created
+    at runBuild (file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:403:32)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/scripts/qa/submission-recovery-qa.mjs:795:40
+
+Node.js v24.14.1
+SIGNAL_READY={"profile":"/var/folders/7t/w43nqwr10q1cfrzlxg0kv5940000gn/T/guiapineda-recovery-012-signal-ByVzM8","port":49357}
+SIGNAL_CLEANUP=SIGINT;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+SIGNAL_READY={"profile":"/var/folders/7t/w43nqwr10q1cfrzlxg0kv5940000gn/T/guiapineda-recovery-012-signal-FWqH7R","port":49358}
+SIGNAL_CLEANUP=SIGTERM;PROFILE_ABSENT=true;PORT_FREE=true;RUN_CALLS=1
+CLEANUP PROBES PASS — pass/assertion/exception/build/preview/browser/abort/SIGINT/SIGTERM; independent attempts; accumulated failure; non-reentrant; zero owned residue

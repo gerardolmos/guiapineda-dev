@@ -1,0 +1,73 @@
+16:16:24 [types] Generated 109ms
+16:16:24 [build] output: "static"
+16:16:24 [build] mode: "static"
+16:16:24 [build] directory: /Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/.recovery-012-qa-UCW1PV/dist/
+16:16:24 [build] Collecting build info...
+16:16:24 [build] ✓ Completed in 139ms.
+16:16:24 [build] Building static entrypoints...
+16:16:25 [vite] ✓ built in 393ms
+16:16:25 [vite] ✓ built in 25ms
+16:16:25 [build] Rearranging server assets...
+
+ generating static routes 
+16:16:25   ├─ /404.html (+9ms) 
+16:16:25   ├─ /agenda/envia-una-activitat/index.html (+61ms) 
+16:16:25   ├─ /agenda/fixture-qa/index.html (+5ms) 
+16:16:25   ├─ /agenda/index.html (+9ms) 
+16:16:25   ├─ /alta-comerc/index.html (+7ms) 
+16:16:25   ├─ /comunicats/fixture-qa/index.html (+8ms) 
+16:16:25   ├─ /comunicats/index.html (+8ms) 
+16:16:25   ├─ /en/about-guiapineda/index.html (+8ms) 
+16:16:25   ├─ /en/agenda/send-an-activity/index.html (+8ms) 
+16:16:25   ├─ /en/agenda/fixture-qa/index.html (+7ms) 
+16:16:25   ├─ /en/agenda/index.html (+6ms) 
+16:16:25   ├─ /en/businesses/add-a-business/index.html (+15ms) 
+16:16:25   ├─ /en/comunicats/send-an-announcement/index.html (+9ms) 
+16:16:25   ├─ /en/comunicats/fixture-qa/index.html (+6ms) 
+16:16:25   ├─ /en/comunicats/index.html (+5ms) 
+16:16:25   ├─ /en/foto-del-mes/index.html (+5ms) 
+16:16:25   ├─ /en/millorem-pineda/send-an-improvement/index.html (+15ms) 
+16:16:25   ├─ /en/millorem-pineda/fixture-qa/index.html (+8ms) 
+16:16:25   ├─ /en/millorem-pineda/index.html (+30ms) 
+16:16:25   ├─ /en/sent/index.html (+22ms) 
+16:16:25   ├─ /en/tauler/index.html (+28ms) 
+16:16:25   ├─ /en/veus/send-your-voice/index.html (+23ms) 
+16:16:25   ├─ /en/veus/fixture-qa/index.html (+6ms) 
+16:16:25   ├─ /en/veus/index.html (+31ms) 
+16:16:25   ├─ /en/index.html (+24ms) 
+16:16:25   ├─ /envia-un-comunicat/index.html (+4ms) 
+16:16:25   ├─ /enviat/index.html (+12ms) 
+16:16:25   ├─ /es/agenda/enviar-una-actividad/index.html (+17ms) 
+16:16:25   ├─ /es/agenda/fixture-qa/index.html (+10ms) 
+16:16:25   ├─ /es/agenda/index.html (+5ms) 
+16:16:25   ├─ /es/alta-comercio/index.html (+3ms) 
+16:16:25   ├─ /es/comunicats/fixture-qa/index.html (+1ms) 
+16:16:25   ├─ /es/comunicats/index.html (+2ms) 
+16:16:25   ├─ /es/enviado/index.html (+1ms) 
+16:16:25   ├─ /es/enviar-comunicado/index.html (+1ms) 
+16:16:25   ├─ /es/foto-del-mes/index.html (+7ms) 
+16:16:25   ├─ /es/millorem-pineda/enviar-una-mejora/index.html (+2ms) 
+16:16:25   ├─ /es/millorem-pineda/fixture-qa/index.html (+1ms) 
+16:16:25   ├─ /es/millorem-pineda/index.html (+2ms) 
+16:16:25   ├─ /es/sobre-guiapineda/index.html (+1ms) 
+16:16:25   ├─ /es/tauler/index.html (+2ms) 
+16:16:25   ├─ /es/veus/envia-tu-voz/index.html (+1ms) 
+16:16:25   ├─ /es/veus/fixture-qa/index.html (+1ms) 
+16:16:25   ├─ /es/veus/index.html (+1ms) 
+16:16:25   ├─ /es/index.html (+2ms) 
+16:16:25   ├─ /foto-del-mes/index.html (+1ms) 
+16:16:25   ├─ /millorem-pineda/envia-una-millora/index.html (+1ms) 
+16:16:25   ├─ /millorem-pineda/fixture-qa/index.html (+1ms) 
+16:16:25   ├─ /millorem-pineda/index.html (+1ms) 
+16:16:25   ├─ /sobre-guiapineda/index.html (+1ms) 
+16:16:25   ├─ /tauler/index.html (+2ms) 
+16:16:25   ├─ /veus/envia-la-teva-veu/index.html (+1ms) 
+16:16:25   ├─ /veus/fixture-qa/index.html (+1ms) 
+16:16:25   ├─ /veus/index.html (+1ms) 
+16:16:25   ├─ /index.html (+1ms) 
+16:16:25 ✓ Completed in 572ms.
+
+16:16:25 [build] ✓ Completed in 1.02s.
+16:16:25 [build] 55 page(s) built in 1.16s
+16:16:25 [build] Complete!
+BUILD PASS — run 23b105e3-f7a9-4d28-9498-cc92aa125eeb; qa-root /Users/gerardolmos/CURRO/WEB/Guia-Pineda/guiapineda-astro/.recovery-012-qa-UCW1PV; copied [src, public, astro.config.mjs, tsconfig.json, package.json, package-lock.json]; generated [.astro, dist, node_modules/.astro, node_modules/.vite]; real .astro unchanged; real dist absent; CMS 127.0.0.1:49310 closed

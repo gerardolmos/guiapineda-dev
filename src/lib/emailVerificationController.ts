@@ -4,6 +4,53 @@ import {
     type VerificationScope,
 } from "./emailVerification.ts";
 
+export type SubmissionFailureKind =
+    | "pre-consumption-safe"
+    | "verification-invalid"
+    | "post-consumption-failure"
+    | "ambiguous";
+
+export interface SubmissionFailure {
+    kind: SubmissionFailureKind;
+    status?: number;
+    reason?: string;
+    requestStarted: boolean;
+    persistence: "not-started" | "unknown";
+}
+
+interface VerificationController {
+    isVerified(): boolean;
+    getToken(): string;
+    reset(): void;
+}
+const controllers = new WeakMap<HTMLFormElement, VerificationController>();
+
+export function hasEmailVerificationController(form: HTMLFormElement): boolean {
+    return controllers.has(form);
+}
+
+export function recoverVerifiedSubmission(form: HTMLFormElement, failure: SubmissionFailure): void {
+    const controller = controllers.get(form);
+    if (!controller) return;
+    if (failure.kind !== "pre-consumption-safe") controller.reset();
+    const block = form.querySelector<HTMLElement>("[data-email-verification]");
+    const targetId = block?.dataset.submissionFeedbackTarget;
+    if (!block || !targetId) return;
+    const message = failure.kind === "pre-consumption-safe"
+        ? block.dataset.submissionSafeMessage
+        : failure.kind === "verification-invalid"
+          ? block.dataset.submissionInvalidMessage
+          : block.dataset.submissionUncertainMessage;
+    const target = form.querySelector<HTMLElement>(`#${targetId}`);
+    const feedback = target ?? block.querySelector<HTMLElement>("[data-verification-error]");
+    if (feedback) {
+        feedback.textContent = message ?? "";
+        feedback.setAttribute("role", "alert");
+        if (!target) feedback.hidden = false;
+    }
+}
+
+
 type VerificationLanguage =
     | "ca"
     | "es"
@@ -65,6 +112,8 @@ function readScope(
 export function initEmailVerificationController(
     form: HTMLFormElement,
 ) {
+    const existing = controllers.get(form);
+    if (existing) return existing;
     const block =
         form.querySelector<HTMLElement>(
             "[data-email-verification]",
@@ -532,7 +581,7 @@ export function initEmailVerificationController(
     block.hidden = false;
     resetVerification();
 
-    return {
+    const controller: VerificationController = {
         isVerified() {
             return (
                 Boolean(
@@ -550,4 +599,6 @@ export function initEmailVerificationController(
         reset:
             resetVerification,
     };
+    controllers.set(form, controller);
+    return controller;
 }

@@ -1,0 +1,6 @@
+(node:3438) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+CONTRACT PASS: 23 unit cases
+DEADLINE PASS: headers/body ignoring abort, late parse, network, interrupted body
+(node:3438) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+CLASSIFICATION PASS: 369 finite tuples plus real parser rejection per scope

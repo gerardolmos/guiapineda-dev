@@ -327,50 +327,56 @@ export async function createInternalStrapiSubmission({
             section,
         });
 
-    const controller =
-        new AbortController();
-
-    const timeout =
-        setTimeout(
-            () =>
-                controller.abort(),
-            INTERNAL_SUBMISSION_TIMEOUT_MS,
-        );
-
+    const controller = new AbortController();
+    const deadline = performance.now() + INTERNAL_SUBMISSION_TIMEOUT_MS;
     let response;
-
+    let timer;
+    const failure = () => new Error("Internal submission acknowledgement unavailable.");
+    const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+            controller.abort();
+            reject(failure());
+        }, INTERNAL_SUBMISSION_TIMEOUT_MS);
+    });
     try {
-        response =
-            await fetchImpl(
-                `${baseUrl}/api/internal/submissions/${section}`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        Authorization:
-                            `Bearer ${secret}`,
-
-                        Accept:
-                            "application/json",
+        await Promise.race([
+            timeout,
+            (async () => {
+                response = await fetchImpl(
+                    `${baseUrl}/api/internal/submissions/${section}`,
+                    {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${secret}`,
+                            Accept: "application/json",
+                        },
+                        // FormData owns the multipart boundary.
+                        body,
+                        signal: controller.signal,
                     },
-
-                    /*
-                     * No establecer Content-Type:
-                     * FormData debe generar su boundary.
-                     */
-                    body,
-
-                    signal:
-                        controller.signal,
-                },
-            );
+                );
+                if (controller.signal.aborted || performance.now() >= deadline) {
+                    try { void response.body?.cancel().catch(() => {}); } catch { /* locked body */ }
+                    throw failure();
+                }
+                if (response.status !== 201) throw failure();
+                const acknowledgement = await response.json();
+                if (
+                    controller.signal.aborted ||
+                    performance.now() >= deadline ||
+                    !acknowledgement ||
+                    typeof acknowledgement !== "object" ||
+                    Array.isArray(acknowledgement) ||
+                    acknowledgement.ok !== true
+                ) throw failure();
+            })(),
+        ]);
+    } catch {
+        controller.abort();
+        // Best effort only: a locked or non-cooperative stream must not delay rejection.
+        try { void response?.body?.cancel().catch(() => {}); } catch { /* locked body */ }
+        throw failure();
     } finally {
-        clearTimeout(timeout);
-    }
-
-    if (!response.ok) {
-        throw new Error(
-            `${label} internal Strapi request failed: ${response.status}`,
-        );
+        clearTimeout(timer);
     }
 }

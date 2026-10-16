@@ -106,6 +106,33 @@ const copy = {
 
 const text = copy[lang];
 
+const submissionCopy = {
+    "ca": {
+        "safe": "Revisa les dades indicades i torna a enviar quan estiguis a punt. Conservem el que has escrit; no cal tornar a verificar l’email si l’autorització continua vigent.",
+        "invalid": "Cal tornar a verificar l’email abans d’enviar. Conservem les dades del formulari.",
+        "uncertain": "No hem pogut confirmar l’enviament; la sol·licitud podria haver arribat. Conservem les dades. Verifica de nou l’email i decideix si vols tornar a enviar-la. No la reenviarem automàticament."
+    },
+    "es": {
+        "safe": "Revisa los datos indicados y vuelve a enviar cuando estés listo. Conservamos lo introducido; no necesitas verificar otra vez si la autorización sigue vigente.",
+        "invalid": "Debes verificar de nuevo el email antes de enviar. Conservamos los datos del formulario.",
+        "uncertain": "No hemos podido confirmar el envío; la solicitud podría haber llegado. Conservamos los datos. Verifica de nuevo el email y decide si quieres enviarla otra vez. No la reenviaremos automáticamente."
+    },
+    "en": {
+        "safe": "Review the indicated details and submit again when you are ready. Your entries are preserved; you do not need to verify again while the authorization remains valid.",
+        "invalid": "Verify your email again before submitting. Your form entries are preserved.",
+        "uncertain": "We could not confirm the submission; it may have arrived. Your entries are preserved. Verify your email again and decide whether to submit again. We will not resend it automatically."
+    }
+} as const;
+const feedbackTargets: Partial<Record<Props["scope"], string>> = {
+    agenda: "agenda-submit-error",
+    comunicat: "comunicat-submit-error",
+    veu: "veu-submit-error",
+    millora: "millora-submit-error",
+    "foto-mes": "foto-mes-submit-error",
+};
+const feedbackTarget = feedbackTargets[scope];
+const submissionText = feedbackTarget ? submissionCopy[lang] : undefined;
+
 const codeId =
     `${scope}-verification-code`;
 ---
@@ -115,6 +142,10 @@ const codeId =
     data-email-verification
     data-verification-scope={scope}
     data-verification-language={lang}
+    data-submission-feedback-target={feedbackTarget}
+    data-submission-safe-message={submissionText?.safe}
+    data-submission-invalid-message={submissionText?.invalid}
+    data-submission-uncertain-message={submissionText?.uncertain}
     class="mt-6 rounded-2xl border border-sky-200 bg-sky-50 p-5 sm:p-6"
 >
     <div
