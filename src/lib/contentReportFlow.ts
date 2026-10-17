@@ -1,6 +1,7 @@
 import {
     initEmailVerificationController,
 } from "./emailVerificationController.ts";
+import { classifySubmissionFailure } from "./netlifySubmission.ts";
 
 export const CONTENT_REPORT_TYPES = new Set([
     "agenda",
@@ -38,6 +39,7 @@ export type ContentReportValidationError =
 export type ContentReportResponseState =
     | "success"
     | "limited"
+    | "verificationRequired"
     | "invalidReference"
     | "unavailable";
 
@@ -119,6 +121,12 @@ export function classifyContentReportResponse(
     }
 
     if (status === 400) {
+        if (
+            classifySubmissionFailure("content-report", status, data).kind ===
+            "verification-invalid"
+        ) {
+            return "verificationRequired";
+        }
         return "invalidReference";
     }
 
