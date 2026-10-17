@@ -28,6 +28,8 @@ const communicatsUrl =
     lang === "ca" ? "/comunicats" : `/${lang}/comunicats`;
 const milloresUrl =
     lang === "ca" ? "/millorem-pineda" : `/${lang}/millorem-pineda`;
+const agendaUrl = lang === "ca" ? "/agenda" : `/${lang}/agenda`;
+const veusUrl = lang === "ca" ? "/veus" : `/${lang}/veus`;
 
 const aboutUrl =
     lang === "ca"
@@ -42,6 +44,8 @@ const navigationItems = [
     { label: t.about.navLabel, href: aboutUrl },
     { label: t.comunicats.title, href: communicatsUrl },
     { label: t.millores.title, href: milloresUrl },
+    { label: t.footer.agenda, href: agendaUrl },
+    { label: t.footer.veus, href: veusUrl },
 ];
 ---
 

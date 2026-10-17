@@ -209,6 +209,8 @@
     "footer": {
         "description": "The citizens’ guide to businesses, services, organisations and local resources in Pineda de Mar.",
         "navigation": "Navigation",
+        "agenda": "Open Agenda",
+        "veus": "Voices of Pineda",
         "contact": "Contact",
         "rights": "The citizens’ guide to Pineda de Mar."
     }

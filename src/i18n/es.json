@@ -209,6 +209,8 @@
     "footer": {
         "description": "La guía ciudadana para descubrir comercios, servicios, entidades y recursos de Pineda de Mar.",
         "navigation": "Navegación",
+        "agenda": "Agenda Abierta",
+        "veus": "Voces de Pineda",
         "contact": "Contacto",
         "rights": "La guía ciudadana de Pineda de Mar."
     }
