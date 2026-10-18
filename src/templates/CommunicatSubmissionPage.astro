@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CommunicatSubmissionFlow from "../components/CommunicatSubmissionFlow.astro";
+import LanguageSwitcher from "../components/LanguageSwitcher.astro";
 
 interface Props {
     lang: "ca" | "es" | "en";
@@ -27,6 +28,11 @@ const metadata = {
 } as const;
 
 const { title, description } = metadata[lang];
+const languageLinks = {
+    ca: "/envia-un-comunicat",
+    es: "/es/enviar-comunicado",
+    en: "/en/comunicats/send-an-announcement",
+};
 ---
 
 <Layout
@@ -35,5 +41,17 @@ const { title, description } = metadata[lang];
     description={description}
     showLanguageSwitcher={false}
 >
+    <div
+        data-comunicat-language-switch
+        class="border-b border-slate-200 bg-white px-5 py-4 sm:px-8"
+    >
+        <div class="mx-auto flex max-w-6xl justify-end">
+            <LanguageSwitcher
+                currentLang={lang}
+                links={languageLinks}
+                label={lang === "en" ? "Language" : "Idioma"}
+            />
+        </div>
+    </div>
     <CommunicatSubmissionFlow lang={lang} />
 </Layout>
