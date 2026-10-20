@@ -1,0 +1,10 @@
+# Future validation guide — NOT EXECUTED
+
+Only after explicit IMPLEMENT authorization. No current code, test harness, server, browser or build execution.
+
+1. Recheck both Git states; preserve pre-existing untracked017/prerequisite docs. Read spec/plan/contract. Capture header baseline before editing.
+2. In future qa.mjs, render the actual SiteHeader.astro with its actual local SiteBrand/LanguageSwitcher dependencies and existing static translation dictionaries and synthetic paths using installed Astro in an owned temporary project. Do not import real application pages, CMS libraries, Functions, .env or backend. Page/content fixtures synthetic; translations are existing source files; no network other than owned loopback; no installation. Audit imports and isolation before running. Handle cleanup on success/failure and terminate only owned processes.
+3. Future commands (harness not yet created): `node specs/018-header-active-section-accuracy/qa.mjs baseline`, then after authorized fix `node specs/018-header-active-section-accuracy/qa.mjs`. Baseline must reproduce incorrect guide state; final must meet contract, rather than update expected output to accept a defect.
+4. Build those isolated fixture pages and inspect actual rendered DOM in a browser. Cover 18 affected combinations at1280×900 and390×900 (36), both lists' attribute omission, visible inactive styling, trailing slash variants and normalized query/hash behavior. Confirm Layout still passes pathname without changing it.
+5. Compare all control rows in contracts/header-navigation.md, all languages/viewports; preserve four hrefs/labels/order, existing active states, language switch links, menu open/Escape/link close, keyboard access and layout. Compare screenshots/computed styling before/after; no redesign or footer focus repair.
+6. Record outcomes, build/DOM/visual evidence and limitations in future qa-report.md. Confirm only SiteHeader product diff, no dependency/backend/017 changes. CONVERGE only after authorized implementation and completed QA. Synthetic header build is not a full application/CMS integration claim; never run a production build that might fetch real data.

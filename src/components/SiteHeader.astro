@@ -40,7 +40,11 @@ const activeSection = pathWithoutLanguage.startsWith("/tauler")
       : pathWithoutLanguage.startsWith("/millorem-pineda")
         ? "millores"
         : pathWithoutLanguage.startsWith("/foto-del-mes") ||
-            pathWithoutLanguage === "/404"
+            pathWithoutLanguage === "/404" ||
+            pathWithoutLanguage === "/agenda" ||
+            pathWithoutLanguage.startsWith("/agenda/") ||
+            pathWithoutLanguage === "/veus" ||
+            pathWithoutLanguage.startsWith("/veus/")
           ? null
           : "guide";
 
