@@ -1,0 +1,61 @@
+# Durable Millorem identity and image publication — design package
+
+2026-10-18. Extra persistence may now be DESIGNED; it is a human authorization gate, not automatically an architectural blocker. No schema/code/data/storage operation. This supersedes prior advice to stop merely for a new field. Revision CAS design retained.
+
+## Four identities and trust boundary
+Source X = full private solicitud-millora documentId, generated before publication, retained by normal updates/moderation/reopen; internal non-contact identifier. DB row id is local identity, not portable publication key. Controlled updates must forbid documentId mutation/clone-as-restore. Existing documentId generation/application identity is used, not a claim of globally collision-free arbitrary caller-assigned IDs. Trusted command validates actual source UID/documentId and approved state. Public target P has its own documentId. URL slug is independently editorial. Image operation O = millorem-publication:v1:X:main-image:Q, where Q is immutable server-generated quarantine image ID captured for the approved image. An image replacement uses a different Q; no hash-only ownership.
+
+## Schema options
+A public source_submission_document_id string private/read-only/nullable legacy: simplest logical link, but uniqueness needs care. Millora draftAndPublish=true; repository.publish creates a published physical entry from draft while retaining draft. A physical unique index on copied source value conflicts across these variants. Attribute unique validation alone is not demonstrated atomic uniqueness. Therefore DO NOT recommend a simple unique public string as complete concurrent protection.
+B public one-to-one relation to source: exposes coupling/deletion semantics; draft/published physical versions again require documented cardinality semantics; not selected without proof.
+C RECOMMENDED persistence foundation: internal non-draft content type millorem-publication-operation, one row per source X with a database unique source_key, canonical target_document_id nullable until assigned, private operation metadata and image receipt. Optional public source_submission_document_id nullable/non-unique/private/read-only is a convenience backlink; it is NOT necessary if ledger is authoritative and can be omitted for minimality. No public schema modification required for ledger option. This is more than the prior proposed one-public-field package and must be explicitly approved.
+
+Proposed internal fields: source_key (required string, immutable, server-only, DB unique); target_document_id (nullable string); operation_revision (integer default1, CAS); source_image_key (nullable string, frozen Q); image_operation_key (nullable string); storage_manifest (private JSON of planned immutable keys/digest/size/format, no PII); media_id (nullable integer); stage (pending/image_pending/image_ready/published/failed); error_code (nullable fixed code). No public routes or general Admin edit permissions. Source keyed row survives title/slug edits, reopen and retry. Exact schema proposal must use supported model unique index, not merely validator; database/schema/schema.js builds unique indexes from column uniqueness/model indexes. DraftAndPublish disabled avoids draft duplication issue. All physical schema/backfill operations separately human-gated. Storage safety still incomplete; these fields are a proposal, not a closed implementation allowlist.
+
+Existing public Millores may remain unlinked. Never infer links by title, last8 ID or slug. Historical source with possible old publication cannot automatically create another target: require trusted manual mapping or exclude historical sources from automatic publication until reconciled. A rollout cutoff/source eligibility set must be maintained by the ledger/manual migration procedure; otherwise 'legacy unlinked' could silently duplicate a prior publication. New sources after cutover always require ledger. No legacy lookup performed now.
+
+## Public identity creation algorithm candidate
+After committed private approval, ensureMilloremPublished(X) obtains/creates source ledger via enforced UNIQUE source_key. Concurrent insertion loser rolls back failed insert transaction and fetches winner in a fresh transaction; no 'read then insert' alone. Canonical creation/finalization transaction conditionally increments operation_revision, preventing two owners from committing from same baseline. Create a DRAFT Millora and set target_document_id in the SAME transaction. If either fails, rollback both; no orphan public identity. Later contender reloads canonical P; it must not independently create one. Permissions prohibit manual ledger/source identity edits. Public draft/published physical rows share canonical document identity P; guarantee at-most-one public DOCUMENT per source, not one physical row across D&P variants.
+
+External image I/O is outside DB transactions. Final attachment/publish transaction CASes ledger, checks ready verified Media, attaches only if expected image slot is still owned/empty, publishes P, marks completed. No overwriting public editorial changes on retries. A successful published P is returned without rewriting fields or uploading again. Public edit changes title/slug do not affect ledger lookup. Slug collision is a recoverable editorial validation error, never lookup-as-identity or overwrite of another target. Duplicate titles may need distinct URL slugs; no change to identity.
+
+Content copied once to draft; subsequent retries complete missing stages rather than reapply private snapshots. A human changing draft/public content wins: retry cannot overwrite it. Concurrent manual publish/image edits must obey a scoped publication guard so incomplete generated drafts cannot be published; ordinary unrelated public Millores remain unaffected. This extends public workflow guard scope and must be in future authorization. Automatic reapprove after already-published P returns same P without overwriting public edits; changed source text/image is surfaced for explicit editorial review, not auto-sync. This preserves existing reuse behavior where possible and does not invent new public documents.
+
+## Current image path (source evidence)
+Moderation promotes normalized private file through Upload.upload with source refId/ref/field. Upload formatFileInfo calls generateFileName, which appends crypto.randomBytes(5). Upload image may optimize/create formats; provider writes original/derivatives, then add() creates Media metadata. Current project config/plugins.js is empty; installed upload default is provider local. This establishes configured source/default, not observed runtime storage. Local provider uses fs.writeFile or createWriteStream directly on hash+ext; no atomic temp-promote, exclusive claim, verify-existing, operation lookup or fsync durability contract. File successful/Media failed leaves no guaranteed durable operation mapping. Retrying high-level Upload generates a new hash.
+
+## Image recovery strategy comparison
+| Option | Retry/concurrency | Rollback/portability | Decision |
+|---|---|---|---|
+| A deterministic storage key | can bound target names; direct overwrite may truncate valid file and expose partial bytes | existing local provider writes in place; not safe immutable put | requires stronger storage primitive |
+| B temporary upload then promote | avoids visible partial destination if publish is atomic and exclusive | no supported provider promote/rename capability in current abstraction; custom local filesystem logic would extend it | candidate capability, not assumed |
+| C durable operation record/manifest | remembers planned keys and Media ID before/after stages; enables recovery | alone cannot prove file completeness or prevent stale worker overwrite | necessary candidate but insufficient |
+| D cleanup-on-failure | best effort only; crash skips cleanup; race may remove winner's file | destructive global cleanup forbidden | rejected as guarantee |
+| E provider overwrite/upsert | retry may reuse name but overwrite is not atomic idempotent immutable publication | no documented conditional verified put in installed local provider | insufficient |
+| F Media metadata lookup/relation | reuse committed Media identity | cannot find file written before Media commit; no physical durability proof | insufficient alone |
+| G content hash | verifies bytes if future authorized read; distinguishes corruption | source ownership still X+Q, hash cannot claim another source's image | auxiliary only |
+
+## Required missing capability / remaining architectural blocker
+A safe narrow image publisher would need an immutable put/reconcile operation taking O and precommitted manifest, producing one verified storage result: retries return existing verified bytes, concurrent writers cannot truncate/overwrite a completed result, and crash before Media registration can be discovered by O. All formats need equivalent semantics. A deterministic filename or DB ledger alone does not provide that capability. Installed Upload/provider API does NOT expose it. Implementing atomic temporary-file publication and reconciliation for local storage would be a new project/provider capability, not merely using current upload API or a schema field. Do not claim portability across providers from local rename/link behavior; no Cloudinary/S3 semantics assumed. No local filesystem trick silently adopted under the user's explicit provider-abstraction constraint.
+
+Once such capability is authorized/designed, Media registration+ledger media_id would commit together under ledger CAS. Losing attempts reuse M; complete external objects with missing Media can be reconciled from precommitted manifest. Media creation failure must not delete a concurrent winner. Storage digest verification cannot be replaced by exists(). No actual image bytes/hash/path accessed in this design.
+
+## Failure matrix
+A before P creation: ledger pending/no target, transaction retry.
+B P draft created/image not started: canonical target exists, resume O.
+C physical file written/Media failed: manifest could identify object, but current provider cannot prove immutable complete object safely→BLOCKER.
+D Media created/attach failed: commit Media+ledger receipt together; resume attach, reuse M; requires candidate safe image publisher.
+E relation attached/publish failed: draft not public, repeat finalization transaction with fresh ledger baseline.
+F publication success/response lost: ledger target/completion in same transaction, return canonical P.
+G concurrent attempts: ledger CAS/unique source protects DB identity; external file safety still BLOCKER.
+H reopen/reapprove: same X→same P, no overwrite of editorial changes; no new source publication identity.
+I title changed: lookup ignores slug; no duplicate creation or stale reapply.
+J changed source image Q: before completion mark explicit conflict requiring selected approved image generation; after publication no auto replacement, editorial review. No blind reuse of old O for new Q.
+
+Private transaction failure invokes no publication command. Approved private state may remain after effect failure; ledger stage/error_code represents failure without rollback to stale private snapshot. Synchronous explicitly awaited ensure command, no queue requirement; crash recovery requires explicit retry/operator reconciliation, not exactly-once claims. Desired guarantee idempotent retry + at-most-one P and M per approved O; currently image guarantee unproved.
+
+## Privacy/logging
+Trusted moderation only; clients cannot choose another X or set ledger keys. Evidence source/target/Media IDs, stage/result/time/fixed error code only. Ledger not publicly exposed; source identifier is non-contact metadata. No free-text/private contact or raw provider exception logging.
+
+## Decision
+Extra schema itself is NOT the blocker; proposed durable ledger is designed as a human-gated option. The missing immutable upload/reconcile capability is the material unresolved architectural blocker. One M01 BLOCKER,0HIGH,0MEDIUM. PLAN/TASKS/full ANALYZE cannot PASS. No full implementation allowlist because provider capability/Media-registration integration must be settled. Do not offer a misleading schema-only one-shot implementation approval.

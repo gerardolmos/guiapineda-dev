@@ -1,0 +1,11 @@
+# Conditional persistence ANALYZE —2026-10-18
+
+FAIL / STOP. Current authority: contracts/conditional-persistence.md and active spec/plan/tasks. Prior reports retained as history. Prerequisites present.8FR+4SC remain mapped to7tasks; expanded22-case QA refines existing coverage, no new feature. No orphan requirement/task; no deferred media/expiry reintroduced.
+
+B02 BLOCKER: all writers classified, but RELATION WRITE and INTERNAL COMPENSATION lack a demonstrated safe integration. Installed Query Engine update catch restores entity through query builder, bypassing lifecycle; document relation updates use that route. Declaring all writers covered would be false. Denying all generic updates without an alternative would regress legitimate Admin relation writes. Existing Document Service transaction wrapper acknowledged; no claim that an abstract rollback schedule was observed committing in the real backend.
+
+Scalar CAS is concrete: id+state+email, plus Commerce name/private phone, explicit null predicates in updateMany actual UPDATE, count1 or conflict0. It closes stale scalar restoration in a closed writer model without version schema or timestamp uniqueness. It does not prove the entire application routing. Gate/sanitizer/lifecycle roles, Admin conflict mitigation, transition/reopen-null preservation and failure/QA matrices defined. No new transaction, vendor behavior, distributed lock or schema is selected. Not a claim no future integration can ever need them.
+
+SPEC PASS. PLAN FAIL and TASKS FAIL for implementation readiness; ANALYZE FAIL. BLOCKER1,HIGH0,MEDIUM0. Constitution III/IV prohibits certifying a bypass; other principles unchanged. Public validation untouched, approval preservation specified. Rejection safety and Admin protection not proven end-to-end. Reopen preservation is defined by rejecting unsupported reopen, with null-preserving future policy; no restoration authorization.
+
+Next action: obtain a bounded design decision for replacing the six-request document/relation persistence path or an approved alternative that intercepts internal compensation. Do not authorize implementation, execute transactions, patch framework or expand schema automatically. No product/schema/DB/data/SQLite/migration/commit/push/deploy operations performed.
